@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rudlgc"
+version = "0.1.0"
+description = "2D&3D Python Game Engine with awesomy system"
+authors = [
+  { name="DaemonDuck", email="simulasimulasimula15@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "pysdl2",
+  "pysdl2-dll", 
+  "moderngl", 
+  "PyGLM",
+  "pillow"
+]
+
+[tool.setuptools]
+package-dir = {"" = "rudlgc"}
+
+[tool.setuptools.packages.find]
+where = ["rudlgc"]
