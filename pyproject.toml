@@ -16,7 +16,8 @@ dependencies = [
   "pysdl2-dll", 
   "moderngl", 
   "PyGLM",
-  "pillow"
+  "pillow",
+  "pyyaml"
 ]
 
 [tool.setuptools]

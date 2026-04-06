@@ -1,8 +1,13 @@
+import warnings
+
+warnings.filterwarnings("ignore", message="Using SDL2 binaries from pysdl2-dll*")
+
 import os
 import sys
 import sdl2
 import sdl2.ext
 import json
+import traceback
 import xml.etree
 import moderngl
 import PIL
@@ -70,7 +75,7 @@ class SettingsCore:
     }
 
     def __init__(self):
-        self.__settings_module = import_module(os.getenv("RUDLGC_PROJECT_SETTINGS", "test_module"))
+        self.__settings_module = import_module(os.getenv("RUDLGC_PROJECT_SETTINGS", "test.test_module"))
 
         self.VSYNC = getattr(self.__settings_module, "VSYNC", False)
 
