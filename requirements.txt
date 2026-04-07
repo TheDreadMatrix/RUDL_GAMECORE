@@ -1,4 +1,5 @@
 pyinstaller
+platformdirs
 moderngl
 pysdl2
 pysdl2-dll

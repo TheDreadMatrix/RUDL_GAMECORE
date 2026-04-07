@@ -1,9 +1,9 @@
-
+from . import GameType
 
 
 
 class SceneModel:
-    def __init__(self, game):
+    def __init__(self, game: GameType):
         pass
 
 

@@ -6,12 +6,14 @@ import os
 import sys
 import sdl2
 import sdl2.ext
+import time
 import json
 import traceback
 import xml.etree
 import moderngl
 import PIL
 import glm
+import platformdirs
 from pathlib import Path
 from datetime import datetime
 from importlib import import_module
@@ -19,19 +21,47 @@ from importlib import import_module
 
 
 class PathCore:
-    def __init__(self):
+    def __init__(self, game: "Game"):
+        if hasattr(sys, "frozen"):
+            self._BASE_DATA_DIR = Path(platformdirs.user_data_dir(game.settings.APPNAME))
+        else:
+            self._BASE_DATA_DIR = Path(__file__).resolve().parent
+
         if hasattr(sys, "_MEIPASS"):
             self._RESOURCE_DIR = Path(sys._MEIPASS)
         else:
             self._RESOURCE_DIR = Path(__file__).resolve().parent
             
 
-        self.datas_dir = ""
         self.musics_dir = self._RESOURCE_DIR / "musics"
         self.sounds_dir = self._RESOURCE_DIR / "sounds"
         self.assets_dir = self._RESOURCE_DIR / "assets"
         self.fonts_dir = self._RESOURCE_DIR / "fonts"
         self.shaders_dir = self._RESOURCE_DIR / "shaders"
+
+        self.config_dir = self._BASE_DATA_DIR / ".config"
+        self.saves_dir = self._BASE_DATA_DIR / ".saves"
+
+    def getConfigPath(self, pathfile):
+        return self.config_dir / pathfile
+
+    def getSavesPath(self, pathfile):
+        return self.saves_dir_dir / pathfile
+
+    def getMusicsPath(self, pathfile):
+        return self.musics_dir / pathfile
+
+    def getSoundsPath(self, pathfile):
+        return self.sounds_dir / pathfile
+
+    def getAssetsPath(self, pathfile):
+        return self.assets_dir / pathfile
+
+    def getFontsPath(self, pathfile):
+        return self.fonts_dir / pathfile
+
+    def getShadersPath(self, pathfile):
+        return self.shaders_dir / pathfile
 
 
 
@@ -61,24 +91,45 @@ class Requirements:
 
 class SettingsCore:
     __DEFAULTS = {
-        "DEBUG", "WINDOW_WIDTH", "WINDOW_HEIGHT",
-        "WINDOW_MINWIDTH", "WINDOW_MINHEIGHT",
-        "WINDOW_MAXWIDTH", "WINDOW_MAXHEIGHT",
-        "GAME_NAME", "GAME_DESCRIPTION", "FILE_VERSION",
-        "GAME_ICON","GAME_RIGHT", "GAME_VERSION", 
-        "TITLE", "VSYNC", 
-        "FULLSCREEN", "BORDERLESS", "RESIZABLE",
-        "START_SCENE", "SHOW_FPS", "SHOW_INFO", "SHOW_PROMPT",
-        "MUSIC_VOLUME", "SOUND_VOLUME",
-        "FPS", "PPS",
-        "POINT_SIZE", "LINE_SIZE",
-        "SIX_SEVEN", "SIX_NINE", "POOR_NUMBER_68"
+        "DEBUG", 
+        "WINDOW_WIDTH", 
+        "WINDOW_HEIGHT",
+        "WINDOW_MINWIDTH", 
+        "WINDOW_MINHEIGHT",
+        "WINDOW_MAXWIDTH", 
+        "WINDOW_MAXHEIGHT",
+        "APPNAME", 
+        "GAME_NAME", 
+        "GAME_DESCRIPTION", 
+        "FILE_VERSION",
+        "GAME_ICON",
+        "GAME_RIGHT", 
+        "GAME_VERSION", 
+        "TITLE", 
+        "VSYNC", 
+        "FULLSCREEN", 
+        "BORDERLESS", 
+        "RESIZABLE",
+        "START_SCENE", 
+        "SHOW_FPS", 
+        "SHOW_INFO", 
+        "SHOW_PROMPT",
+        "MUSIC_VOLUME", 
+        "SOUND_VOLUME",
+        "FPS", 
+        "PPS",
+        "POINT_SIZE", 
+        "LINE_SIZE",
+        "SIX_SEVEN", 
+        "SIX_NINE", ""
+        "POOR_NUMBER_68"
     }
 
     def __init__(self):
-        self.__settings_module = import_module(os.getenv("RUDLGC_PROJECT_SETTINGS", "test.test_module"))
+        self.__settings_module = import_module(os.getenv("RUDLGC_PROJECT_SETTINGS", "testproject.test_module"))
 
         self.VSYNC = getattr(self.__settings_module, "VSYNC", False)
+        self.APPNAME = getattr(self.__settings_module, "APPNAME", ".rudlgcGameData")
 
         self.WINDOW_WIDTH = getattr(self.__settings_module, "WINDOW_WIDTH", 800)
         self.WINDOW_HEIGHT = getattr(self.__settings_module, "WINDOW_HEIGHT", 600)
@@ -103,8 +154,8 @@ class SettingsCore:
         self.TITLE = getattr(self.__settings_module, "TITLE", "RUDLGC window")
         self.DEBUG = getattr(self.__settings_module, "DEBUG", True)
 
-        self.FPS = getattr(self.__settings_module, "FPS", 60)
-        self.PPS = getattr(self.__settings_module, "PPS", 60)
+        self.FPS = getattr(self.__settings_module, "FPS", 240)
+        self.PPS = getattr(self.__settings_module, "PPS", 240)
 
         self.START_SCENE = getattr(self.__settings_module, "START_SCENE", "empty-rudlgc")
         self.SHOW_FPS = getattr(self.__settings_module, "SHOW_FPS", True)
@@ -165,13 +216,21 @@ class Game:
     def __init__(self):
         sdl2.ext.init()
         self.settings = SettingsCore()
+        
 
         self._running = True
+        self._last_time = time.perf_counter()
+
+        self._fps = 0
+        self._frame_count = 0
+        self._fps_timer = 0.0
+
+        self._target_fps = self.settings.FPS
         self.delta_time = 0
         self.pelta_time = 1 / self.settings.PPS
         self.scene = self.settings.START_SCENE
 
-        self.paths = PathCore()
+        self.paths = PathCore(self)
         self.logger = Logger()
         self.request = RequestCore()
 
@@ -212,14 +271,32 @@ class Game:
         if self.settings.WINDOW_MAXWIDTH and self.settings.WINDOW_MAXHEIGHT:
             sdl2.SDL_SetWindowMaximumSize(self.__window.window, self.settings.WINDOW_MAXWIDTH, self.settings.WINDOW_MAXHEIGHT)
 
+        if self.settings.VSYNC:
+            sdl2.SDL_GL_SetSwapInterval(1) 
+
         self.__gl_context = sdl2.SDL_GL_CreateContext(self.__window.window)
         self._ctx = moderngl.create_context()
 
         
 
     
-    def getFps(self): pass  
-    def getCurrentScene(self): pass
+    def getFps(self): return self._fps
+    def getCurrentScene(self): return self.scene
+
+
+    def __limit_fps(self, frame_start):
+        if self._target_fps <= 0:
+            return
+
+        target_frame_time = 1.0 / self._target_fps
+
+        frame_end = time.perf_counter()
+        frame_duration = frame_end - frame_start
+
+        sleep_time = target_frame_time - frame_duration
+
+        if sleep_time > 0:
+            time.sleep(sleep_time)
     
 
 
@@ -240,8 +317,26 @@ class Game:
 
     def __run(self): 
         while self._running:
+            frame_start = time.perf_counter()
+            
+            self.delta_time = frame_start - self._last_time
+            self._last_time = frame_start
+
+            
+            self._frame_count += 1
+            self._fps_timer += self.delta_time
+
+            if self._fps_timer >= 1.0:
+                self._fps = self._frame_count
+                self._frame_count = 0
+                self._fps_timer = 0.0
+
+
+            
             self.__update()
             self.__render()
+            
+            self.__limit_fps(frame_start)
 
 
         if self.settings.SHOW_PROMPT:
