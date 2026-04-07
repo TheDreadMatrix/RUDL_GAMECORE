@@ -13,6 +13,7 @@ import moderngl
 import PIL
 import glm
 from pathlib import Path
+from datetime import datetime
 from importlib import import_module
 
 
@@ -134,25 +135,59 @@ class Xmllion:
     pass
 
 
+class Logger:
+    COLORS = {
+        "INFO": "\033[94m", 
+        "WARNING": "\033[33m",
+        "TRACE-USER": "\033[92m",
+        "ERROR": "\033[91m",
+        "RESET": "\033[0m"
+    }
+        
+    @staticmethod
+    def trace(message):
+        now = datetime.now().strftime("%H:%M:%S")
+        color = Logger.COLORS["TRACE-USER"]
+        reset = Logger.COLORS["RESET"]
+        print(f"{color}[{now}]-[TRACE-USER]: {message}{reset}")
+
+    @staticmethod
+    def _system_log(tag, message):
+        now = datetime.now().strftime("%H:%M:%S")
+        color = Logger.COLORS.get(tag, "")
+        reset = Logger.COLORS["RESET"]
+        print(f"{color}[{now}]-[{tag}]: {message}{reset}")
+
+
+
+
 class Game:
     def __init__(self):
         sdl2.ext.init()
+        self.settings = SettingsCore()
 
         self._running = True
         self.delta_time = 0
+        self.pelta_time = 1 / self.settings.PPS
+        self.scene = self.settings.START_SCENE
 
         self.paths = PathCore()
+        self.logger = Logger()
         self.request = RequestCore()
 
         self.johnson = Johnson()
         self.xmllion = Xmllion()
         
-        self.settings = SettingsCore()
+        
         self.requirements = Requirements()
 
 
         if self.settings.SHOW_PROMPT:
-            print("\033[32mHello World with RUDLGC 0.1.0!!!\033[0m")
+            self.logger._system_log("INFO", "RUDL Game Core build with SDL2 && OpenGL 3.3.0")
+        
+        if self.settings.DEBUG:
+            self.logger._system_log("WARNING", "DEBUG mode is enabled")
+        
 
 
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
@@ -184,7 +219,7 @@ class Game:
 
     
     def getFps(self): pass  
-    def getScene(self): pass
+    def getCurrentScene(self): pass
     
 
 
@@ -208,6 +243,10 @@ class Game:
             self.__update()
             self.__render()
 
+
+        if self.settings.SHOW_PROMPT:
+            self.logger._system_log("INFO", "Game succesfully exit")
+            
 
         sdl2.SDL_GL_DeleteContext(self.__gl_context)
         sdl2.SDL_DestroyWindow(self.__window.window)

@@ -1,5 +1,9 @@
 from typing import *
 from abc import abstractmethod, ABC
+import moderngl
+import sdl2
+import PIL
+import glm
 
 
 class _Settings:
@@ -42,22 +46,44 @@ class _Settings:
     LINE_SIZE: float
 
 
+class _RequirementsType:
+    sdl2 = sdl2
+    pyglm = glm
+    moderngl = moderngl
+    pillow = PIL
+
+
+class _RequestType:
+    def closeGame(self) -> None: ...
+
+    def updateSettings(self) -> None: ...
+
+    def redirectScene(self, scene) -> str: ...
+
+
+class _LoggerType:
+    @staticmethod
+    def trace(message: str) -> None: ...
+
+
 
 class GameType(Protocol):
-    request: Any
-    requirements: Any
+    request: _RequestType
+    requirements: _RequirementsType
     settings: _Settings
     paths: Any
+    logger: _LoggerType
 
     johnson: Any
     xmllion: Any
 
 
     delta_time: float
-    physic_time: float
+    pelta_time: float
 
     def getFps(self) -> float: ...
-    def getScene(self) -> str: ...
+    def getCurrentScene(self) -> str: ...
+
 
 
 
