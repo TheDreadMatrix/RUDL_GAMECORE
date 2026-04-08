@@ -46,7 +46,7 @@ class PathCore:
         return self.config_dir / pathfile
 
     def getSavesPath(self, pathfile):
-        return self.saves_dir_dir / pathfile
+        return self.saves_dir / pathfile
 
     def getMusicsPath(self, pathfile):
         return self.musics_dir / pathfile
@@ -126,7 +126,7 @@ class SettingsCore:
     }
 
     def __init__(self):
-        self.__settings_module = import_module(os.getenv("RUDLGC_PROJECT_SETTINGS", "testproject.test_module"))
+        self.__settings_module = import_module(os.getenv("RUDLGC_PROJECT_SETTINGS", "rudlgc.core.templates_test.test_module"))
 
         self.VSYNC = getattr(self.__settings_module, "VSYNC", False)
         self.APPNAME = getattr(self.__settings_module, "APPNAME", ".rudlgcGameData")
@@ -217,7 +217,7 @@ class Game:
         sdl2.ext.init()
         self.settings = SettingsCore()
         
-
+        
         self._running = True
         self._last_time = time.perf_counter()
 
@@ -276,6 +276,8 @@ class Game:
 
         self.__gl_context = sdl2.SDL_GL_CreateContext(self.__window.window)
         self._ctx = moderngl.create_context()
+        self._ctx.point_size = self.settings.POINT_SIZE
+        self._ctx.line_width = self.settings.LINE_SIZE
 
         
 
@@ -348,4 +350,5 @@ class Game:
         sdl2.ext.quit()
         
 
-Game()._Game__run()
+if __name__ == "__main__":
+    Game()._Game__run()

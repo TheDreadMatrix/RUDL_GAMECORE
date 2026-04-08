@@ -1,5 +1,4 @@
 from typing import *
-from abc import abstractmethod, ABC
 import moderngl
 import sdl2
 import PIL
@@ -95,23 +94,18 @@ class GameType(Protocol):
 
 
 
-class AbstractScene(ABC):
-    @abstractmethod
+class AbstractScene:
     def __init__(self, game: GameType):
         pass
 
-    @abstractmethod
     def onUpdate(self):
         pass
 
-    @abstractmethod
     def onEvent(self, event):
         pass
 
-    @abstractmethod
     def onRender(self):
         pass
-
     
     def onSave(self):
         pass
