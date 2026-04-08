@@ -1,7 +1,3 @@
-import warnings
-
-warnings.filterwarnings("ignore", message="Using SDL2 binaries from pysdl2-dll*")
-
 import os
 import sys
 import sdl2

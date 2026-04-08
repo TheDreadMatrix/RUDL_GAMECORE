@@ -18,7 +18,7 @@ class _RUDLParser(argparse.ArgumentParser):
 
 
 def _rudlgc_admin():
-    from rudlgc.core.templates_test.templates import _PROHIBITED_WORDS, _EXAMPLE_PY, _ROUTER_PY, _SETTINGS_PY, _MANAGE_PY, is_valid_name
+    from rudlgc.core.templates_test.templates import _PROHIBITED_WORDS, _EXAMPLE_PY, _ROUTER_PY, _SETTINGS_PY, _MANAGE_PY, is_valid_name, _SCENE_PY
 
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
     sub_parser = parser.add_subparsers(dest="command")
@@ -79,9 +79,9 @@ def _rudlgc_admin():
 
         #HERE WE WRITES EXAMPLE CODE
         (PROJECT_BASE_PATH / "scenes" / "example.py").write_text(_EXAMPLE_PY)
-        (PROJECT_BASE_PATH / "router.py").write_text(_ROUTER_PY)
+        (PROJECT_BASE_PATH / "router.py").write_text(_ROUTER_PY(args.project_name))
         (PROJECT_BASE_PATH / "settings.py").write_text(_SETTINGS_PY(args.project_name))
-        (Path.cwd() / f"manage_{args.project_name}.py").write_text(_MANAGE_PY(args.project_name))
+        (Path.cwd() / f"manage_{args.project_name.lower()}.py").write_text(_MANAGE_PY(args.project_name))
 
         print("\033[32mProject succesfully created!\033[0m")
         return 1
@@ -101,8 +101,41 @@ def _rudlgc_admin():
         return 1
 
 
+    #rudlgc-admin newscene main_menu.py menu (--project-name game_1)(optional)
     elif args.command == "newscene":
-        pass
+        if not is_valid_name(args.filename):
+            parser.error("Invalid filename!")
+
+        if not is_valid_name(args.classname):
+            parser.error("Invalid classname!")
+
+
+        #IF YOU WANT TO POINT OTHER PROJECT
+        if args.project_name is not None:
+            PROJECT_BASE_PATH = Path.cwd() / args.project_name
+            if not PROJECT_BASE_PATH.exists():
+                parser.error(f"Config project '{args.project_name}' does not exists! Are you sure that you ve not deleted that folder?")
+            else:
+                (PROJECT_BASE_PATH / "scenes" / f"{args.filename}.py").write_text(_SCENE_PY(args.classname)) 
+                print("\033[32mProject scene succesfully created!\033[0m")
+                return 1
+
+        else:
+            #IF PROJECT IS EXISTING AND ACTIVE
+            with open(res.files("rudlgc.core").joinpath("config.yaml"), "r") as f:
+                data_config = yaml.safe_load(f)
+
+            PROJECT_BASE_PATH = Path.cwd() / data_config["project-name"]
+            if not PROJECT_BASE_PATH.exists():
+                parser.error(f"Config project '{data_config["project-name"]}' does not exists! Are you sure that you ve not deleted that folder?")
+            else:
+                (PROJECT_BASE_PATH / "scenes" / f"{args.filename}.py").write_text(_SCENE_PY(args.classname)) 
+                print("\033[32mProject scene succesfully created!\033[0m")
+                return 1
+
+        
+
+        
 
     #CONTENT COMMANDS
     elif args.command == "tg":
@@ -122,7 +155,7 @@ def _rudlgc_admin():
 
 
 
-def execute_console(execute_now: bool=False):
+def execute_console(execute_now: bool=False) -> int|None:
     if execute_now:
         from rudlgc.core.execute_game import Game
         Game()._Game__run()
@@ -130,10 +163,19 @@ def execute_console(execute_now: bool=False):
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
     sub_parser = parser.add_subparsers(dest="command")
 
+    sub_parser.add_parser("none", help="Nonetyper AAAAAAAA")
+
     run = sub_parser.add_parser("run", help="Running the game")
     build = sub_parser.add_parser("build", help="Building game into EXE")
     settings = sub_parser.add_parser("settings", help="Shows list of settings")
 
+    args = parser.parse_args()
+
+    if args.command == "none":
+        print("None", None)
+        return 0
 
 
-_rudlgc_admin()
+
+if __name__ == "__main__":
+    _rudlgc_admin()

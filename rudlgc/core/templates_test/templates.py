@@ -65,9 +65,33 @@ class ExampleScene(AbstractScene):
     #The method is called when the scene switches to another, otherwise the useful date must save here             
     def onSave(self):
         pass
-    
-                              
+                    
 """)
+
+
+def _SCENE_PY(class_name: str):
+    formatted_name = "".join(word.capitalize() for word in class_name.replace("_", " ").split())
+
+    return textwrap.dedent(f"""
+    from rudlgc.contrib import GameType, AbstractScene
+
+    class {formatted_name}(AbstractScene):
+        def __init__(self, game: GameType):
+            self.game = game
+
+        def onUpdate(self):
+            pass
+
+        def onEvent(self, event):
+            pass
+
+        def onRender(self):
+            pass
+
+        def onSave(self):
+            pass
+    """)
+
 
 
 def _ROUTER_PY(project_name: str):
