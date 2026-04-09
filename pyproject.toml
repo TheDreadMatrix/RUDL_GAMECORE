@@ -17,12 +17,20 @@ dependencies = [
   "moderngl", 
   "PyGLM",
   "pillow",
-  "pyyaml",
-  "platformdirs"
+  "platformdirs",
+  "pyinstaller"
 ]
 
 [tool.setuptools]
 package-dir = {"" = "rudlgc"}
 
 [tool.setuptools.packages.find]
-where = ["rudlgc"]
+where = ["."]
+
+[tool.setuptools.package-data]
+"rudlgc" = [
+  
+]
+
+[project.scripts]
+rudlgc-admin = "rudlgc.core.execute_prompt:_rudlgc_admin"

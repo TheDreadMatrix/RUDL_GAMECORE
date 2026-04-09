@@ -7,4 +7,3 @@ pyglm
 pillow
 build
 twine
-pyyaml

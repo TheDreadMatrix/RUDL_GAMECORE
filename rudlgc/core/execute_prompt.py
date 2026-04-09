@@ -1,8 +1,6 @@
 from pathlib import Path
-import importlib.resources as res
 import argparse
 import webbrowser
-import yaml
 
 
 
@@ -25,15 +23,6 @@ def _rudlgc_admin():
 
     start_project = sub_parser.add_parser("newproject", help="Creates game project")
     start_project.add_argument("project_name")
-
-    switch_project = sub_parser.add_parser("setproject", help="Switch active project to another")
-    switch_project.add_argument("project_name")
-
-    start_scene = sub_parser.add_parser("newscene", help="Creates new game scene")
-    start_scene.add_argument("filename")
-    start_scene.add_argument("classname")
-    start_scene.add_argument("--project-name", default=None)
-
     
 
     sub_parser.add_parser("tg", help="Open TG channel")
@@ -52,16 +41,6 @@ def _rudlgc_admin():
         PROJECT_BASE_PATH = Path.cwd() / args.project_name
         if PROJECT_BASE_PATH.exists():
             parser.error(f"Project {args.project_name} already exists!")
-
-        #BINDING TO CORE CONFIG
-        with open(res.files("rudlgc.core").joinpath("config.yaml"), "r") as f:
-            data_config = yaml.safe_load(f)
-
-        data_config["project-name"] = args.project_name
-                
-
-        with open(res.files("rudlgc.core").joinpath("config.yaml"), "w") as f:
-            yaml.dump(data_config, f, sort_keys=False, default_flow_style=False)
 
 
         #CREATING ALL FOLDERS AND FILES
@@ -86,56 +65,7 @@ def _rudlgc_admin():
         print("\033[32mProject succesfully created!\033[0m")
         return 1
                 
-    
-    elif args.command == "setproject":
-        #SWITCHING TO PROJECT
-        if not (Path.cwd() / args.project_name).exists():
-            parser.error(f"Project {args.project_name} does not exists!")
-
-        data_config = {"project-name": args.project_name}
-                
-        with open(res.files("rudlgc.core").joinpath("config.yaml"), "w") as f:
-            yaml.dump(data_config, f, sort_keys=False, default_flow_style=False)
-        
-        print("\033[32mProject succesfully switched!\033[0m")
-        return 1
-
-
-    #rudlgc-admin newscene main_menu.py menu (--project-name game_1)(optional)
-    elif args.command == "newscene":
-        if not is_valid_name(args.filename):
-            parser.error("Invalid filename!")
-
-        if not is_valid_name(args.classname):
-            parser.error("Invalid classname!")
-
-
-        #IF YOU WANT TO POINT OTHER PROJECT
-        if args.project_name is not None:
-            PROJECT_BASE_PATH = Path.cwd() / args.project_name
-            if not PROJECT_BASE_PATH.exists():
-                parser.error(f"Config project '{args.project_name}' does not exists! Are you sure that you ve not deleted that folder?")
-            else:
-                (PROJECT_BASE_PATH / "scenes" / f"{args.filename}.py").write_text(_SCENE_PY(args.classname)) 
-                print("\033[32mProject scene succesfully created!\033[0m")
-                return 1
-
-        else:
-            #IF PROJECT IS EXISTING AND ACTIVE
-            with open(res.files("rudlgc.core").joinpath("config.yaml"), "r") as f:
-                data_config = yaml.safe_load(f)
-
-            PROJECT_BASE_PATH = Path.cwd() / data_config["project-name"]
-            if not PROJECT_BASE_PATH.exists():
-                parser.error(f"Config project '{data_config["project-name"]}' does not exists! Are you sure that you ve not deleted that folder?")
-            else:
-                (PROJECT_BASE_PATH / "scenes" / f"{args.filename}.py").write_text(_SCENE_PY(args.classname)) 
-                print("\033[32mProject scene succesfully created!\033[0m")
-                return 1
-
-        
-
-        
+            
 
     #CONTENT COMMANDS
     elif args.command == "tg":
@@ -156,24 +86,64 @@ def _rudlgc_admin():
 
 
 def execute_console(execute_now: bool=False) -> int|None:
+    import os
+    import importlib
+    from rudlgc.core.execute_game import Game
+    from rudlgc.core.templates_test.templates import _SCENE_PY, _BUILD_PY, is_valid_name
+
     if execute_now:
-        from rudlgc.core.execute_game import Game
         Game()._Game__run()
 
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
     sub_parser = parser.add_subparsers(dest="command")
 
-    sub_parser.add_parser("none", help="Nonetyper AAAAAAAA")
+    #JUST COMMAND
+    sub_parser.add_parser("test-health")
 
-    run = sub_parser.add_parser("run", help="Running the game")
-    build = sub_parser.add_parser("build", help="Building game into EXE")
-    settings = sub_parser.add_parser("settings", help="Shows list of settings")
+    #BASICS COMMAND
+    sub_parser.add_parser("run", help="Running the game", aliases=["r", "start", "play"])
+    sub_parser.add_parser("build", help="Building game into EXE")
+    sub_parser.add_parser("settings", help="Shows list of settings")
+
+    newscene = sub_parser.add_parser("newscene", help="Creates new scene for your project")
+    newscene.add_argument("filename")
+    newscene.add_argument("classname")
+
 
     args = parser.parse_args()
 
-    if args.command == "none":
-        print("None", None)
-        return 0
+    if args.command == "test-health":
+        print("Manage is working very great!")
+        return 1
+    
+
+    if args.command in ["run", "r", "start", "play"]:
+        Game()._Game__run()
+
+
+    elif args.command == "build":
+        pass
+
+    elif args.command == "settings":
+        settings_module = importlib.import_module(os.environ.get("RUDLGC_PROJECT_SETTINGS"))
+        print("----Settings attributes----")
+        for attr in dir(settings_module):
+            if attr.isupper():
+                print(attr)
+
+
+
+
+    elif args.command == "newscene":
+        if not is_valid_name(args.filename):
+            parser.error("Invalid filename!")
+
+        if not is_valid_name(args.classname):
+            parser.error("Invalid classname!")
+
+        (Path.cwd() / os.environ.get("RUDLGC_PROJECT_NAME") / "scenes" / f"{args.filename}.py").write_text(_SCENE_PY(args.classname))
+        print("\033[32mProject scene succesfully created!\033[0m")
+        return 1
 
 
 

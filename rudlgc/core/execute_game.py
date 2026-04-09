@@ -169,7 +169,7 @@ class SettingsCore:
         self.SIX_NINE = 69
 
         for attr in dir(self.__settings_module):
-            if attr not in SettingsCore.__DEFAULTS and not attr.startswith("__"):
+            if attr not in SettingsCore.__DEFAULTS and not attr.startswith("__") and not attr.isupper():
                 value = getattr(self.__settings_module, attr)
                 setattr(self, attr, value)
 

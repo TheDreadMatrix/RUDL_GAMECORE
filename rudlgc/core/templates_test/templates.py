@@ -192,7 +192,9 @@ def _MANAGE_PY(project_name: str):
 
 
         def main():
-            # Set default settings module for the project
+            # Set default settings module and name for the project
+            # Also do not touch that environs!!! You can destroy your project!!!
+            os.environ.setdefault("RUDLGC_PROJECT_NAME", "{project_name}")
             os.environ.setdefault("RUDLGC_PROJECT_SETTINGS", "{project_name}.settings")
 
             try:
@@ -210,6 +212,16 @@ def _MANAGE_PY(project_name: str):
         if __name__ == "__main__":
             main()
     """)
+
+
+
+def _BUILD_PY(project_name: str):
+    pass
+
+
+
+
+
 
 
 if __name__ == "__main__":
