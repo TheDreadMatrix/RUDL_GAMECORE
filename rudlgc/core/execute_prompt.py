@@ -87,6 +87,7 @@ def _rudlgc_admin():
 
 def execute_console(execute_now: bool=False) -> int|None:
     import os
+    import re
     import importlib
     from rudlgc.core.execute_game import Game
     from rudlgc.core.templates_test.templates import _SCENE_PY, _BUILD_PY, is_valid_name
@@ -119,17 +120,45 @@ def execute_console(execute_now: bool=False) -> int|None:
 
     if args.command in ["run", "r", "start", "play"]:
         Game()._Game__run()
+        return 1
 
 
     elif args.command == "build":
-        pass
+        return 1
+
+
 
     elif args.command == "settings":
+        from rudlgc.core.execute_game import SettingsCore 
         settings_module = importlib.import_module(os.environ.get("RUDLGC_PROJECT_SETTINGS"))
-        print("----Settings attributes----")
+        defaults = []
+        custom = []
+
         for attr in dir(settings_module):
-            if attr.isupper():
-                print(attr)
+            if attr.startswith("__"):
+                continue
+
+            if attr in SettingsCore._DEFAULTS:
+                default_value = getattr(settings_module, attr)
+                defaults.append((attr, default_value))
+                continue
+
+            if re.fullmatch(r"[A-Z_]+", attr):
+                custom_value = getattr(settings_module, attr)
+                custom.append((attr, custom_value))
+
+        print("==== SETTINGS ====")
+
+        if defaults:
+            print("\n[BUILT-IN]")
+            for name, value in sorted(defaults):
+                print(f"  • {name} - {value}")
+
+        if custom:
+            print("\n[CUSTOM]")
+            for name, value in sorted(custom):
+                print(f"  • {name} - {value}")
+        return 1
 
 
 

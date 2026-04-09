@@ -86,7 +86,7 @@ class Requirements:
 
 
 class SettingsCore:
-    __DEFAULTS = {
+    _DEFAULTS = {
         "DEBUG", 
         "WINDOW_WIDTH", 
         "WINDOW_HEIGHT",
@@ -169,7 +169,7 @@ class SettingsCore:
         self.SIX_NINE = 69
 
         for attr in dir(self.__settings_module):
-            if attr not in SettingsCore.__DEFAULTS and not attr.startswith("__") and not attr.isupper():
+            if attr not in SettingsCore._DEFAULTS and not attr.startswith("__") and attr.isupper():
                 value = getattr(self.__settings_module, attr)
                 setattr(self, attr, value)
 
@@ -212,8 +212,7 @@ class Game:
     def __init__(self):
         sdl2.ext.init()
         self.settings = SettingsCore()
-        
-        
+
         self._running = True
         self._last_time = time.perf_counter()
 

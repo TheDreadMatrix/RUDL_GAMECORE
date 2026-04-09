@@ -7,6 +7,9 @@
 # Should be set to False in production.
 DEBUG = True
 MY = 10
+SECOND_LIFE = True
+Error = 100
+__PRIVATE = "123"
 
 # Window size settings
 WINDOW_WIDTH = 800
