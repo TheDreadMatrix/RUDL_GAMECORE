@@ -4,6 +4,7 @@ import os
 
 def main():
     # Set default settings module and name for the project
+    # Also do not touch that environs!!! You can destroy your project!!!
     os.environ.setdefault("RUDLGC_PROJECT_NAME", "AAA_game")
     os.environ.setdefault("RUDLGC_PROJECT_SETTINGS", "AAA_game.settings")
 

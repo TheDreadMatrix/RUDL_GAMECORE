@@ -18,15 +18,16 @@ from importlib import import_module
 
 class PathCore:
     def __init__(self, game: "Game"):
+        PROJECT_DIR = game.PROJECT_NAME
         if hasattr(sys, "frozen"):
             self._BASE_DATA_DIR = Path(platformdirs.user_data_dir(game.settings.APPNAME))
         else:
-            self._BASE_DATA_DIR = Path(__file__).resolve().parent
+            self._BASE_DATA_DIR = Path.cwd() / PROJECT_DIR
 
         if hasattr(sys, "_MEIPASS"):
             self._RESOURCE_DIR = Path(sys._MEIPASS)
         else:
-            self._RESOURCE_DIR = Path(__file__).resolve().parent
+            self._RESOURCE_DIR = Path.cwd() / PROJECT_DIR
             
 
         self.musics_dir = self._RESOURCE_DIR / "musics"
@@ -38,26 +39,38 @@ class PathCore:
         self.config_dir = self._BASE_DATA_DIR / ".config"
         self.saves_dir = self._BASE_DATA_DIR / ".saves"
 
-    def getConfigPath(self, pathfile):
-        return self.config_dir / pathfile
+    def _build_path(self, base: Path, *folders, file: str | None = None):
+        path = base
+        for f in folders:
+            path = path / f
 
-    def getSavesPath(self, pathfile):
-        return self.saves_dir / pathfile
+        if file:
+            path = path / file
+        
+        if not path.exists():
+            raise FileExistsError(f"Path not found: '{str(path)}'")
+        return str(path)
 
-    def getMusicsPath(self, pathfile):
-        return self.musics_dir / pathfile
+    def getConfigPath(self, *folder, file):
+        return self._build_path(self.config_dir, *folder, file=file)
 
-    def getSoundsPath(self, pathfile):
-        return self.sounds_dir / pathfile
+    def getSavesPath(self, *folder, file):
+        return self._build_path(self.saves_dir, *folder, file=file)
 
-    def getAssetsPath(self, pathfile):
-        return self.assets_dir / pathfile
+    def getMusicsPath(self, *folder, file):
+        return self._build_path(self.musics_dir, *folder, file=file)
 
-    def getFontsPath(self, pathfile):
-        return self.fonts_dir / pathfile
+    def getSoundsPath(self, *folder, file):
+        return self._build_path(self.sounds_dir, *folder, file=file)
 
-    def getShadersPath(self, pathfile):
-        return self.shaders_dir / pathfile
+    def getAssetsPath(self, *folder, file):
+        return self._build_path(self.assets_dir, *folder, file=file)
+
+    def getFontsPath(self, *folder, file):
+        return self._build_path(self.fonts_dir, *folder, file=file)
+
+    def getShadersPath(self, *folder, file):
+        return self._build_path(self.shaders_dir, *folder, file=file)
 
 
 
@@ -178,14 +191,14 @@ class SettingsCore:
 class Johnson:
     pass
 
-class Xmllion:
-    pass
+
 
 
 class Logger:
     COLORS = {
         "INFO": "\033[94m", 
         "WARNING": "\033[33m",
+        "MAGENTA": "\033[35m",
         "TRACE-USER": "\033[92m",
         "ERROR": "\033[91m",
         "RESET": "\033[0m"
@@ -197,6 +210,13 @@ class Logger:
         color = Logger.COLORS["TRACE-USER"]
         reset = Logger.COLORS["RESET"]
         print(f"{color}[{now}]-[TRACE-USER]: {message}{reset}")
+
+    @staticmethod
+    def traceMagenta(message):
+        now = datetime.now().strftime("%H:%M:%S")
+        color = Logger.COLORS["MAGENTA"]
+        reset = Logger.COLORS["RESET"]
+        print(f"{color}[{now}]-[MAGENTA]: {message}{reset}")
 
     @staticmethod
     def _system_log(tag, message):
@@ -211,6 +231,7 @@ class Logger:
 class Game:
     def __init__(self):
         sdl2.ext.init()
+        self.PROJECT_NAME = os.environ.get("RUDLGC_PROJECT_NAME", "NOT_FOUND")
         self.settings = SettingsCore()
 
         self._running = True
@@ -228,12 +249,14 @@ class Game:
         self.paths = PathCore(self)
         self.logger = Logger()
         self.request = RequestCore()
-
         self.johnson = Johnson()
-        self.xmllion = Xmllion()
-        
-        
         self.requirements = Requirements()
+
+        module = import_module(f"{self.PROJECT_NAME}.router")
+        if not hasattr(module, "SceneManager"):
+            raise ImportError(f"Can not founs 'SceneManager' from project '{self.PROJECT_NAME}'")
+
+        self.scene_router = module.SceneManager(self, "HERE THIS YOU CAN REGISTER YOUR SCENES LOL!!!")
 
 
         if self.settings.SHOW_PROMPT:

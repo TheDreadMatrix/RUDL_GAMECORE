@@ -114,7 +114,7 @@ def execute_console(execute_now: bool=False) -> int|None:
     args = parser.parse_args()
 
     if args.command == "test-health":
-        print("Manage is working very great!")
+        print("\033[32mManage is working very great!\033[0m")
         return 1
     
 
@@ -124,6 +124,7 @@ def execute_console(execute_now: bool=False) -> int|None:
 
 
     elif args.command == "build":
+        print("That command not working yet...")
         return 1
 
 
@@ -147,17 +148,17 @@ def execute_console(execute_now: bool=False) -> int|None:
                 custom_value = getattr(settings_module, attr)
                 custom.append((attr, custom_value))
 
-        print("==== SETTINGS ====")
+        print("\033[33m==== SETTINGS ====\033[0m")
 
         if defaults:
-            print("\n[BUILT-IN]")
+            print("\n\033[33m[BUILT-IN]\033[0m")
             for name, value in sorted(defaults):
-                print(f"  • {name} - {value}")
+                print(f"\033[33m  • {name} - {value}\033[0m")
 
         if custom:
-            print("\n[CUSTOM]")
+            print("\n\033[33m[CUSTOM]\033[0m")
             for name, value in sorted(custom):
-                print(f"  • {name} - {value}")
+                print(f"\033[33m  • {name} - {value}\033[0m")
         return 1
 
 

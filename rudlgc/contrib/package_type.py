@@ -5,6 +5,7 @@ import PIL
 import glm
 
 
+
 class _Settings:
     DEBUG: bool
     VSYNC: bool
@@ -33,6 +34,7 @@ class _Settings:
     GAME_VERSION: str
     GAME_DESCRIPTION: str
 
+    APPNAME: str
     FILE_VERSION: str
     GAME_RIGHT: str
 
@@ -62,6 +64,17 @@ class _RequestType:
 
     def setWindowPosition(self, x: int, y: int): ...
     def setWindowSize(self, w: int, h: int): ...
+
+
+
+class _PathsType:
+    def getConfigPath(self, *folder: str, file: str) -> str: ...
+    def getSavesPath(self, *folder: str, file: str) -> str: ...
+    def getMusicsPath(self, *folder: str, file: str) -> str: ...
+    def getSoundsPath(self, *folder: str, file: str) -> str: ...
+    def getAssetsPath(self, *folder: str, file: str) -> str: ...
+    def getFontsPath(self, *folder: str, file: str) -> str: ...
+    def getShadersPath(self, *folder: str, file: str) -> str: ...
     
 
 
@@ -69,7 +82,27 @@ class _LoggerType:
     @staticmethod
     def trace(message: str) -> None: ...
     @staticmethod
-    def _system_log(tag: str, message: str) -> None: ...
+    def traceMagenta(message: str) -> None: ...
+
+
+
+class _JoshuaType:
+    def __init__(self, json_path: str): ...
+
+    def readData(self) -> Dict[str, Any]: ...
+    def saveData(self, json_data: Dict[str, Any]) -> None: ...
+
+
+class _XmlionType:
+    def __init__(self, xml_path: str): ...
+
+    def readDataXml(self) -> Any: ...
+    def saveDataXml(self, xml_data: Any) -> None: ...
+
+
+class _JohnsonType:
+    def giveJoshua(self) -> _JoshuaType: ...
+    def giveXmlion(self) -> _XmlionType: ...
 
 
 
@@ -77,15 +110,14 @@ class GameType(Protocol):
     request: _RequestType
     requirements: _RequirementsType
     settings: _Settings
-    paths: Any
+    paths: _PathsType
     logger: _LoggerType
-
-    johnson: Any
-    xmllion: Any
-
+    johnson: _JohnsonType
 
     delta_time: float
     pelta_time: float
+
+    PROJECT_NAME: str
 
     def getFps(self) -> float: ...
     def getCurrentScene(self) -> str: ...

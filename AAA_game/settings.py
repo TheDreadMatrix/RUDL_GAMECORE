@@ -3,13 +3,11 @@
 # AAA_GAME - SETTINGS CONFIGURATION FILE
 # =============================================
 
+
 # DEBUG mode enables additional logs and development features.
 # Should be set to False in production.
 DEBUG = True
-MY = 10
-SECOND_LIFE = True
-Error = 100
-__PRIVATE = "123"
+
 
 # Window size settings
 WINDOW_WIDTH = 800
@@ -82,3 +80,15 @@ PPS = 60
 # Rendering quality settings
 POINT_SIZE = 1.0
 LINE_SIZE = 1.0
+
+# =========================
+# CUSTOM CONFIGURATION
+# =========================
+# Define constant values used by the game engine.
+# Convention:
+# - UPPER_CASE = constant
+# - no __dunder__ names
+# - accessible via game.settings if registered
+
+HELLO_WORLD = ":)"
+

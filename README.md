@@ -1,0 +1,6 @@
+1) Add color text in console 1
+2) Add scenes
+3) Add Sprite Shader render class
+4) Add Audio Music classes
+5) Add Error and Empty scenes
+6) Add Building project

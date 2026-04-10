@@ -95,7 +95,25 @@ def _SCENE_PY(class_name: str):
 
 
 def _ROUTER_PY(project_name: str):
-    return textwrap.dedent("""""")
+    return textwrap.dedent(f"""
+    from rudlgc.contrib import SceneModel, GameType
+    #THERE WE IMPORT OURS SCENES
+    from {project_name}.scenes.example import ExampleScene
+                           
+    class SceneManager(SceneModel):
+        def __init__(self, game: GameType, help_text: str=''):
+            super().__init__(game)
+                           
+            #FIRST OF WE SWITCHING TO DEFAULT START SCENE
+            self.game.request.redirectScene(self.game.settings.START_SCENE)
+            
+            #HERE YOU CALLING 'self.registerScene' TO REGISTRATE TO GAME
+            self.registerScene('example', ExampleScene(game=game))
+
+            #ONLY ONE RULE IF YOU PUSH UNDEFINED SCENE YOUR CAN CRASH THE PROGRAM
+            #SO ITS NOT GOOD IDEA, PLEASE BE ACCURACY, GOOD LUCK
+
+    """)
 
 
 
@@ -105,6 +123,7 @@ def _SETTINGS_PY(project_name: str):
 # =============================================
 # {project_name.upper()} - SETTINGS CONFIGURATION FILE
 # =============================================
+
 
 # DEBUG mode enables additional logs and development features.
 # Should be set to False in production.
@@ -182,6 +201,18 @@ PPS = 60
 # Rendering quality settings
 POINT_SIZE = 1.0
 LINE_SIZE = 1.0
+
+# =========================
+# CUSTOM CONFIGURATION
+# =========================
+# Define constant values used by the game engine.
+# Convention:
+# - UPPER_CASE = constant
+# - no __dunder__ names
+# - accessible via game.settings if registered
+
+HELLO_WORLD = ":)"
+
 """)
 
 
@@ -225,4 +256,4 @@ def _BUILD_PY(project_name: str):
 
 
 if __name__ == "__main__":
-    print(_MANAGE_PY("Game"))
+    print(_ROUTER_PY("game"))
