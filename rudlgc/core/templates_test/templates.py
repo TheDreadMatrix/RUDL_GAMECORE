@@ -113,6 +113,16 @@ def _ROUTER_PY(project_name: str):
             #ONLY ONE RULE IF YOU PUSH UNDEFINED SCENE YOUR CAN CRASH THE PROGRAM
             #SO ITS NOT GOOD IDEA, PLEASE BE ACCURACY, GOOD LUCK
 
+            
+        #THIS METHOD APPEARS WHEN GAME IS ENDING. (NEED FOR SAVING DATA PROGRESS)
+        def savingProgress(self):
+            pass
+
+
+        #THIS METHOD APPEARS WHEN AN ERROR OCCURS IN THE CODE.
+        def onException(self, error: str):
+            print(error)
+
     """)
 
 
@@ -138,9 +148,6 @@ WINDOW_HEIGHT = 600
 WINDOW_MINWIDTH = 799
 WINDOW_MINHEIGHT = 599
 
-# Maximum allowed window size
-WINDOW_MAXWIDTH = 1920
-WINDOW_MAXHEIGHT = 1080
 
 # Application and build metadata
 # APPNAME is used as the application identifier and may also define

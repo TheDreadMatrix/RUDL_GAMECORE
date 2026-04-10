@@ -56,7 +56,7 @@ RESIZABLE = True
 
 
 # Entry scene loaded at startup.
-START_SCENE = "empty-rudlgc"
+START_SCENE = "example"
 
 
 # Debug UI options
@@ -73,7 +73,7 @@ SOUND_VOLUME = 0.7
 # Engine timing settings
 # FPS - frames per second target for rendering
 # PPS - physics/update steps per second
-FPS = 60
+FPS = 240
 PPS = 60
 
 

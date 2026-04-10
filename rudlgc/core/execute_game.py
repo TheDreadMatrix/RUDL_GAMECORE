@@ -74,19 +74,6 @@ class PathCore:
 
 
 
-class RequestCore:
-    def __init__(self):
-        pass
-
-    def closeGame(self):
-        pass
-
-    def updateSettings(self):
-        pass
-
-    def redirectScene(self, scene):
-        pass
-
 
 class Requirements:
     def __init__(self):
@@ -105,8 +92,6 @@ class SettingsCore:
         "WINDOW_HEIGHT",
         "WINDOW_MINWIDTH", 
         "WINDOW_MINHEIGHT",
-        "WINDOW_MAXWIDTH", 
-        "WINDOW_MAXHEIGHT",
         "APPNAME", 
         "GAME_NAME", 
         "GAME_DESCRIPTION", 
@@ -145,9 +130,6 @@ class SettingsCore:
 
         self.WINDOW_MINWIDTH = getattr(self.__settings_module, "WINDOW_MINWIDTH", 799)
         self.WINDOW_MINHEIGHT = getattr(self.__settings_module, "WINDOW_MINHEIGHT", 599)
-
-        self.WINDOW_MAXWIDTH = getattr(self.__settings_module, "WINDOW_MAXWIDTH", None)
-        self.WINDOW_MAXHEIGHT = getattr(self.__settings_module, "WINDOW_MAXHEIGHT", None)
 
         self.FULLSCREEN = getattr(self.__settings_module, "FULLSCREEN", False)
         self.BORDERLESS = getattr(self.__settings_module, "BORDERLESS", False)
@@ -228,37 +210,70 @@ class Logger:
 
 
 
+class RequestCore:
+    def __init__(self, game: "Game"):
+        self.game = game
+
+    def closeGame(self):
+        self.game._running = False
+
+    def updateSettings(self):
+        pass
+
+    def redirectScene(self, scene):
+        self.game._current_scene_name = scene
+
+    def restartScene(self):
+        self.game._scene_router._restartScene()
+
+    def setScreenColor(self, r, g, b):
+        self.game._screen_color = (r, g, b)
+
+    def setWindowPosition(self, x, y):
+        self.game._window.position = (x, y)
+
+    def setWindowTitle(self, title):
+        self.game._window.title = title
+
+    def setWindowSize(self, w, h):
+        self.game._window.size = (w, h)
+        
+
+
+
+
+
+
+
 class Game:
     def __init__(self):
         sdl2.ext.init()
         self.PROJECT_NAME = os.environ.get("RUDLGC_PROJECT_NAME", "NOT_FOUND")
         self.settings = SettingsCore()
 
+        #PRIVATE PROTECTED
         self._running = True
-        self._last_time = time.perf_counter()
+        self._current_scene_name = self.settings.START_SCENE
+        self._screen_color = (0.8, 0.8, 0.8)
 
-        self._fps = 0
+        self._last_time = time.perf_counter()
+        self._fps = 0.0
         self._frame_count = 0
         self._fps_timer = 0.0
-
         self._target_fps = self.settings.FPS
+
+
+        #FREE TO USE
         self.delta_time = 0
         self.pelta_time = 1 / self.settings.PPS
-        self.scene = self.settings.START_SCENE
 
         self.paths = PathCore(self)
         self.logger = Logger()
-        self.request = RequestCore()
+        self.request = RequestCore(self)
         self.johnson = Johnson()
         self.requirements = Requirements()
 
-        module = import_module(f"{self.PROJECT_NAME}.router")
-        if not hasattr(module, "SceneManager"):
-            raise ImportError(f"Can not founs 'SceneManager' from project '{self.PROJECT_NAME}'")
-
-        self.scene_router = module.SceneManager(self, "HERE THIS YOU CAN REGISTER YOUR SCENES LOL!!!")
-
-
+    
         if self.settings.SHOW_PROMPT:
             self.logger._system_log("INFO", "RUDL Game Core build with SDL2 && OpenGL 3.3.0")
         
@@ -266,42 +281,58 @@ class Game:
             self.logger._system_log("WARNING", "DEBUG mode is enabled")
         
 
-
+        #SETTINGS OF THE WINDOW AND CONTEXT
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_MINOR_VERSION, 3)
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_PROFILE_MASK, sdl2.SDL_GL_CONTEXT_PROFILE_CORE)
+        sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_MULTISAMPLEBUFFERS, 1)
+        sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_MULTISAMPLESAMPLES, 4) 
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_DOUBLEBUFFER, 1)
         
-
-        self.__window = sdl2.ext.Window(self.settings.TITLE, size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=sdl2.SDL_WINDOW_OPENGL)
-        self.__window.show()
+        
+        self._window = sdl2.ext.Window(self.settings.TITLE, size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=sdl2.SDL_WINDOW_OPENGL)
+        self._window.show()
+        
 
         if self.settings.RESIZABLE:
-            sdl2.SDL_SetWindowResizable(self.__window.window, sdl2.SDL_TRUE)
+            sdl2.SDL_SetWindowResizable(self._window.window, sdl2.SDL_TRUE)
 
         if self.settings.FULLSCREEN:
-            sdl2.SDL_SetWindowFullscreen(self.__window.window, sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP)
+            sdl2.SDL_SetWindowFullscreen(self._window.window, sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP)
 
         if self.settings.BORDERLESS:
-            sdl2.SDL_SetWindowBordered(self.__window.window, sdl2.SDL_FALSE)
+            sdl2.SDL_SetWindowBordered(self._window.window, sdl2.SDL_FALSE)
 
-        sdl2.SDL_SetWindowMinimumSize(self.__window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
-        if self.settings.WINDOW_MAXWIDTH and self.settings.WINDOW_MAXHEIGHT:
-            sdl2.SDL_SetWindowMaximumSize(self.__window.window, self.settings.WINDOW_MAXWIDTH, self.settings.WINDOW_MAXHEIGHT)
+        sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
+        mode = sdl2.SDL_DisplayMode()
+        sdl2.SDL_GetCurrentDisplayMode(0, mode)
+        sdl2.SDL_SetWindowMaximumSize(self._window.window, mode.w, mode.h)
 
         if self.settings.VSYNC:
             sdl2.SDL_GL_SetSwapInterval(1) 
 
-        self.__gl_context = sdl2.SDL_GL_CreateContext(self.__window.window)
+        self.__gl_context = sdl2.SDL_GL_CreateContext(self._window.window)
         self._ctx = moderngl.create_context()
+        self._ctx.viewport = (0, 0, self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
+        self._ctx.enable(moderngl.DEPTH_TEST)
+        self._ctx.enable(moderngl.BLEND)
+        self._ctx.blend_func = (moderngl.SRC_ALPHA, moderngl.ONE_MINUS_SRC_ALPHA)
         self._ctx.point_size = self.settings.POINT_SIZE
         self._ctx.line_width = self.settings.LINE_SIZE
+
+
+        #SCENE ROUTER FOR SCENE MANAGMENT
+        module = import_module(f"{self.PROJECT_NAME}.router")
+        if not hasattr(module, "SceneManager"):
+            raise ImportError(f"Can not founs 'SceneManager' from project '{self.PROJECT_NAME}'")
+
+        self._scene_router = module.SceneManager(self, "HERE THIS YOU CAN REGISTER YOUR SCENES LOL!!!")
 
         
 
     
     def getFps(self): return self._fps
-    def getCurrentScene(self): return self.scene
+    def getCurrentScene(self): return self._current_scene_name
 
 
     def __limit_fps(self, frame_start):
@@ -322,17 +353,18 @@ class Game:
 
     
     def __update(self): 
+        self._scene_router._update()
+
         for event in sdl2.ext.get_events():
             if event.type == sdl2.SDL_QUIT:
                 self._running = False
-
-
+            self._scene_router._event(event)
 
 
     def __render(self):
-        self._ctx.clear(0.8, 0.8, 0.8)
-
-        sdl2.SDL_GL_SwapWindow(self.__window.window)
+        self._ctx.clear(*self._screen_color)
+        self._scene_router._render()
+        sdl2.SDL_GL_SwapWindow(self._window.window)
 
 
     def __run(self): 
@@ -342,19 +374,17 @@ class Game:
             self.delta_time = frame_start - self._last_time
             self._last_time = frame_start
 
-            
-            self._frame_count += 1
-            self._fps_timer += self.delta_time
-
-            if self._fps_timer >= 1.0:
-                self._fps = self._frame_count
-                self._frame_count = 0
-                self._fps_timer = 0.0
+            if self.delta_time > 0:
+                self._fps = 1.0 / self.delta_time
 
 
-            
-            self.__update()
-            self.__render()
+            try:
+                self.__update()
+                self.__render()
+            except Exception:
+                error_message = traceback.format_exc()
+                self.request.redirectScene("error-scene")
+                self._scene_router.onException(error_message)
             
             self.__limit_fps(frame_start)
 
@@ -362,9 +392,10 @@ class Game:
         if self.settings.SHOW_PROMPT:
             self.logger._system_log("INFO", "Game succesfully exit")
             
+        self._scene_router.savingProgress()
 
         sdl2.SDL_GL_DeleteContext(self.__gl_context)
-        sdl2.SDL_DestroyWindow(self.__window.window)
+        sdl2.SDL_DestroyWindow(self._window.window)
         sdl2.ext.quit()
         
 

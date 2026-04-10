@@ -59,11 +59,14 @@ class _RequestType:
 
     def updateSettings(self) -> None: ...
 
-    def redirectScene(self, scene) -> str: ...
-    def restartScene(self): ...
+    def redirectScene(self, scene) -> None: ...
+    def restartScene(self) -> None: ...
 
-    def setWindowPosition(self, x: int, y: int): ...
-    def setWindowSize(self, w: int, h: int): ...
+
+    def setScreenColor(self, r: float, g: float, b: float) -> None: ...
+    def setWindowPosition(self, x: int, y: int) -> None: ...
+    def setWindowSize(self, w: int, h: int) -> None: ...
+    def setWindowTitle(self, title: str) -> None: ...
 
 
 
@@ -128,7 +131,7 @@ class GameType(Protocol):
 
 class AbstractScene:
     def __init__(self, game: GameType):
-        pass
+        self.game = game
 
     def onUpdate(self):
         pass
@@ -137,7 +140,7 @@ class AbstractScene:
         pass
 
     def onRender(self):
-        pass
+        self.game.request.setScreenColor(0, 0, 0)
     
     def onSave(self):
         pass
