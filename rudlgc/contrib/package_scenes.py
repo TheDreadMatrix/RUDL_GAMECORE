@@ -7,7 +7,7 @@ class _SceneError(AbstractScene):
         self.game = game
         self.game.request.setWindowTitle("RUDLGC Error")
         
-        print(self.game.ERROR if self.game.ERROR else None)
+        self.game.logger._system_log("ERROR", self.game.ERROR if self.game.ERROR else None)
 
 
 

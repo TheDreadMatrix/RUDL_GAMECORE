@@ -10,7 +10,7 @@ authors = [
   { name="DaemonDuck", email="simulasimulasimula15@gmail.com" }
 ]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 dependencies = [
   "pysdl2",
   "pysdl2-dll", 
@@ -29,7 +29,9 @@ where = ["."]
 
 [tool.setuptools.package-data]
 "rudlgc" = [
-  
+  "stuff/*.png",
+  "stuff/*.jpg",
+  "stuff/error.jfif"
 ]
 
 [project.scripts]

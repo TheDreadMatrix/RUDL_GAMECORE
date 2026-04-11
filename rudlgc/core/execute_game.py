@@ -383,10 +383,9 @@ class Game:
             try:
                 self.__update()
                 self.__render()
-            except Exception as exc:
+            except Exception:
                 error_message = traceback.format_exc()
                 self.ERROR = error_message
-                self.logger._system_log("ERROR", f"{type(exc).__name__}: {exc}")
                 self.request.redirectScene("error-scene")
                 self._scene_router.onException(error_message)
             
