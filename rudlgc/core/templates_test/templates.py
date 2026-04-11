@@ -121,7 +121,7 @@ def _ROUTER_PY(project_name: str):
 
         #THIS METHOD APPEARS WHEN AN ERROR OCCURS IN THE CODE.
         def onException(self, error: str):
-            print(error)
+            pass
 
     """)
 

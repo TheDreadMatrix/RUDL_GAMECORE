@@ -23,6 +23,7 @@ class ExampleScene(AbstractScene):
     def onEvent(self, event):
         if event.type == self.sdl2.SDL_KEYDOWN:
             self.game.request.redirectScene("menu")
+            
 
     #The method is called after 'onUpdate' is created to draw objects              
     def onRender(self):

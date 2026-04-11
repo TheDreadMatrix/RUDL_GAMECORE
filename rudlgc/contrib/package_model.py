@@ -1,4 +1,5 @@
 from . import GameType, AbstractScene
+from .package_scenes import SceneEmpty, _SceneError
 
 
 
@@ -8,18 +9,24 @@ class SceneModel:
 
         self._state_of_scene = ""
         self._scene_dict = {
-            "empty-rudlgc": lambda: AbstractScene(game=game),
-            "error-scene": lambda: AbstractScene(game=game),
+            "empty-rudlgc": lambda: SceneEmpty(game=game, text_about_scene="That Building Scene isnt useless...", scene_switch=1),
+            "error-scene": lambda: _SceneError(game=game),
         }
         self._current_scene_class = self._scene_dict.get(self.game.settings.START_SCENE, lambda: AbstractScene(game=game))()
         
 
 
-    def registerScene(self, name, scene):
+    def registerScene(self, name: str, scene, ignore: bool=False):
+        if not ignore:
+            self.game.logger._system_log("INFO", f"Scene '{name}' has been registered.")
         self._scene_dict.update({name: scene})
 
 
-    def _restartScene(self): pass
+    def _restartScene(self): 
+        self._state_of_scene = self.game.getCurrentScene()
+        self._current_scene_class.onSave()
+        self._current_scene_class = None
+        self._current_scene_class = self._scene_dict.get(self._state_of_scene)()
 
 
     def _update(self):

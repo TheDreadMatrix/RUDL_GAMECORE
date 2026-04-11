@@ -187,9 +187,9 @@ class Logger:
     }
         
     @staticmethod
-    def trace(message):
+    def trace(message, as_error=False):
         now = datetime.now().strftime("%H:%M:%S")
-        color = Logger.COLORS["TRACE-USER"]
+        color = Logger.COLORS["TRACE-USER"] if not as_error else Logger.COLORS["ERROR"]
         reset = Logger.COLORS["RESET"]
         print(f"{color}[{now}]-[TRACE-USER]: {message}{reset}")
 
@@ -249,6 +249,7 @@ class Game:
     def __init__(self):
         sdl2.ext.init()
         self.PROJECT_NAME = os.environ.get("RUDLGC_PROJECT_NAME", "NOT_FOUND")
+        self.ERROR = ""
         self.settings = SettingsCore()
 
         #PRIVATE PROTECTED
@@ -327,6 +328,7 @@ class Game:
             raise ImportError(f"Can not founs 'SceneManager' from project '{self.PROJECT_NAME}'")
 
         self._scene_router = module.SceneManager(self, "HERE THIS YOU CAN REGISTER YOUR SCENES LOL!!!")
+        
 
         
 
@@ -381,8 +383,10 @@ class Game:
             try:
                 self.__update()
                 self.__render()
-            except Exception:
+            except Exception as exc:
                 error_message = traceback.format_exc()
+                self.ERROR = error_message
+                self.logger._system_log("ERROR", f"{type(exc).__name__}: {exc}")
                 self.request.redirectScene("error-scene")
                 self._scene_router.onException(error_message)
             

@@ -83,7 +83,7 @@ class _PathsType:
 
 class _LoggerType:
     @staticmethod
-    def trace(message: str) -> None: ...
+    def trace(message: str, as_error: bool=False) -> None: ...
     @staticmethod
     def traceMagenta(message: str) -> None: ...
 
@@ -131,7 +131,7 @@ class GameType(Protocol):
 
 class AbstractScene:
     def __init__(self, game: GameType):
-        self.game = game
+        pass
 
     def onUpdate(self):
         pass
@@ -140,7 +140,7 @@ class AbstractScene:
         pass
 
     def onRender(self):
-        self.game.request.setScreenColor(0, 0, 0)
+        pass
     
     def onSave(self):
         pass

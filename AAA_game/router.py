@@ -1,5 +1,6 @@
 
 from rudlgc.contrib import SceneModel, GameType
+from rudlgc.contrib.package_scenes import SceneEmpty
 #THERE WE IMPORT OURS SCENES
 from AAA_game.scenes.example import ExampleScene
 from AAA_game.scenes.menu import Menu
@@ -12,6 +13,7 @@ class SceneManager(SceneModel):
         self.game.request.redirectScene(self.game.settings.START_SCENE)
 
         #HERE YOU CALLING 'self.registerScene' TO REGISTRATE TO GAME
+        self.registerScene('future-scene', lambda: SceneEmpty(game=game, text_about_scene="Hello", scene_switch="example"))
         self.registerScene('example', lambda: ExampleScene(game=game))
         self.registerScene('menu', lambda: Menu(game=game))
         #ONLY ONE RULE IF YOU PUSH UNDEFINED SCENE YOUR CAN CRASH THE PROGRAM
@@ -25,5 +27,5 @@ class SceneManager(SceneModel):
 
     #THIS METHOD APPEARS WHEN AN ERROR OCCURS IN THE CODE.
     def onException(self, error: str):
-        print(error)
+        pass
 
