@@ -13,7 +13,7 @@ class SceneManager(SceneModel):
         self.game.request.redirectScene(self.game.settings.START_SCENE)
 
         #HERE YOU CALLING 'self.registerScene' TO REGISTRATE TO GAME
-        self.registerScene('future-scene', lambda: SceneEmpty(game=game, text_about_scene="Hello", scene_switch="example"))
+        self.registerScene('future-scene', lambda: SceneEmpty(game=game, text_title="FutureScene", text_about_scene="Hello World!", scene_switching="example"))
         self.registerScene('example', lambda: ExampleScene(game=game))
         self.registerScene('menu', lambda: Menu(game=game))
         #ONLY ONE RULE IF YOU PUSH UNDEFINED SCENE YOUR CAN CRASH THE PROGRAM

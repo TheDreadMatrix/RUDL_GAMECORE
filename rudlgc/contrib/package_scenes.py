@@ -20,7 +20,7 @@ class _SceneError(AbstractScene):
     
 
     def onRender(self):
-        return super().onRender()
+        self.game.request.setScreenColor(0, 0, 0)
     
 
     def onSave(self):
@@ -31,8 +31,11 @@ class _SceneError(AbstractScene):
     
 
 class SceneEmpty(AbstractScene):
-    def __init__(self, game: GameType, text_about_scene: str, scene_switch: str):
+    def __init__(self, game: GameType, text_title: str, text_about_scene: str, scene_switching: str):
         self.game = game
+        self.game.request.setWindowTitle(f"RUDLGC EMPTY: {text_title}")
+
+        
 
 
 
@@ -45,7 +48,7 @@ class SceneEmpty(AbstractScene):
     
 
     def onRender(self):
-        return super().onRender()
+        self.game.request.setScreenColor(0, 0, 0)
     
 
     def onSave(self):

@@ -19,6 +19,14 @@ def is_valid_name(name: str) -> bool:
 
 
 _PROHIBITED_WORDS = [
+    "os",
+    "sys",
+    "importlib",
+    "traceback",
+    "signal",
+    "pickle",
+    "marshal",
+    "rudlgc",
     "nigga",
     "rudlgc",
     "test",
@@ -35,7 +43,6 @@ _PROHIBITED_WORDS = [
     "contrib",
     "render",
     "stuff",
-    "testproject",
     "venv",
 ]
 
@@ -97,29 +104,39 @@ def _SCENE_PY(class_name: str):
 def _ROUTER_PY(project_name: str):
     return textwrap.dedent(f"""
     from rudlgc.contrib import SceneModel, GameType
-    #THERE WE IMPORT OURS SCENES
+                           
+    # THERE ALSO USING EMPTY SCENES FOR STUBS
+    from rudlgc.contrib.package_scenes import SceneEmpty
+
+    # THERE WE IMPORT OURS SCENES
     from {project_name}.scenes.example import ExampleScene
                            
     class SceneManager(SceneModel):
         def __init__(self, game: GameType, help_text: str=''):
             super().__init__(game)
                            
-            #FIRST OF WE SWITCHING TO DEFAULT START SCENE
+            # FIRST OF WE SWITCHING TO DEFAULT START SCENE
             self.game.request.redirectScene(self.game.settings.START_SCENE)
             
-            #HERE YOU CALLING 'self.registerScene' TO REGISTRATE TO GAME
-            self.registerScene('example', ExampleScene(game=game))
+            # HERE YOU CALLING 'self.registerScene' TO REGISTRATE TO GAME
+            self.registerScene('example', lambda: ExampleScene(game=game))
 
-            #ONLY ONE RULE IF YOU PUSH UNDEFINED SCENE YOUR CAN CRASH THE PROGRAM
+            # ALSO CREATE STUBS SCENE
+            # 'text_title' - for Window Title
+            # 'text_about_scene' - for UI text
+            # 'scene_switching' - for switching to scene
+            self.registerScene('my-empty-scene', lambda: SceneEmpty(game=game, text_title='Stubs Title', text_about_scene='Hello World!', scene_switching='example'))
+
+            # ONLY ONE RULE IF YOU PUSH UNDEFINED SCENE YOUR CAN CRASH THE PROGRAM
             #SO ITS NOT GOOD IDEA, PLEASE BE ACCURACY, GOOD LUCK
 
             
-        #THIS METHOD APPEARS WHEN GAME IS ENDING. (NEED FOR SAVING DATA PROGRESS)
+        # THIS METHOD APPEARS WHEN GAME IS ENDING. (NEED FOR SAVING DATA PROGRESS)
         def savingProgress(self):
             pass
 
 
-        #THIS METHOD APPEARS WHEN AN ERROR OCCURS IN THE CODE.
+        # THIS METHOD APPEARS WHEN AN ERROR OCCURS IN THE CODE.
         def onException(self, error: str):
             pass
 
@@ -184,7 +201,7 @@ RESIZABLE = True
 
 
 # Entry scene loaded at startup.
-START_SCENE = "empty-rudlgc"
+START_SCENE = "empty-scene"
 
 
 # Debug UI options
