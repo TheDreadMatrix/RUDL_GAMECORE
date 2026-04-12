@@ -109,6 +109,19 @@ class _JohnsonType:
 
 
 
+class _Keyboard:
+    def isPressed(self, key: int) -> bool: ...
+
+class _Mouse:
+    def isLeft(self) -> bool: ...
+    def isMiddle(self) -> bool: ...
+    def isRight(self) -> bool: ...
+
+    def getPos(self) -> tuple[float, float]: ...
+    def getRel(self) -> tuple[float, float]: ...
+
+
+
 class GameType(Protocol):
     request: _RequestType
     requirements: _RequirementsType
@@ -119,6 +132,9 @@ class GameType(Protocol):
 
     delta_time: float
     pelta_time: float
+
+    keyboard: _Keyboard
+    mouse: _Mouse
 
     PROJECT_NAME: str
 
