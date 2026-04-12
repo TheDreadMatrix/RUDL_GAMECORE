@@ -77,39 +77,23 @@ class PathCore:
 class SettingsCore:
     _DEFAULTS = {
         "DEBUG", 
-        "WINDOW_WIDTH", 
-        "WINDOW_HEIGHT",
-        "WINDOW_MINWIDTH", 
-        "WINDOW_MINHEIGHT",
-        "APPNAME", 
-        "GAME_NAME", 
-        "GAME_DESCRIPTION", 
-        "FILE_VERSION",
-        "GAME_ICON",
-        "GAME_RIGHT", 
-        "GAME_VERSION", 
-        "TITLE", 
-        "VSYNC", 
-        "FULLSCREEN", 
-        "BORDERLESS", 
-        "RESIZABLE",
-        "START_SCENE", 
-        "SHOW_FPS", 
-        "SHOW_INFO", 
-        "SHOW_PROMPT",
-        "MUSIC_VOLUME", 
-        "SOUND_VOLUME",
-        "FPS", 
-        "PPS",
-        "POINT_SIZE", 
-        "LINE_SIZE",
-        "SIX_SEVEN", 
-        "SIX_NINE", ""
-        "POOR_NUMBER_68"
+        "WINDOW_WIDTH", "WINDOW_HEIGHT", "WINDOW_MINWIDTH", "WINDOW_MINHEIGHT",
+        "APPNAME", "GAME_NAME", "GAME_DESCRIPTION", "FILE_VERSION", "GAME_ICON", "GAME_RIGHT", "GAME_VERSION", "TITLE", 
+        "VSYNC", "FULLSCREEN", "BORDERLESS", "RESIZABLE",
+        "START_SCENE", "SHOW_FPS", "SHOW_INFO",
+        "MUSIC_VOLUME", "SOUND_VOLUME",
+        "FPS", "PPS",
+        "POINT_SIZE", "LINE_SIZE",
+        "SIX_SEVEN", "SIX_NINE", "POOR_NUMBER_68"
     }
 
-    def __init__(self):
-        self.__settings_module = import_module(os.getenv("RUDLGC_PROJECT_SETTINGS", "rudlgc.core.templates_test.test_module"))
+    def __init__(self, game: "Game"):
+        try: 
+            self.__settings_module = import_module(os.getenv("RUDLGC_PROJECT_SETTINGS", ""))
+        except ModuleNotFoundError:
+            game.logger._system_log("ERROR", traceback.format_exc())
+            game.logger._system_log("ERROR", "Game failure exit")
+            exit(1)
 
         self.VSYNC = getattr(self.__settings_module, "VSYNC", False)
         self.APPNAME = getattr(self.__settings_module, "APPNAME", ".rudlgcGameData")
@@ -140,7 +124,6 @@ class SettingsCore:
         self.START_SCENE = getattr(self.__settings_module, "START_SCENE", "empty-rudlgc")
         self.SHOW_FPS = getattr(self.__settings_module, "SHOW_FPS", True)
         self.SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", True)
-        self.SHOW_PROMPT = getattr(self.__settings_module, "SHOW_PROMPT", True)
 
         self.MUSIC_VOLUME = getattr(self.__settings_module, "MUSIC_VOLUME", 1.0)
         self.SOUND_VOLUME = getattr(self.__settings_module, "SOUND_VOLUME", 1.0)
@@ -233,7 +216,9 @@ class Game:
         sdl2.ext.init()
         self.PROJECT_NAME = os.environ.get("RUDLGC_PROJECT_NAME", "NOT_FOUND")
         self.ERROR = ""
-        self.settings = SettingsCore()
+
+        self.logger = Logger()
+        self.settings = SettingsCore(self)
 
         #PRIVATE PROTECTED
         self._running = True
@@ -252,16 +237,11 @@ class Game:
         self.pelta_time = 1 / self.settings.PPS
 
         self.paths = PathCore(self)
-        self.logger = Logger()
         self.request = RequestCore(self)
-        
-
-    
-        if self.settings.SHOW_PROMPT:
-            self.logger._system_log("INFO", "RUDL Game Core build with SDL2 && OpenGL 3.3.0")
-        
+                
         if self.settings.DEBUG:
             self.logger._system_log("WARNING", "DEBUG mode is enabled")
+        self.logger._system_log("INFO", "RUDL Game Core build with SDL2 && OpenGL 3.3.0")
         
 
         #SETTINGS OF THE WINDOW AND CONTEXT
@@ -284,6 +264,7 @@ class Game:
         
         self._window = sdl2.ext.Window(self.settings.TITLE, size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=flags)
         sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
+        
 
         self.__gl_context = sdl2.SDL_GL_CreateContext(self._window.window)
         self._ctx = moderngl.create_context()
@@ -295,14 +276,31 @@ class Game:
         self._ctx.line_width = self.settings.LINE_SIZE
 
         sdl2.SDL_GL_SetSwapInterval(self.settings.VSYNC) 
-
+        self._window.show()
 
         #SCENE ROUTER FOR SCENE MANAGMENT
-        module = import_module(f"{self.PROJECT_NAME}.router")
-        if not hasattr(module, "SceneManager"):
-            raise ImportError(f"Can not founs 'SceneManager' from project '{self.PROJECT_NAME}'")
+        try:
+            module = import_module(f"{self.PROJECT_NAME}.router")
+        except ModuleNotFoundError:
+            self.logger._system_log("ERROR", traceback.format_exc())
+            self.logger._system_log("ERROR", "Game failure exit")
+            exit(1)
 
-        self._scene_router = module.SceneManager(self, "HERE THIS YOU CAN REGISTER YOUR SCENES LOL!!!")
+
+        if not hasattr(module, "SceneManager"):
+            self.logger._system_log("ERROR", f"Can not found 'SceneManager' from {self.PROJECT_NAME}/router.py ")
+            self.logger._system_log("ERROR", "Game failure exit")
+            exit(1)
+
+        try:
+            self._scene_router = module.SceneManager(self, "HERE THIS YOU CAN REGISTER YOUR SCENES LOL!!!")
+        except Exception:
+            self.logger._system_log("ERROR", f"You got error in {self.PROJECT_NAME}/router.py.")
+            self.logger._system_log("ERROR", traceback.format_exc())
+            self.logger._system_log("ERROR", "Game failure exit")
+            exit(1)
+
+    
         self.keyboard = None
         self.mouse = None
         
@@ -369,14 +367,13 @@ class Game:
             self.__limit_fps(frame_start)
 
 
-        if self.settings.SHOW_PROMPT:
-            self.logger._system_log("INFO", "Game succesfully exit")
-            
         self._scene_router.savingProgress()
 
         sdl2.SDL_GL_DeleteContext(self.__gl_context)
         sdl2.SDL_DestroyWindow(self._window.window)
         sdl2.ext.quit()
+
+        self.logger._system_log("INFO" if not self.ERROR else "ERROR", "Game succesfully exit" if not self.ERROR else "Game failure exit 2")
         
 
 if __name__ == "__main__":

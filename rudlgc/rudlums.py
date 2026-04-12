@@ -12,4 +12,6 @@ class Keysym:
 
 
 class Evalent:
-    pass
+    KEY_DOWN = sdl2.SDL_KEYDOWN
+    KEY_UP = sdl2.SDL_KEYUP
+    

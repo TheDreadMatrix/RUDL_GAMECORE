@@ -8,7 +8,7 @@ from AAA_game.scenes.menu import Menu
 class SceneManager(SceneModel):
     def __init__(self, game: GameType, help_text: str=''):
         super().__init__(game)
-
+       
         #FIRST OF WE SWITCHING TO DEFAULT START SCENE
         self.game.request.redirectScene(self.game.settings.START_SCENE)
 

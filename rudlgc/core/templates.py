@@ -207,7 +207,6 @@ START_SCENE = "empty-scene"
 # Debug UI options
 SHOW_FPS = True
 SHOW_INFO = True
-SHOW_PROMPT = True
 
 
 # Audio settings (range typically 0.0 - 1.0)

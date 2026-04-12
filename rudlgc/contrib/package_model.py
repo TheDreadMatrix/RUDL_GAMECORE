@@ -1,6 +1,6 @@
 from . import GameType, AbstractScene
 from .package_scenes import SceneEmpty, _SceneError
-
+import traceback as _error
 
 
 class SceneModel:
@@ -35,7 +35,13 @@ class SceneModel:
         
         if state != self._state_of_scene:
             self._state_of_scene = state
-            self._current_scene_class.onSave()
+            try:
+                self._current_scene_class.onSave()
+            except Exception:
+                error_message = _error.format_exc()
+                self.game.ERROR = error_message
+                state = "error-scene"
+                self.onException(error_message)
             self._current_scene_class = self._scene_dict.get(state)()
 
         self._current_scene_class.onUpdate()

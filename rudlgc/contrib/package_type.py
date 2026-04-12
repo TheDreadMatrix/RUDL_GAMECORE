@@ -19,7 +19,6 @@ class _Settings:
 
     SHOW_FPS: bool
     SHOW_INFO: bool
-    SHOW_PROMPT: bool
 
     GAME_NAME: str
     GAME_VERSION: str
@@ -125,4 +124,6 @@ class AbstractScene:
     
     def onSave(self):
         pass
+
+    
 

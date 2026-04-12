@@ -17,9 +17,6 @@ WINDOW_HEIGHT = 600
 WINDOW_MINWIDTH = 799
 WINDOW_MINHEIGHT = 599
 
-# Maximum allowed window size
-WINDOW_MAXWIDTH = 1920
-WINDOW_MAXHEIGHT = 1080
 
 # Application and build metadata
 # APPNAME is used as the application identifier and may also define
