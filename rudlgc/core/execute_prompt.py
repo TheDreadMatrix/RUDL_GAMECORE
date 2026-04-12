@@ -105,6 +105,7 @@ def execute_console(execute_now: bool=False) -> int|None:
     sub_parser.add_parser("run", help="Running the game", aliases=["r", "start", "play"])
     sub_parser.add_parser("build", help="Building game into EXE")
     sub_parser.add_parser("settings", help="Shows list of settings")
+    sub_parser.add_parser("collectstuff", help="Copy build-in images to your project for building")
 
     newscene = sub_parser.add_parser("newscene", help="Creates new scene for your project")
     newscene.add_argument("filename")
@@ -161,6 +162,9 @@ def execute_console(execute_now: bool=False) -> int|None:
                 print(f"\033[33m  • {name} - {value}\033[0m")
         return 1
 
+
+    elif args.command == "collectstuff":
+        pass
 
 
 

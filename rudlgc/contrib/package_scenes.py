@@ -2,7 +2,7 @@ from rudlgc.contrib import GameType, AbstractScene
 
 
 
-class _SceneError(AbstractScene):
+class SceneError(AbstractScene):
     def __init__(self, game: GameType):
         self.game = game
         self.game.request.setWindowTitle("RUDLGC Error")
