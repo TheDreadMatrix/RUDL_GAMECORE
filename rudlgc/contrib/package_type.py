@@ -1,22 +1,15 @@
 from typing import *
-import moderngl
-import sdl2
-import PIL
-import glm
-
 
 
 class _Settings:
     DEBUG: bool
-    VSYNC: bool
 
     WINDOW_WIDTH: int
     WINDOW_HEIGHT: int
-    WINDOW_MINWIDTH: int|None
-    WINDOW_MINHEIGHT: int|None
-    WINDOW_MAXWIDTH: int|None
-    WINDOW_MAXHEIGHT: int|None
+    WINDOW_MINWIDTH: int
+    WINDOW_MINHEIGHT: int
 
+    VSYNC: int
     FULLSCREEN: bool
     BORDERLESS: bool
     RESIZABLE: bool
@@ -28,8 +21,6 @@ class _Settings:
     SHOW_INFO: bool
     SHOW_PROMPT: bool
 
-    START_SCENE: str
-
     GAME_NAME: str
     GAME_VERSION: str
     GAME_DESCRIPTION: str
@@ -39,6 +30,7 @@ class _Settings:
     GAME_RIGHT: str
 
     TITLE: str
+    START_SCENE: str
 
     MUSIC_VOLUME: float
     SOUND_VOLUME: float
@@ -46,12 +38,6 @@ class _Settings:
     POINT_SIZE: float
     LINE_SIZE: float
 
-
-class _RequirementsType:
-    sdl2 = sdl2
-    pyglm = glm
-    moderngl = moderngl
-    pillow = PIL
 
 
 class _RequestType:
@@ -89,26 +75,6 @@ class _LoggerType:
 
 
 
-class _JoshuaType:
-    def __init__(self, json_path: str): ...
-
-    def readData(self) -> Dict[str, Any]: ...
-    def saveData(self, json_data: Dict[str, Any]) -> None: ...
-
-
-class _XmlionType:
-    def __init__(self, xml_path: str): ...
-
-    def readDataXml(self) -> Any: ...
-    def saveDataXml(self, xml_data: Any) -> None: ...
-
-
-class _JohnsonType:
-    def giveJoshua(self) -> _JoshuaType: ...
-    def giveXmlion(self) -> _XmlionType: ...
-
-
-
 class _Keyboard:
     def isPressed(self, key: int) -> bool: ...
 
@@ -124,11 +90,9 @@ class _Mouse:
 
 class GameType(Protocol):
     request: _RequestType
-    requirements: _RequirementsType
     settings: _Settings
     paths: _PathsType
     logger: _LoggerType
-    johnson: _JohnsonType
 
     delta_time: float
     pelta_time: float
@@ -137,6 +101,7 @@ class GameType(Protocol):
     mouse: _Mouse
 
     PROJECT_NAME: str
+    ERROR: str
 
     def getFps(self) -> float: ...
     def getCurrentScene(self) -> str: ...

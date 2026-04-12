@@ -7,8 +7,6 @@ import json
 import traceback
 import xml.etree
 import moderngl
-import PIL
-import glm
 import platformdirs
 from pathlib import Path
 from datetime import datetime
@@ -73,15 +71,6 @@ class PathCore:
         return self._build_path(self.shaders_dir, *folder, file=file)
 
 
-
-
-class Requirements:
-    def __init__(self):
-        self.sdl2 = sdl2
-        self.moderngl = moderngl
-        self.pyglm = glm
-        self.pillow = PIL
-        
 
 
 
@@ -167,12 +156,6 @@ class SettingsCore:
             if attr not in SettingsCore._DEFAULTS and not attr.startswith("__") and attr.isupper():
                 value = getattr(self.__settings_module, attr)
                 setattr(self, attr, value)
-
-
-
-class Johnson:
-    pass
-
 
 
 
@@ -271,8 +254,7 @@ class Game:
         self.paths = PathCore(self)
         self.logger = Logger()
         self.request = RequestCore(self)
-        self.johnson = Johnson()
-        self.requirements = Requirements()
+        
 
     
         if self.settings.SHOW_PROMPT:
@@ -290,27 +272,18 @@ class Game:
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_MULTISAMPLESAMPLES, 4) 
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_DOUBLEBUFFER, 1)
         
-        
-        self._window = sdl2.ext.Window(self.settings.TITLE, size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=sdl2.SDL_WINDOW_OPENGL)
-        self._window.show()
-        
 
+        flags = sdl2.SDL_WINDOW_OPENGL
         if self.settings.RESIZABLE:
-            sdl2.SDL_SetWindowResizable(self._window.window, sdl2.SDL_TRUE)
-
-        if self.settings.FULLSCREEN:
-            sdl2.SDL_SetWindowFullscreen(self._window.window, sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP)
-
+            flags |= sdl2.SDL_WINDOW_RESIZABLE
         if self.settings.BORDERLESS:
-            sdl2.SDL_SetWindowBordered(self._window.window, sdl2.SDL_FALSE)
-
+            flags |= sdl2.SDL_WINDOW_BORDERLESS
+        if self.settings.FULLSCREEN:
+            flags |= sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
+        
+        
+        self._window = sdl2.ext.Window(self.settings.TITLE, size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=flags)
         sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
-        mode = sdl2.SDL_DisplayMode()
-        sdl2.SDL_GetCurrentDisplayMode(0, mode)
-        sdl2.SDL_SetWindowMaximumSize(self._window.window, mode.w, mode.h)
-
-        if self.settings.VSYNC:
-            sdl2.SDL_GL_SetSwapInterval(1) 
 
         self.__gl_context = sdl2.SDL_GL_CreateContext(self._window.window)
         self._ctx = moderngl.create_context()
@@ -321,6 +294,8 @@ class Game:
         self._ctx.point_size = self.settings.POINT_SIZE
         self._ctx.line_width = self.settings.LINE_SIZE
 
+        sdl2.SDL_GL_SetSwapInterval(self.settings.VSYNC) 
+
 
         #SCENE ROUTER FOR SCENE MANAGMENT
         module = import_module(f"{self.PROJECT_NAME}.router")
@@ -328,6 +303,8 @@ class Game:
             raise ImportError(f"Can not founs 'SceneManager' from project '{self.PROJECT_NAME}'")
 
         self._scene_router = module.SceneManager(self, "HERE THIS YOU CAN REGISTER YOUR SCENES LOL!!!")
+        self.keyboard = None
+        self.mouse = None
         
 
         
@@ -364,7 +341,7 @@ class Game:
 
 
     def __render(self):
-        self._ctx.clear(*self._screen_color)
+        self._ctx.clear(self._screen_color[0], self._screen_color[1], self._screen_color[2])
         self._scene_router._render()
         sdl2.SDL_GL_SwapWindow(self._window.window)
 

@@ -1,7 +1,7 @@
 import sdl2
 
 
-class Key:
+class Keysym:
     A = sdl2.SDL_SCANCODE_A
     W = sdl2.SDL_SCANCODE_W
     S = sdl2.SDL_SCANCODE_S
@@ -9,3 +9,7 @@ class Key:
 
 
 
+
+
+class Evalent:
+    pass

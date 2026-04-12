@@ -194,7 +194,7 @@ TITLE = GAME_NAME
 
 
 # Rendering / window behavior
-VSYNC = False
+VSYNC = 0
 FULLSCREEN = False
 BORDERLESS = False
 RESIZABLE = True
