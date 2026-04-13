@@ -1,6 +1,5 @@
 from pathlib import Path
 import argparse
-import webbrowser
 
 
 
@@ -16,6 +15,7 @@ class _RUDLParser(argparse.ArgumentParser):
 
 
 def _rudlgc_admin():
+    import webbrowser
     from rudlgc.core.templates import _PROHIBITED_WORDS, _EXAMPLE_PY, _ROUTER_PY, _SETTINGS_PY, _MANAGE_PY, is_valid_name, _SCENE_PY
 
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
@@ -88,12 +88,14 @@ def _rudlgc_admin():
 def execute_console(execute_now: bool=False) -> int|None:
     import os
     import re
+    import shutil
     import importlib
+    import importlib.resources as res
     from rudlgc.core.execute_game import Game
     from rudlgc.core.templates import _SCENE_PY, _BUILD_PY, is_valid_name
 
     if execute_now:
-        Game()._Game__run()
+        Game()._run()
 
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
     sub_parser = parser.add_subparsers(dest="command")
@@ -120,19 +122,16 @@ def execute_console(execute_now: bool=False) -> int|None:
     
 
     if args.command in ["run", "r", "start", "play"]:
-        Game()._Game__run()
-        return 1
-
-
-    elif args.command == "build":
-        print("That command not working yet...")
+        Game()._run()
         return 1
 
 
 
     elif args.command == "settings":
         from rudlgc.core.execute_game import SettingsCore 
+        
         settings_module = importlib.import_module(os.environ.get("RUDLGC_PROJECT_SETTINGS"))
+        
         defaults = []
         custom = []
 
@@ -161,13 +160,8 @@ def execute_console(execute_now: bool=False) -> int|None:
             for name, value in sorted(custom):
                 print(f"\033[33m  • {name} - {value}\033[0m")
         return 1
-
-
-    elif args.command == "collectstuff":
-        pass
-
-
-
+    
+    
     elif args.command == "newscene":
         if not is_valid_name(args.filename):
             parser.error("Invalid filename!")
@@ -178,6 +172,23 @@ def execute_console(execute_now: bool=False) -> int|None:
         (Path.cwd() / os.environ.get("RUDLGC_PROJECT_NAME") / "scenes" / f"{args.filename}.py").write_text(_SCENE_PY(args.classname))
         print("\033[32mProject scene succesfully created!\033[0m")
         return 1
+
+
+
+    elif args.command == "collectstuff":
+        return 0
+        src_image = res.files()
+        dst_image = Path.cwd() / os.environ.get("RUDLGC_PROJECT_NAME") / "assets"
+
+        shutil.copy(src_image, dst_image)
+
+    elif args.command == "build":
+        print("That command not working yet...")
+        return 0
+
+
+
+    
 
 
 

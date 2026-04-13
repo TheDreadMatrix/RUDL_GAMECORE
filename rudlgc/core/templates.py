@@ -116,7 +116,7 @@ def _ROUTER_PY(project_name: str):
             super().__init__(game)
                            
             # FIRST OF WE SWITCHING TO DEFAULT START SCENE
-            self.game.request.redirectScene(self.game.settings.START_SCENE)
+            self.game.api.redirectScene(self.game.settings.START_SCENE)
             
             # HERE YOU CALLING 'self.registerScene' TO REGISTRATE TO GAME
             self.registerScene('example', lambda: ExampleScene(game=game))
@@ -155,6 +155,10 @@ def _SETTINGS_PY(project_name: str):
 # DEBUG mode enables additional logs and development features.
 # Should be set to False in production.
 DEBUG = True
+
+# JSON SETTINGS: WHEN YOU CONSTRUCT YOUR OWN SETTINGS FOR YOU GAME YOU WRITE PATH AS .saves/settings.json or .config/settings.json
+# ALL DATA MUST BE CHANGES SO LOOK UP!
+JSON_SETTINGS = None
 
 
 # Window size settings

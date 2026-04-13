@@ -3,14 +3,53 @@ import sys
 import sdl2
 import sdl2.ext
 import time
-import json
 import traceback
-import xml.etree
 import moderngl
+import platform
 import platformdirs
 from pathlib import Path
 from datetime import datetime
+from functools import lru_cache
 from importlib import import_module
+
+
+def _callOnce(error_message):
+    def decorator(func):
+        called = False
+
+        def wrapper(*args, **kwargs):
+            nonlocal called
+
+            if called:
+                now = datetime.now().strftime("%H:%M:%S")
+                print(f"\033[91m[{now}]-[ERROR]: {error_message}\033[0m")
+                print(f"\033[91m[{now}]-[ERROR]: Game failure exit\033[0m")
+                exit(1)
+
+            called = True
+            return func(*args, **kwargs)
+
+        return wrapper
+    return decorator
+
+
+def _get_os():
+    system = platform.system().lower()
+    machine = platform.machine().lower()
+
+    if system == "windows":
+        return "Windows"
+    
+    if system == "darwin":
+        if "iphone" in machine or "ipad" in machine:
+            return "iOS"
+        return "macOS"
+
+    if system == "linux":
+        if ("ANDROID_ROOT" in os.environ or "ANDROID_DATA" in os.environ or "ANDROID_BOOTLOGO" in os.environ):
+            return "Android"
+        return "Linux"
+    
 
 
 
@@ -37,6 +76,7 @@ class PathCore:
         self.config_dir = self._BASE_DATA_DIR / ".config"
         self.saves_dir = self._BASE_DATA_DIR / ".saves"
 
+    @lru_cache(maxsize=512)
     def _build_path(self, base: Path, *folders, file: str | None = None):
         path = base
         for f in folders:
@@ -80,7 +120,7 @@ class SettingsCore:
         "WINDOW_WIDTH", "WINDOW_HEIGHT", "WINDOW_MINWIDTH", "WINDOW_MINHEIGHT",
         "APPNAME", "GAME_NAME", "GAME_DESCRIPTION", "FILE_VERSION", "GAME_ICON", "GAME_RIGHT", "GAME_VERSION", "TITLE", 
         "VSYNC", "FULLSCREEN", "BORDERLESS", "RESIZABLE",
-        "START_SCENE", "SHOW_FPS", "SHOW_INFO",
+        "START_SCENE", "SHOW_FPS", "SHOW_INFO", "OS_PLATFORM"
         "MUSIC_VOLUME", "SOUND_VOLUME",
         "FPS", "PPS",
         "POINT_SIZE", "LINE_SIZE",
@@ -94,6 +134,8 @@ class SettingsCore:
             game.logger._system_log("ERROR", traceback.format_exc())
             game.logger._system_log("ERROR", "Game failure exit")
             exit(1)
+
+        self.JSON_SETTINGS = getattr(self.__settings_module, "JSON_SETTINGS", None)
 
         self.VSYNC = getattr(self.__settings_module, "VSYNC", False)
         self.APPNAME = getattr(self.__settings_module, "APPNAME", ".rudlgcGameData")
@@ -130,6 +172,8 @@ class SettingsCore:
 
         self.POINT_SIZE = getattr(self.__settings_module, "POINT_SIZE", 10)
         self.LINE_SIZE = getattr(self.__settings_module, "LINE_SIZE", 10)
+
+        self.OS_PLATFORM = str(_get_os()).lower()
 
         self.SIX_SEVEN = 67
         self.POOR_NUMBER_68 = 68
@@ -192,6 +236,12 @@ class RequestCore:
     def restartScene(self):
         self.game._scene_router._restartScene()
 
+    def setWindowGrab(self, flag):
+        sdl2.SDL_SetWindowGrab(self.game._window.window, flag)
+
+    def setWindowRelative(self, flag):
+        sdl2.SDL_SetRelativeMouseMode(flag)
+
     def setScreenColor(self, r, g, b):
         self.game._screen_color = (r, g, b)
 
@@ -208,15 +258,54 @@ class RequestCore:
 
 
 
+class Keyboard:
+    def __init__(self):
+        self.keys = None
+
+    def updateThis(self):
+        self.keys = sdl2.SDL_GetKeyboardState(None)
+
+
+    def isPressed(self, key):
+        return self.keys[key]
+
+
+class Mouse:
+    def __init__(self):
+        self.mx = sdl2.c_int()
+        self.my = sdl2.c_int()
+        self.buttons = None
+
+    def updateThis(self):
+        self.buttons = sdl2.SDL_GetMouseState(self.mx, self.my)
+
+    def isLeft(self):
+        return self.buttons & sdl2.SDL_BUTTON(sdl2.SDL_BUTTON_LEFT)
+    
+    def isMiddle(self):
+        return self.buttons & sdl2.SDL_BUTTON(sdl2.SDL_BUTTON_MIDDLE)
+    
+    def isRight(self):
+        return self.buttons & sdl2.SDL_BUTTON(sdl2.SDL_BUTTON_RIGHT)
+    
+    def getPos(self):
+        return (self.mx.value, self.my.value)
+    
+    def getRel(self):
+        return [0, 0]
+
+
+
 
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, renderer: None=None):
         sdl2.ext.init()
         self.PROJECT_NAME = os.environ.get("RUDLGC_PROJECT_NAME", "NOT_FOUND")
         self.ERROR = ""
 
+        #ALSO FOR DEBUG OR SPECIAL POWERS
         self.logger = Logger()
         self.settings = SettingsCore(self)
 
@@ -237,7 +326,9 @@ class Game:
         self.pelta_time = 1 / self.settings.PPS
 
         self.paths = PathCore(self)
-        self.request = RequestCore(self)
+        self.api = RequestCore(self)
+        self.keyboard = Keyboard()
+        self.mouse = Mouse()
                 
         if self.settings.DEBUG:
             self.logger._system_log("WARNING", "DEBUG mode is enabled")
@@ -298,12 +389,7 @@ class Game:
             self.logger._system_log("ERROR", f"You got error in {self.PROJECT_NAME}/router.py.")
             self.logger._system_log("ERROR", traceback.format_exc())
             self.logger._system_log("ERROR", "Game failure exit")
-            exit(1)
-
-    
-        self.keyboard = None
-        self.mouse = None
-        
+            exit(1)    
 
         
 
@@ -329,7 +415,10 @@ class Game:
 
 
     
-    def __update(self): 
+    def __update(self):
+        self.keyboard.updateThis() 
+        self.mouse.updateThis()
+
         self._scene_router._update()
 
         for event in sdl2.ext.get_events():
@@ -344,7 +433,8 @@ class Game:
         sdl2.SDL_GL_SwapWindow(self._window.window)
 
 
-    def __run(self): 
+    @_callOnce("It is strictly forbidden to call private functions and methods.")
+    def _run(self): 
         while self._running:
             frame_start = time.perf_counter()
             
@@ -361,7 +451,7 @@ class Game:
             except Exception:
                 error_message = traceback.format_exc()
                 self.ERROR = error_message
-                self.request.redirectScene("error-scene")
+                self.api.redirectScene("error-scene")
                 self._scene_router.onException(error_message)
             
             self.__limit_fps(frame_start)
@@ -377,4 +467,4 @@ class Game:
         
 
 if __name__ == "__main__":
-    Game()._Game__run()
+    Game()._run()

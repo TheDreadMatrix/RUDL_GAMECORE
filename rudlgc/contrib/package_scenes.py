@@ -5,7 +5,7 @@ from rudlgc.contrib import GameType, AbstractScene
 class SceneError(AbstractScene):
     def __init__(self, game: GameType):
         self.game = game
-        self.game.request.setWindowTitle("RUDLGC Error")
+        self.game.api.setWindowTitle("RUDLGC Error")
         
         self.game.logger._system_log("ERROR", "Catched error!!!")
         self.game.logger._system_log("ERROR", self.game.ERROR if self.game.ERROR else None)
@@ -21,7 +21,7 @@ class SceneError(AbstractScene):
     
 
     def onRender(self):
-        self.game.request.setScreenColor(0, 0, 0)
+        self.game.api.setScreenColor(0, 0, 0)
     
 
     def onSave(self):
@@ -34,7 +34,7 @@ class SceneError(AbstractScene):
 class SceneEmpty(AbstractScene):
     def __init__(self, game: GameType, text_title: str, text_about_scene: str, scene_switching: str):
         self.game = game
-        self.game.request.setWindowTitle(f"RUDLGC EMPTY: {text_title}")
+        self.game.api.setWindowTitle(f"RUDLGC EMPTY: {text_title}")
 
         
 
@@ -49,7 +49,7 @@ class SceneEmpty(AbstractScene):
     
 
     def onRender(self):
-        self.game.request.setScreenColor(0, 0, 0)
+        self.game.api.setScreenColor(0, 0, 0)
     
 
     def onSave(self):

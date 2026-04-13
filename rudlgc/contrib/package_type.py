@@ -20,16 +20,19 @@ class _Settings:
     SHOW_FPS: bool
     SHOW_INFO: bool
 
+    GAME_ICON: str
     GAME_NAME: str
     GAME_VERSION: str
     GAME_DESCRIPTION: str
 
     APPNAME: str
+    JSON_SETTINGS: str
     FILE_VERSION: str
     GAME_RIGHT: str
 
     TITLE: str
     START_SCENE: str
+    OS_PLATFORM: str
 
     MUSIC_VOLUME: float
     SOUND_VOLUME: float
@@ -52,6 +55,8 @@ class _RequestType:
     def setWindowPosition(self, x: int, y: int) -> None: ...
     def setWindowSize(self, w: int, h: int) -> None: ...
     def setWindowTitle(self, title: str) -> None: ...
+    def setWindowGrab(self, flag: bool) -> None: ...
+    def setWindowRelative(self, flag: bool) -> None: ...
 
 
 
@@ -88,7 +93,7 @@ class _Mouse:
 
 
 class GameType(Protocol):
-    request: _RequestType
+    api: _RequestType
     settings: _Settings
     paths: _PathsType
     logger: _LoggerType
