@@ -2,22 +2,38 @@
 #There we import 'GameType' for anotation and 'AbstractScene' for ours scene
 from rudlgc.contrib import GameType, AbstractScene
 from rudlgc.rudlums import Evalent, Keysym
+from rudlgc.johnson import Joshua, Xmlion
 
 class ExampleScene(AbstractScene):
     #This method is designed to initialize (create) objects.
     #Here you create objects once, which is better
     def __init__(self, game: GameType):
         self.game = game
+        #JSON
+        self.data_json = Joshua(self.game.paths.getConfigPath(file="test.json"))
+        self.data_read_json = self.data_json.readData()
+        self.data_read_json["count"] = 1000
+        self.data_json.saveData(self.data_read_json)
+
+        #XML
+        self.data_xml = Xmlion(self.game.paths.getConfigPath(file="text.xml"))
+        self.data_read_xml = self.data_xml.readXML()
+        self.data_read_xml["hello"] = "123"
+        
+
 
         self.game.api.setWindowTitle(f"{self.game.getCurrentScene()}")
         #self.game.request.setWindowRelative(True)
         #self.game.request.setWindowGrab(True)
         self.game.logger.trace(self.game.settings.OS_PLATFORM)
+        self.game.logger.trace(self.game.settings._joshua_settings)
+        self.game.logger.trace(self.game.settings.HELLO_WORLD)
+        
 
     #This method is called every frame.                    
     def onUpdate(self):
         if self.game.keyboard.isPressed(Keysym.LEFT): self.game.logger.trace("LEFT")
-        if self.game.keyboard.isPressed(Keysym.RIGHT): self.game.logger.trace("RIGHT")
+        if self.game.keyboard.isPressed(Keysym.RIGHT): self.game.api.redirectScene('future-scene')
 
 
         
@@ -34,4 +50,4 @@ class ExampleScene(AbstractScene):
 
     #The method is called when the scene switches to another, otherwise the useful date must save here             
     def onSave(self):
-        pass
+        self.data_xml.saveXML(self.data_read_xml)

@@ -8,6 +8,11 @@
 # Should be set to False in production.
 DEBUG = True
 
+JSON_SETTINGS = {
+    "FOLDERS": (),
+    "FILE": "settings.json"
+}
+
 
 # Window size settings
 WINDOW_WIDTH = 800
@@ -30,7 +35,7 @@ GAME_NAME = "My Game"
 GAME_DESCRIPTION = "A game built with the engine."
 
 # File version used for internal tracking of builds/resources.
-FILE_VERSION = "1.0.0"
+FILE_VERSION = "1.0.0.0"
 
 # Path to the game icon used in the executable/window.
 GAME_ICON = None
@@ -41,8 +46,6 @@ GAME_RIGHT = "All rights reserved."
 # Public game version shown to users.
 GAME_VERSION = "1.0.0"
 
-# Window title text.
-TITLE = GAME_NAME
 
 
 # Rendering / window behavior
@@ -59,7 +62,6 @@ START_SCENE = "example"
 # Debug UI options
 SHOW_FPS = True
 SHOW_INFO = True
-SHOW_PROMPT = True
 
 
 # Audio settings (range typically 0.0 - 1.0)
@@ -87,5 +89,9 @@ LINE_SIZE = 1.0
 # - no __dunder__ names
 # - accessible via game.settings if registered
 
-HELLO_WORLD = ":)"
+__CUSTOM_CATEGORY = {
+   "HELLO": 1.0
+}
 
+HELLO_WORLD = ":)"
+SENSA = 1.0

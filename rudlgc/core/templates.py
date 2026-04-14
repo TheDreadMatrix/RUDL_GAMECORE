@@ -18,6 +18,20 @@ def is_valid_name(name: str) -> bool:
     return True
 
 
+def _group_by_category(settings, category_map):
+    grouped = {}
+
+    for name, value in settings:
+        group = category_map.get(name, "OTHER")
+
+        if group not in grouped:
+            grouped[group] = []
+
+        grouped[group].append((name, value))
+
+    return grouped
+
+
 _PROHIBITED_WORDS = [
     "os",
     "sys",
@@ -124,7 +138,8 @@ def _ROUTER_PY(project_name: str):
             # ALSO CREATE STUBS SCENE
             # 'text_title' - for Window Title
             # 'text_about_scene' - for UI text
-            # 'scene_switching' - for switching to scene
+            # 'scene_switching' - for switching to scene when click the [ESC]
+            # You can also change EmptyScene by inheritance
             self.registerScene('my-empty-scene', lambda: SceneEmpty(game=game, text_title='Stubs Title', text_about_scene='Hello World!', scene_switching='example'))
 
             # ONLY ONE RULE IF YOU PUSH UNDEFINED SCENE YOUR CAN CRASH THE PROGRAM
@@ -156,8 +171,8 @@ def _SETTINGS_PY(project_name: str):
 # Should be set to False in production.
 DEBUG = True
 
-# JSON SETTINGS: WHEN YOU CONSTRUCT YOUR OWN SETTINGS FOR YOU GAME YOU WRITE PATH AS .saves/settings.json or .config/settings.json
-# ALL DATA MUST BE CHANGES SO LOOK UP!
+# To control 'game.settings'. You create file in '.saves' folder and write his filename or something as 'settings.json'
+# If that variable is None the settings attribute will be changed auto by RUDLGC
 JSON_SETTINGS = None
 
 
@@ -182,7 +197,7 @@ GAME_NAME = "My Game"
 GAME_DESCRIPTION = "A game built with the engine."
 
 # File version used for internal tracking of builds/resources.
-FILE_VERSION = "1.0.0"
+FILE_VERSION = "1.0.0.0"
 
 # Path to the game icon used in the executable/window.
 GAME_ICON = None
@@ -193,9 +208,6 @@ GAME_RIGHT = "All rights reserved."
 # Public game version shown to users.
 GAME_VERSION = "1.0.0"
 
-# Window title text.
-TITLE = GAME_NAME
-
 
 # Rendering / window behavior
 VSYNC = 0
@@ -205,7 +217,7 @@ RESIZABLE = True
 
 
 # Entry scene loaded at startup.
-START_SCENE = "empty-scene"
+START_SCENE = "example"
 
 
 # Debug UI options
@@ -237,6 +249,12 @@ LINE_SIZE = 1.0
 # - UPPER_CASE = constant
 # - no __dunder__ names
 # - accessible via game.settings if registered
+
+# Also you can create category for your custom command 
+# Your can watch in 'py manage_{project_name.lower()}.py settings'
+__CUSTOM_CATEGORY = {{
+    "HELLO_WORLD": "HELLO-CATEGORY"
+}}
 
 HELLO_WORLD = ":)"
 

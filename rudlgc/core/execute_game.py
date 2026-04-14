@@ -1,261 +1,16 @@
 import os
-import sys
 import sdl2
 import sdl2.ext
 import time
 import traceback
 import moderngl
-import platform
-import platformdirs
-from pathlib import Path
-from datetime import datetime
-from functools import lru_cache
 from importlib import import_module
 
 
-def _callOnce(error_message):
-    def decorator(func):
-        called = False
-
-        def wrapper(*args, **kwargs):
-            nonlocal called
-
-            if called:
-                now = datetime.now().strftime("%H:%M:%S")
-                print(f"\033[91m[{now}]-[ERROR]: {error_message}\033[0m")
-                print(f"\033[91m[{now}]-[ERROR]: Game failure exit\033[0m")
-                exit(1)
-
-            called = True
-            return func(*args, **kwargs)
-
-        return wrapper
-    return decorator
-
-
-def _get_os():
-    system = platform.system().lower()
-    machine = platform.machine().lower()
-
-    if system == "windows":
-        return "Windows"
-    
-    if system == "darwin":
-        if "iphone" in machine or "ipad" in machine:
-            return "iOS"
-        return "macOS"
-
-    if system == "linux":
-        if ("ANDROID_ROOT" in os.environ or "ANDROID_DATA" in os.environ or "ANDROID_BOOTLOGO" in os.environ):
-            return "Android"
-        return "Linux"
-    
-
-
-
-class PathCore:
-    def __init__(self, game: "Game"):
-        PROJECT_DIR = game.PROJECT_NAME
-        if hasattr(sys, "frozen"):
-            self._BASE_DATA_DIR = Path(platformdirs.user_data_dir(game.settings.APPNAME))
-        else:
-            self._BASE_DATA_DIR = Path.cwd() / PROJECT_DIR
-
-        if hasattr(sys, "_MEIPASS"):
-            self._RESOURCE_DIR = Path(sys._MEIPASS)
-        else:
-            self._RESOURCE_DIR = Path.cwd() / PROJECT_DIR
-            
-
-        self.musics_dir = self._RESOURCE_DIR / "musics"
-        self.sounds_dir = self._RESOURCE_DIR / "sounds"
-        self.assets_dir = self._RESOURCE_DIR / "assets"
-        self.fonts_dir = self._RESOURCE_DIR / "fonts"
-        self.shaders_dir = self._RESOURCE_DIR / "shaders"
-
-        self.config_dir = self._BASE_DATA_DIR / ".config"
-        self.saves_dir = self._BASE_DATA_DIR / ".saves"
-
-    @lru_cache(maxsize=512)
-    def _build_path(self, base: Path, *folders, file: str | None = None):
-        path = base
-        for f in folders:
-            path = path / f
-
-        if file:
-            path = path / file
-        
-        if not path.exists():
-            raise FileExistsError(f"Path not found: '{str(path)}'")
-        return str(path)
-
-    def getConfigPath(self, *folder, file):
-        return self._build_path(self.config_dir, *folder, file=file)
-
-    def getSavesPath(self, *folder, file):
-        return self._build_path(self.saves_dir, *folder, file=file)
-
-    def getMusicsPath(self, *folder, file):
-        return self._build_path(self.musics_dir, *folder, file=file)
-
-    def getSoundsPath(self, *folder, file):
-        return self._build_path(self.sounds_dir, *folder, file=file)
-
-    def getAssetsPath(self, *folder, file):
-        return self._build_path(self.assets_dir, *folder, file=file)
-
-    def getFontsPath(self, *folder, file):
-        return self._build_path(self.fonts_dir, *folder, file=file)
-
-    def getShadersPath(self, *folder, file):
-        return self._build_path(self.shaders_dir, *folder, file=file)
-
-
-
-
-
-class SettingsCore:
-    _DEFAULTS = {
-        "DEBUG", 
-        "WINDOW_WIDTH", "WINDOW_HEIGHT", "WINDOW_MINWIDTH", "WINDOW_MINHEIGHT",
-        "APPNAME", "GAME_NAME", "GAME_DESCRIPTION", "FILE_VERSION", "GAME_ICON", "GAME_RIGHT", "GAME_VERSION", "TITLE", 
-        "VSYNC", "FULLSCREEN", "BORDERLESS", "RESIZABLE",
-        "START_SCENE", "SHOW_FPS", "SHOW_INFO", "OS_PLATFORM"
-        "MUSIC_VOLUME", "SOUND_VOLUME",
-        "FPS", "PPS",
-        "POINT_SIZE", "LINE_SIZE",
-        "SIX_SEVEN", "SIX_NINE", "POOR_NUMBER_68"
-    }
-
-    def __init__(self, game: "Game"):
-        try: 
-            self.__settings_module = import_module(os.getenv("RUDLGC_PROJECT_SETTINGS", ""))
-        except ModuleNotFoundError:
-            game.logger._system_log("ERROR", traceback.format_exc())
-            game.logger._system_log("ERROR", "Game failure exit")
-            exit(1)
-
-        self.JSON_SETTINGS = getattr(self.__settings_module, "JSON_SETTINGS", None)
-
-        self.VSYNC = getattr(self.__settings_module, "VSYNC", False)
-        self.APPNAME = getattr(self.__settings_module, "APPNAME", ".rudlgcGameData")
-
-        self.WINDOW_WIDTH = getattr(self.__settings_module, "WINDOW_WIDTH", 800)
-        self.WINDOW_HEIGHT = getattr(self.__settings_module, "WINDOW_HEIGHT", 600)
-
-        self.WINDOW_MINWIDTH = getattr(self.__settings_module, "WINDOW_MINWIDTH", 799)
-        self.WINDOW_MINHEIGHT = getattr(self.__settings_module, "WINDOW_MINHEIGHT", 599)
-
-        self.FULLSCREEN = getattr(self.__settings_module, "FULLSCREEN", False)
-        self.BORDERLESS = getattr(self.__settings_module, "BORDERLESS", False)
-        self.RESIZABLE = getattr(self.__settings_module, "RESIZABLE", False)
-
-        self.GAME_NAME = getattr(self.__settings_module, "GAME_NAME", "RUDLGC game!!!")
-        self.GAME_DESCRIPTION = getattr(self.__settings_module, "GAME_DESCRIPTION", "RUDL Game Core Engine!!!")
-        self.GAME_VERSION = getattr(self.__settings_module, "GAME_VERSION", "0.1.0")
-
-        self.GAME_RIGHT = getattr(self.__settings_module, "GAME_RIGHT", "NONE")
-        self.FILE_VERSION = getattr(self.__settings_module, "PRODUCT_VERSION", "1.0.0.0")
-
-        self.TITLE = getattr(self.__settings_module, "TITLE", "RUDLGC window")
-        self.DEBUG = getattr(self.__settings_module, "DEBUG", True)
-
-        self.FPS = getattr(self.__settings_module, "FPS", 240)
-        self.PPS = getattr(self.__settings_module, "PPS", 240)
-
-        self.START_SCENE = getattr(self.__settings_module, "START_SCENE", "empty-rudlgc")
-        self.SHOW_FPS = getattr(self.__settings_module, "SHOW_FPS", True)
-        self.SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", True)
-
-        self.MUSIC_VOLUME = getattr(self.__settings_module, "MUSIC_VOLUME", 1.0)
-        self.SOUND_VOLUME = getattr(self.__settings_module, "SOUND_VOLUME", 1.0)
-
-        self.POINT_SIZE = getattr(self.__settings_module, "POINT_SIZE", 10)
-        self.LINE_SIZE = getattr(self.__settings_module, "LINE_SIZE", 10)
-
-        self.OS_PLATFORM = str(_get_os()).lower()
-
-        self.SIX_SEVEN = 67
-        self.POOR_NUMBER_68 = 68
-        self.SIX_NINE = 69
-
-        for attr in dir(self.__settings_module):
-            if attr not in SettingsCore._DEFAULTS and not attr.startswith("__") and attr.isupper():
-                value = getattr(self.__settings_module, attr)
-                setattr(self, attr, value)
-
-
-
-class Logger:
-    COLORS = {
-        "INFO": "\033[94m", 
-        "WARNING": "\033[33m",
-        "MAGENTA": "\033[35m",
-        "TRACE-USER": "\033[92m",
-        "ERROR": "\033[91m",
-        "RESET": "\033[0m"
-    }
-        
-    @staticmethod
-    def trace(message, as_error=False):
-        now = datetime.now().strftime("%H:%M:%S")
-        color = Logger.COLORS["TRACE-USER"] if not as_error else Logger.COLORS["ERROR"]
-        reset = Logger.COLORS["RESET"]
-        print(f"{color}[{now}]-[TRACE-USER]: {message}{reset}")
-
-    @staticmethod
-    def traceMagenta(message):
-        now = datetime.now().strftime("%H:%M:%S")
-        color = Logger.COLORS["MAGENTA"]
-        reset = Logger.COLORS["RESET"]
-        print(f"{color}[{now}]-[MAGENTA]: {message}{reset}")
-
-    @staticmethod
-    def _system_log(tag, message):
-        now = datetime.now().strftime("%H:%M:%S")
-        color = Logger.COLORS.get(tag, "")
-        reset = Logger.COLORS["RESET"]
-        print(f"{color}[{now}]-[{tag}]: {message}{reset}")
-
-
-
-
-class RequestCore:
-    def __init__(self, game: "Game"):
-        self.game = game
-
-    def closeGame(self):
-        self.game._running = False
-
-    def updateSettings(self):
-        pass
-
-    def redirectScene(self, scene):
-        self.game._current_scene_name = scene
-
-    def restartScene(self):
-        self.game._scene_router._restartScene()
-
-    def setWindowGrab(self, flag):
-        sdl2.SDL_SetWindowGrab(self.game._window.window, flag)
-
-    def setWindowRelative(self, flag):
-        sdl2.SDL_SetRelativeMouseMode(flag)
-
-    def setScreenColor(self, r, g, b):
-        self.game._screen_color = (r, g, b)
-
-    def setWindowPosition(self, x, y):
-        self.game._window.position = (x, y)
-
-    def setWindowTitle(self, title):
-        self.game._window.title = title
-
-    def setWindowSize(self, w, h):
-        self.game._window.size = (w, h)
-        
-
-
+from rudlgc.core.subsystems import Logger, _callOnce
+from rudlgc.core.subsystems import RequestCore
+from rudlgc.core.subsystems import SettingsCore
+from rudlgc.core.subsystems import PathCore
 
 
 class Keyboard:
@@ -302,12 +57,21 @@ class Mouse:
 class Game:
     def __init__(self, renderer: None=None):
         sdl2.ext.init()
+    
+        #FREE TO USE
         self.PROJECT_NAME = os.environ.get("RUDLGC_PROJECT_NAME", "NOT_FOUND")
         self.ERROR = ""
 
-        #ALSO FOR DEBUG OR SPECIAL POWERS
+        self.paths = PathCore(self)
+        self.api = RequestCore(self)
         self.logger = Logger()
         self.settings = SettingsCore(self)
+
+        self.keyboard = Keyboard()
+        self.mouse = Mouse()
+
+        self.delta_time = 0
+        self.pelta_time = 1 / self.settings.PPS
 
         #PRIVATE PROTECTED
         self._running = True
@@ -321,14 +85,6 @@ class Game:
         self._target_fps = self.settings.FPS
 
 
-        #FREE TO USE
-        self.delta_time = 0
-        self.pelta_time = 1 / self.settings.PPS
-
-        self.paths = PathCore(self)
-        self.api = RequestCore(self)
-        self.keyboard = Keyboard()
-        self.mouse = Mouse()
                 
         if self.settings.DEBUG:
             self.logger._system_log("WARNING", "DEBUG mode is enabled")
@@ -353,7 +109,7 @@ class Game:
             flags |= sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
         
         
-        self._window = sdl2.ext.Window(self.settings.TITLE, size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=flags)
+        self._window = sdl2.ext.Window(self.settings.GAME_NAME, size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=flags)
         sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
         
 

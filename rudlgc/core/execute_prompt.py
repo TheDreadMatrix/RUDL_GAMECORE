@@ -91,10 +91,10 @@ def execute_console(execute_now: bool=False) -> int|None:
     import shutil
     import importlib
     import importlib.resources as res
-    from rudlgc.core.execute_game import Game
-    from rudlgc.core.templates import _SCENE_PY, _BUILD_PY, is_valid_name
+    from rudlgc.core.templates import _SCENE_PY, _BUILD_PY, is_valid_name, _group_by_category
 
     if execute_now:
+        from rudlgc.core.execute_game import Game
         Game()._run()
 
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
@@ -122,18 +122,62 @@ def execute_console(execute_now: bool=False) -> int|None:
     
 
     if args.command in ["run", "r", "start", "play"]:
+        from rudlgc.core.execute_game import Game
         Game()._run()
         return 1
 
 
 
     elif args.command == "settings":
-        from rudlgc.core.execute_game import SettingsCore 
+        from rudlgc.core.subsystems import SettingsCore
+
+        CATEGORY = {
+            # WINDOW
+            "VSYNC": "WINDOW",
+            "WINDOW_WIDTH": "WINDOW",
+            "WINDOW_HEIGHT": "WINDOW",
+            "WINDOW_MINWIDTH": "WINDOW",
+            "WINDOW_MINHEIGHT": "WINDOW",
+            "FULLSCREEN": "WINDOW",
+            "BORDERLESS": "WINDOW",
+            "RESIZABLE": "WINDOW",
+
+            # GAME
+            "GAME_NAME": "GAME",
+            "GAME_VERSION": "GAME",
+            "GAME_DESCRIPTION": "GAME",
+            "START_SCENE": "GAME",
+            "GAME_ICON": "GAME",
+            "GAME_RIGHT": "GAME",
+            "FILE_VERSION": "GAME",
+            "FPS": "GAME",
+            "PPS": "GAME",
+
+            # AUDIO
+            "MUSIC_VOLUME": "AUDIO",
+            "SOUND_VOLUME": "AUDIO",
+
+            # DEBUG
+            "DEBUG": "DEBUG",
+            "SHOW_FPS": "DEBUG",
+            "SHOW_INFO": "DEBUG",
+
+            # SYSTEM
+            "OS_PLATFORM": "SYSTEM",
+            "APPNAME": "SYSTEM",
+            "JSON_SETTINGS": "SYSTEM",
+        } 
         
         settings_module = importlib.import_module(os.environ.get("RUDLGC_PROJECT_SETTINGS"))
         
         defaults = []
+        defaults_not_dec = []
         custom = []
+
+        for attr in SettingsCore._DEFAULTS:
+            if attr not in dir(settings_module):
+                defaults_not_dec.append((attr, SettingsCore._DEFAULTS.get(attr)))
+
 
         for attr in dir(settings_module):
             if attr.startswith("__"):
@@ -152,13 +196,41 @@ def execute_console(execute_now: bool=False) -> int|None:
 
         if defaults:
             print("\n\033[33m[BUILT-IN]\033[0m")
-            for name, value in sorted(defaults):
-                print(f"\033[33m  • {name} - {value}\033[0m")
+
+            grouped = _group_by_category(defaults, CATEGORY)
+
+            for group in sorted(grouped):
+                print(f"\n\033[36m  •[{group}]\033[0m")
+
+                for name, value in sorted(grouped[group]):
+                    print(f"\t\033[33m  • {name} - {value}\033[0m")
+
+        
+        if defaults_not_dec:
+            print("\n\033[33m[NOT DECLARATED BUILD-IN]\033[0m")
+
+            grouped = _group_by_category(defaults_not_dec, CATEGORY)
+
+            for group in sorted(grouped):
+                print(f"\n\033[36m  •[{group}]\033[0m")
+
+                for name, value in sorted(grouped[group]):
+                    print(f"\t\033[33m  • {name} - {value}\033[0m")
 
         if custom:
+            CUSTOM_CATEGORY = getattr(settings_module, "__CUSTOM_CATEGORY", {})
+            
             print("\n\033[33m[CUSTOM]\033[0m")
-            for name, value in sorted(custom):
-                print(f"\033[33m  • {name} - {value}\033[0m")
+            if not CUSTOM_CATEGORY:
+                for name, value in sorted(custom):
+                    print(f"\033[33m  • {name} - {value}\033[0m")
+            else:
+                grouped = _group_by_category(custom, CUSTOM_CATEGORY)
+                for group in sorted(grouped):
+                    print(f"\n\033[36m  *[{group}]\033[0m")
+
+                    for name, value in sorted(grouped[group]):
+                        print(f"\t\033[33m  • {name} - {value}\033[0m")
         return 1
     
     
