@@ -55,7 +55,7 @@ class Mouse:
 
 
 class Game:
-    def __init__(self, renderer: None=None):
+    def __init__(self):
         sdl2.ext.init()
     
         #FREE TO USE
@@ -92,9 +92,9 @@ class Game:
         
 
         #SETTINGS OF THE WINDOW AND CONTEXT
+        sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_PROFILE_MASK, sdl2.SDL_GL_CONTEXT_PROFILE_CORE)
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_MINOR_VERSION, 3)
-        sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_PROFILE_MASK, sdl2.SDL_GL_CONTEXT_PROFILE_CORE)
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_MULTISAMPLEBUFFERS, 1)
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_MULTISAMPLESAMPLES, 4) 
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_DOUBLEBUFFER, 1)
@@ -110,10 +110,13 @@ class Game:
         
         
         self._window = sdl2.ext.Window(self.settings.GAME_NAME, size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=flags)
+        self._window.show()
+
         sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
         
 
-        self.__gl_context = sdl2.SDL_GL_CreateContext(self._window.window)
+        # GPU CONTEXT
+        sdl2.SDL_GL_CreateContext(self._window.window)
         self._ctx = moderngl.create_context()
         self._ctx.viewport = (0, 0, self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
         self._ctx.enable(moderngl.DEPTH_TEST)
@@ -123,7 +126,7 @@ class Game:
         self._ctx.line_width = self.settings.LINE_SIZE
 
         sdl2.SDL_GL_SetSwapInterval(self.settings.VSYNC) 
-        self._window.show()
+        
 
         #SCENE ROUTER FOR SCENE MANAGMENT
         try:
@@ -215,8 +218,6 @@ class Game:
 
         self._scene_router.savingProgress()
 
-        sdl2.SDL_GL_DeleteContext(self.__gl_context)
-        sdl2.SDL_DestroyWindow(self._window.window)
         sdl2.ext.quit()
 
         self.logger._system_log("INFO" if not self.ERROR else "ERROR", "Game succesfully exit" if not self.ERROR else "Game failure exit 2")

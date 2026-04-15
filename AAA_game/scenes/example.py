@@ -20,6 +20,7 @@ class ExampleScene(AbstractScene):
         self.data_read_xml = self.data_xml.readXML()
         self.data_read_xml["hello"] = "123"
         
+        self.game.logger.trace(self.game.settings.DEBUG)
 
 
         self.game.api.setWindowTitle(f"{self.game.getCurrentScene()}")

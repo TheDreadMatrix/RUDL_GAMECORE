@@ -21,8 +21,15 @@ def is_valid_name(name: str) -> bool:
 def _group_by_category(settings, category_map):
     grouped = {}
 
+    # reverse map: variable -> category
+    reverse_map = {}
+
+    for category, vars_list in category_map.items():
+        for var in vars_list:
+            reverse_map[var] = category
+
     for name, value in settings:
-        group = category_map.get(name, "OTHER")
+        group = reverse_map.get(name, "OTHER")
 
         if group not in grouped:
             grouped[group] = []
@@ -167,16 +174,49 @@ def _SETTINGS_PY(project_name: str):
 # =============================================
 
 
-# DEBUG mode enables additional logs and development features.
-# Should be set to False in production.
+# =========================================================
+# CORE / DEBUG
+# =========================================================
+
+# Enables debug mode with logs and development tools.
+# Must be False in production builds.
 DEBUG = True
 
-# To control 'game.settings'. You create file in '.saves' folder and write his filename or something as 'settings.json'
-# If that variable is None the settings attribute will be changed auto by RUDLGC
+# External settings override file (stored in '.saves/settings.json').
+# If None, engine auto-manages runtime settings.
 JSON_SETTINGS = None
 
 
-# Window size settings
+# =========================================================
+# PROJECT METADATA
+# =========================================================
+
+# Internal application identifier (also used for build folder name)
+APPNAME = "{project_name.lower()}_gamedata"
+
+# Human-readable game name (UI/window title)
+GAME_NAME = "My Game"
+
+# Short description of the project
+GAME_DESCRIPTION = "A game built with the engine."
+
+# Version used for internal build tracking
+FILE_VERSION = "1.0.0.0"
+
+# Public version shown to players
+GAME_VERSION = "1.0.0"
+
+# Copyright / rights info
+GAME_RIGHT = "All rights reserved."
+
+# Path to application icon (None = default)
+GAME_ICON = None
+
+
+# =========================================================
+# WINDOW / DISPLAY SETTINGS
+# =========================================================
+
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 
@@ -184,79 +224,65 @@ WINDOW_HEIGHT = 600
 WINDOW_MINWIDTH = 799
 WINDOW_MINHEIGHT = 599
 
-
-# Application and build metadata
-# APPNAME is used as the application identifier and may also define
-# the folder name when building/exporting the project.
-APPNAME = ".{project_name.lower()}GameData"
-
-# Human-readable game name displayed in UI or window title.
-GAME_NAME = "My Game"
-
-# Short description of the game/project.
-GAME_DESCRIPTION = "A game built with the engine."
-
-# File version used for internal tracking of builds/resources.
-FILE_VERSION = "1.0.0.0"
-
-# Path to the game icon used in the executable/window.
-GAME_ICON = None
-
-# Copyright or rights notice string.
-GAME_RIGHT = "All rights reserved."
-
-# Public game version shown to users.
-GAME_VERSION = "1.0.0"
-
-
-# Rendering / window behavior
-VSYNC = 0
+# Window behavior flags
+VSYNC = False
 FULLSCREEN = False
 BORDERLESS = False
 RESIZABLE = True
 
 
-# Entry scene loaded at startup.
+# =========================================================
+# ENGINE RUNTIME
+# =========================================================
+
+# First scene loaded on startup
 START_SCENE = "example"
 
+# Frame timing settings
+FPS = 60   # rendering FPS cap
+PPS = 60   # physics/update rate
 
-# Debug UI options
-SHOW_FPS = True
-SHOW_INFO = True
 
+# =========================================================
+# AUDIO
+# =========================================================
 
-# Audio settings (range typically 0.0 - 1.0)
+# Volume values are in range 0.0 - 1.0
 MUSIC_VOLUME = 0.5
 SOUND_VOLUME = 0.7
 
 
-# Engine timing settings
-# FPS - frames per second target for rendering
-# PPS - physics/update steps per second
-FPS = 60
-PPS = 60
+# =========================================================
+# DEBUG UI
+# =========================================================
+
+# Show performance and debug overlays
+SHOW_FPS = True
+SHOW_INFO = True
 
 
-# Rendering quality settings
+# =========================================================
+# RENDERING QUALITY
+# =========================================================
+
 POINT_SIZE = 1.0
 LINE_SIZE = 1.0
 
-# =========================
-# CUSTOM CONFIGURATION
-# =========================
-# Define constant values used by the game engine.
-# Convention:
-# - UPPER_CASE = constant
-# - no __dunder__ names
-# - accessible via game.settings if registered
 
-# Also you can create category for your custom command 
-# Your can watch in 'py manage_{project_name.lower()}.py settings'
+# =========================================================
+# CUSTOM SETTINGS (ENGINE EXTENSION LAYER)
+# =========================================================
+
+# Categories are used ONLY for editor/UI grouping.
+# They do NOT affect runtime logic.
 __CUSTOM_CATEGORY = {{
-    "HELLO_WORLD": "HELLO-CATEGORY"
+    "GENERAL": ["HELLO_WORLD"],
+    "SECRET": ["MY_ABSOLUTE_SECRET",]
 }}
 
+# Custom user-defined constants (accessible via game.settings)
 HELLO_WORLD = ":)"
+MY_ABSOLUTE_SECRET = 12345
 
 """)
 

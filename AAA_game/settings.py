@@ -90,7 +90,8 @@ LINE_SIZE = 1.0
 # - accessible via game.settings if registered
 
 __CUSTOM_CATEGORY = {
-   "HELLO": 1.0
+   "JUST-ATTR": ["HELLO_WORLD"],
+   
 }
 
 HELLO_WORLD = ":)"

@@ -132,40 +132,23 @@ def execute_console(execute_now: bool=False) -> int|None:
         from rudlgc.core.subsystems import SettingsCore
 
         CATEGORY = {
-            # WINDOW
-            "VSYNC": "WINDOW",
-            "WINDOW_WIDTH": "WINDOW",
-            "WINDOW_HEIGHT": "WINDOW",
-            "WINDOW_MINWIDTH": "WINDOW",
-            "WINDOW_MINHEIGHT": "WINDOW",
-            "FULLSCREEN": "WINDOW",
-            "BORDERLESS": "WINDOW",
-            "RESIZABLE": "WINDOW",
+            "WINDOW-SIZES": ["WINDOW_WIDTH", "WINDOW_HEIGHT", "WINDOW_MINWIDTH", "WINDOW_MINHEIGHT"],
 
-            # GAME
-            "GAME_NAME": "GAME",
-            "GAME_VERSION": "GAME",
-            "GAME_DESCRIPTION": "GAME",
-            "START_SCENE": "GAME",
-            "GAME_ICON": "GAME",
-            "GAME_RIGHT": "GAME",
-            "FILE_VERSION": "GAME",
-            "FPS": "GAME",
-            "PPS": "GAME",
+            "WINDOW-ATTR": ["FULLSCREEN", "BORDERLESS", "RESIZABLE", "VSYNC"],
 
-            # AUDIO
-            "MUSIC_VOLUME": "AUDIO",
-            "SOUND_VOLUME": "AUDIO",
+            "GAME": ["GAME_NAME", "GAME_VERSION", "GAME_DESCRIPTION", "GAME_ICON", "GAME_RIGHT", "FILE_VERSION"],
 
-            # DEBUG
-            "DEBUG": "DEBUG",
-            "SHOW_FPS": "DEBUG",
-            "SHOW_INFO": "DEBUG",
+            "DEBUG": ["DEBUG", "SHOW_FPS", "SHOW_INFO"],
 
-            # SYSTEM
-            "OS_PLATFORM": "SYSTEM",
-            "APPNAME": "SYSTEM",
-            "JSON_SETTINGS": "SYSTEM",
+            "SETTINGS": ["JSON_SETTINGS", "APPNAME"],
+
+            "STARTUP": ["FPS", "PPS", "START_SCENE"],
+
+            "AUDIO": ["MUSIC_VOLUME", "SOUND_VOLUME"],
+
+            "CROSS-PLATFORM": ["OS_PLATFORM"],
+
+            "RENDER-ATTR": ["LINE_SIZE", "POINT_SIZE"]
         } 
         
         settings_module = importlib.import_module(os.environ.get("RUDLGC_PROJECT_SETTINGS"))
