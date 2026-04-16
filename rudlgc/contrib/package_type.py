@@ -99,7 +99,7 @@ class GameType(Protocol):
     logger: _LoggerType
 
     delta_time: float
-    pelta_time: float
+    tick_time: float
 
     keyboard: _Keyboard
     mouse: _Mouse
@@ -118,7 +118,10 @@ class AbstractScene:
     def __init__(self, game: GameType):
         pass
 
-    def onUpdate(self):
+    def onFixedUpdate(self):
+        pass
+
+    def onUpdate(self): 
         pass
 
     def onEvent(self, event):

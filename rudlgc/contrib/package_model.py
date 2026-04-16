@@ -51,6 +51,8 @@ class SceneModel:
 
         self._current_scene_class.onUpdate()
 
+    def _updateFixed(self):
+        self._current_scene_class.onFixedUpdate()
 
     def _event(self, event):
         self._current_scene_class.onEvent(event)

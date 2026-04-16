@@ -27,17 +27,25 @@ class ExampleScene(AbstractScene):
         #self.game.request.setWindowRelative(True)
         #self.game.request.setWindowGrab(True)
         self.game.logger.trace(self.game.settings.OS_PLATFORM)
-        self.game.logger.trace(self.game.settings._joshua_settings)
         self.game.logger.trace(self.game.settings.HELLO_WORLD)
+        self.game.logger.trace(self.game.settings.MY_DICT["num"]["1"])
         
+        self.time_fps = 0
+        self.time_tps = 0
 
-    #This method is called every frame.                    
+
+    #This method is called every frame. 
     def onUpdate(self):
+        self.time_fps += self.game.delta_time
+        self.game.api.setWindowTitle(f"FPS: {self.time_fps:.2f} - TPS: {self.time_tps:.2f} - FRAMERATE: {int(self.game.getFps())}")
+
+
+    def onFixedUpdate(self):
+        self.time_tps += self.game.tick_time
+        
         if self.game.keyboard.isPressed(Keysym.LEFT): self.game.logger.trace("LEFT")
         if self.game.keyboard.isPressed(Keysym.RIGHT): self.game.api.redirectScene('future-scene')
-
-
-        
+    
 
     #This method is called on any event, such as clicking, changing focus, etc.                      
     def onEvent(self, event):
@@ -47,6 +55,7 @@ class ExampleScene(AbstractScene):
     #The method is called after 'onUpdate' is created to draw objects              
     def onRender(self):
         self.game.api.setScreenColor(0.0, 0.8, 0.9)
+
         
 
     #The method is called when the scene switches to another, otherwise the useful date must save here             

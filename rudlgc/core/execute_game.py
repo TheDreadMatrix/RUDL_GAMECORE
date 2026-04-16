@@ -71,7 +71,7 @@ class Game:
         self.mouse = Mouse()
 
         self.delta_time = 0
-        self.pelta_time = 1 / self.settings.PPS
+        self.tick_time = 1 / self.settings.FPS
 
         #PRIVATE PROTECTED
         self._running = True
@@ -83,6 +83,7 @@ class Game:
         self._frame_count = 0
         self._fps_timer = 0.0
         self._target_fps = self.settings.FPS
+        self._accumulator = 0
 
 
                 
@@ -109,7 +110,7 @@ class Game:
             flags |= sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
         
         
-        self._window = sdl2.ext.Window(self.settings.GAME_NAME, size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=flags)
+        self._window = sdl2.ext.Window(self.settings.GAME_METADATA["META"]["GAME_TITLE"], size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=flags)
         self._window.show()
 
         sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
@@ -178,7 +179,12 @@ class Game:
         self.keyboard.updateThis() 
         self.mouse.updateThis()
 
+        self._accumulator += self.delta_time
         self._scene_router._update()
+
+        while self._accumulator >= self.tick_time:
+            self._scene_router._updateFixed()
+            self._accumulator -= self.tick_time
 
         for event in sdl2.ext.get_events():
             if event.type == sdl2.SDL_QUIT:
@@ -194,18 +200,18 @@ class Game:
 
     @_callOnce("It is strictly forbidden to call private functions and methods.")
     def _run(self): 
+        frame_start = time.perf_counter()
         while self._running:
             frame_start = time.perf_counter()
             
-            self.delta_time = frame_start - self._last_time
+            self.delta_time = min(frame_start - self._last_time, 0.02)
             self._last_time = frame_start
 
             if self.delta_time > 0:
                 self._fps = 1.0 / self.delta_time
 
-
             try:
-                self.__update()
+                self.__update()  
                 self.__render()
             except Exception:
                 error_message = traceback.format_exc()
@@ -214,6 +220,8 @@ class Game:
                 self._scene_router.onException(error_message)
             
             self.__limit_fps(frame_start)
+
+            
 
 
         self._scene_router.savingProgress()

@@ -2,7 +2,6 @@ import os
 import platform
 import traceback
 from importlib import import_module
-from rudlgc.johnson import Joshua
 
 
 def _get_os():
@@ -33,15 +32,7 @@ class SettingsCore:
         "WINDOW_MINWIDTH": 799,
         "WINDOW_MINHEIGHT": 599,
 
-        "APPNAME": ".rudlgcGameData",
-        "JSON_SETTINGS": None,
-
-        "GAME_NAME": "RUDLGC game!!!",
-        "GAME_ICON": None,
-        "GAME_DESCRIPTION": "RUDL Game Core Engine!!!",
-        "GAME_VERSION": "0.1.0",
-        "GAME_RIGHT": "NONE",
-        "FILE_VERSION": "1.0.0.0",
+        "GAME_METADATA": None,
 
         "VSYNC": 0,
         "FULLSCREEN": False,
@@ -56,7 +47,7 @@ class SettingsCore:
         "SOUND_VOLUME": 1.0,
 
         "FPS": 240,
-        "PPS": 240,
+        
 
         "POINT_SIZE": 10,
         "LINE_SIZE": 10,
@@ -75,14 +66,10 @@ class SettingsCore:
             game.logger._system_log("ERROR", "Game failure exit")
             exit(1)
 
-        self._JSON_SETTINGS = getattr(self.__settings_module, "JSON_SETTINGS", None)
-        if self._JSON_SETTINGS:
-           self._joshua_settings = Joshua(game.paths.getSavesPath(*self._JSON_SETTINGS["FOLDERS"], file=self._JSON_SETTINGS["FILE"]))
-        else:
-            self._joshua_settings = {}
+
+        self.__game = game
 
         self.DEBUG = getattr(self.__settings_module, "DEBUG", True)
-        self.APPNAME = getattr(self.__settings_module, "APPNAME", ".rudlgcGameData")
 
         self.WINDOW_WIDTH = getattr(self.__settings_module, "WINDOW_WIDTH", 800)
         self.WINDOW_HEIGHT = getattr(self.__settings_module, "WINDOW_HEIGHT", 600)
@@ -90,21 +77,17 @@ class SettingsCore:
         self.WINDOW_MINWIDTH = getattr(self.__settings_module, "WINDOW_MINWIDTH", 799)
         self.WINDOW_MINHEIGHT = getattr(self.__settings_module, "WINDOW_MINHEIGHT", 599)
 
-        self.VSYNC = getattr(self.__settings_module, "VSYNC", False)
+        self.VSYNC = getattr(self.__settings_module, "VSYNC", 0)
         self.FULLSCREEN = getattr(self.__settings_module, "FULLSCREEN", False)
         self.BORDERLESS = getattr(self.__settings_module, "BORDERLESS", False)
         self.RESIZABLE = getattr(self.__settings_module, "RESIZABLE", False)
 
-        self.GAME_ICON = getattr(self.__settings_module, "GAME_ICON", None)
-        self.GAME_NAME = getattr(self.__settings_module, "GAME_NAME", "RUDLGC game!!!")
-        self.GAME_DESCRIPTION = getattr(self.__settings_module, "GAME_DESCRIPTION", "RUDL Game Core Engine!!!")
-        self.GAME_VERSION = getattr(self.__settings_module, "GAME_VERSION", "0.1.0")
+        self.GAME_METADATA = getattr(self.__settings_module, "GAME_METADATA", None)
+        self._hasInRequiredSettings(self.GAME_METADATA, "GAME_METADATA")
 
-        self.GAME_RIGHT = getattr(self.__settings_module, "GAME_RIGHT", "NONE")
-        self.FILE_VERSION = getattr(self.__settings_module, "FILE_VERSION", "1.0.0.0")
 
         self.FPS = getattr(self.__settings_module, "FPS", 240)
-        self.PPS = getattr(self.__settings_module, "PPS", 240)
+        
 
         self.START_SCENE = getattr(self.__settings_module, "START_SCENE", "empty-rudlgc")
         self.SHOW_FPS = getattr(self.__settings_module, "SHOW_FPS", True)
@@ -123,8 +106,11 @@ class SettingsCore:
                 value = getattr(self.__settings_module, attr)
                 setattr(self, attr, value)
 
-    def _getSettings(self, key, default, category=""):
-        
 
-        return default
+    def _hasInRequiredSettings(self, VARS, his_name):
+        if VARS is None:
+            self.__game.logger._system_log("ERROR", f"{his_name} is not declarated in {os.getenv("RUDLGC_PROJECT_SETTINGS")}/settings.py")
+            self.__game.logger._system_log("ERROR", "Game failure exit")
+            exit(1)
+
     

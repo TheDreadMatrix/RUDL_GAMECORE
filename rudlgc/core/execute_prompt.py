@@ -88,6 +88,7 @@ def _rudlgc_admin():
 def execute_console(execute_now: bool=False) -> int|None:
     import os
     import re
+    import json
     import shutil
     import importlib
     import importlib.resources as res
@@ -129,20 +130,18 @@ def execute_console(execute_now: bool=False) -> int|None:
 
 
     elif args.command == "settings":
-        from rudlgc.core.subsystems import SettingsCore
+        from rudlgc.core.subsystems import SettingsCore, _get_os
 
         CATEGORY = {
             "WINDOW-SIZES": ["WINDOW_WIDTH", "WINDOW_HEIGHT", "WINDOW_MINWIDTH", "WINDOW_MINHEIGHT"],
 
             "WINDOW-ATTR": ["FULLSCREEN", "BORDERLESS", "RESIZABLE", "VSYNC"],
 
-            "GAME": ["GAME_NAME", "GAME_VERSION", "GAME_DESCRIPTION", "GAME_ICON", "GAME_RIGHT", "FILE_VERSION"],
+            "GAME-META": ["GAME_METADATA"],
 
             "DEBUG": ["DEBUG", "SHOW_FPS", "SHOW_INFO"],
 
-            "SETTINGS": ["JSON_SETTINGS", "APPNAME"],
-
-            "STARTUP": ["FPS", "PPS", "START_SCENE"],
+            "STARTUP": ["FPS", "START_SCENE"],
 
             "AUDIO": ["MUSIC_VOLUME", "SOUND_VOLUME"],
 
@@ -168,7 +167,7 @@ def execute_console(execute_now: bool=False) -> int|None:
 
             if attr in SettingsCore._DEFAULTS:
                 default_value = getattr(settings_module, attr)
-                defaults.append((attr, default_value))
+                defaults.append((attr, default_value if attr != "OS_PLATFORM" else str(_get_os()).upper()))
                 continue
 
             if re.fullmatch(r"[A-Z_]+", attr):
@@ -186,7 +185,8 @@ def execute_console(execute_now: bool=False) -> int|None:
                 print(f"\n\033[36m  •[{group}]\033[0m")
 
                 for name, value in sorted(grouped[group]):
-                    print(f"\t\033[33m  • {name} - {value}\033[0m")
+                    value_str = (json.dumps(value, indent=4, ensure_ascii=False) if isinstance(value, dict) else str(value))
+                    print(f"\t\033[33m  • {name} - {value_str}\033[0m")
 
         
         if defaults_not_dec:
@@ -198,7 +198,8 @@ def execute_console(execute_now: bool=False) -> int|None:
                 print(f"\n\033[36m  •[{group}]\033[0m")
 
                 for name, value in sorted(grouped[group]):
-                    print(f"\t\033[33m  • {name} - {value}\033[0m")
+                    value_str = (json.dumps(value, indent=2, ensure_ascii=False) if isinstance(value, dict) else str(value))
+                    print(f"\t\033[33m  • {name} - {value_str}\033[0m")
 
         if custom:
             CUSTOM_CATEGORY = getattr(settings_module, "__CUSTOM_CATEGORY", {})
@@ -213,7 +214,8 @@ def execute_console(execute_now: bool=False) -> int|None:
                     print(f"\n\033[36m  *[{group}]\033[0m")
 
                     for name, value in sorted(grouped[group]):
-                        print(f"\t\033[33m  • {name} - {value}\033[0m")
+                        value_str = (json.dumps(value, indent=4, ensure_ascii=False) if isinstance(value, dict) else str(value))
+                        print(f"\t\033[33m  • {name} - {value_str}\033[0m")
         return 1
     
     

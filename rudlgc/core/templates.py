@@ -82,6 +82,10 @@ class ExampleScene(AbstractScene):
     def onUpdate(self):
         pass
 
+    #This method is called every tick                
+    def onFixedUpdate(self):
+        pass
+
     #This method is called on any event, such as clicking, changing focus, etc.                      
     def onEvent(self, event):
         pass
@@ -108,6 +112,9 @@ def _SCENE_PY(class_name: str):
             self.game = game
 
         def onUpdate(self):
+            pass
+            
+        def onFixedUpdate(self):
             pass
 
         def onEvent(self, event):
@@ -173,6 +180,21 @@ def _SETTINGS_PY(project_name: str):
 # {project_name.upper()} - SETTINGS CONFIGURATION FILE
 # =============================================
 
+# =========================================================
+# CUSTOM SETTINGS (ENGINE EXTENSION LAYER)
+# =========================================================
+
+# Categories are used ONLY for editor/UI grouping.
+# They do NOT affect runtime logic.
+__CUSTOM_CATEGORY = {{
+    "GENERAL": ["HELLO_WORLD"],
+    "SECRET": ["MY_ABSOLUTE_SECRET",]
+}}
+
+# Custom user-defined constants (accessible via game.settings)
+HELLO_WORLD = ":)"
+MY_ABSOLUTE_SECRET = 12345
+
 
 # =========================================================
 # CORE / DEBUG
@@ -182,35 +204,27 @@ def _SETTINGS_PY(project_name: str):
 # Must be False in production builds.
 DEBUG = True
 
-# External settings override file (stored in '.saves/settings.json').
-# If None, engine auto-manages runtime settings.
-JSON_SETTINGS = None
-
 
 # =========================================================
 # PROJECT METADATA
 # =========================================================
 
-# Internal application identifier (also used for build folder name)
-APPNAME = "{project_name.lower()}_gamedata"
-
-# Human-readable game name (UI/window title)
-GAME_NAME = "My Game"
-
-# Short description of the project
-GAME_DESCRIPTION = "A game built with the engine."
-
-# Version used for internal build tracking
-FILE_VERSION = "1.0.0.0"
-
-# Public version shown to players
-GAME_VERSION = "1.0.0"
-
-# Copyright / rights info
-GAME_RIGHT = "All rights reserved."
-
-# Path to application icon (None = default)
-GAME_ICON = None
+# Application and build metadata.
+# APP_FOLDER defines the directory where game data will be stored
+# and may also be used as the folder name during build/export.
+# META contains general information about the game (title, version, etc.).
+# Must be declarated
+GAME_METADATA = {{
+    "APP_FOLDER": ".{project_name.lower()}GameData",
+    "META": {{
+        "GAME_TITLE": "My Game",
+        "GAME_DESCRIPTION": "A game built with RUDLGC Engine",
+        "GAME_ICON": None,
+        "GAME_VERSION": "1.0.0",
+        "COMPANY": "Write something...",
+        "FILE_VERSION": "1.0.0.0"  
+    }}
+}}
 
 
 # =========================================================
@@ -225,7 +239,7 @@ WINDOW_MINWIDTH = 799
 WINDOW_MINHEIGHT = 599
 
 # Window behavior flags
-VSYNC = False
+VSYNC = 0 # must be [-1, 0, 1]
 FULLSCREEN = False
 BORDERLESS = False
 RESIZABLE = True
@@ -240,7 +254,6 @@ START_SCENE = "example"
 
 # Frame timing settings
 FPS = 60   # rendering FPS cap
-PPS = 60   # physics/update rate
 
 
 # =========================================================
@@ -248,8 +261,8 @@ PPS = 60   # physics/update rate
 # =========================================================
 
 # Volume values are in range 0.0 - 1.0
-MUSIC_VOLUME = 0.5
-SOUND_VOLUME = 0.7
+MUSIC_VOLUME = 1.0
+SOUND_VOLUME = 1.0
 
 
 # =========================================================
@@ -265,24 +278,9 @@ SHOW_INFO = True
 # RENDERING QUALITY
 # =========================================================
 
-POINT_SIZE = 1.0
-LINE_SIZE = 1.0
+POINT_SIZE = 10.0
+LINE_SIZE = 10.0
 
-
-# =========================================================
-# CUSTOM SETTINGS (ENGINE EXTENSION LAYER)
-# =========================================================
-
-# Categories are used ONLY for editor/UI grouping.
-# They do NOT affect runtime logic.
-__CUSTOM_CATEGORY = {{
-    "GENERAL": ["HELLO_WORLD"],
-    "SECRET": ["MY_ABSOLUTE_SECRET",]
-}}
-
-# Custom user-defined constants (accessible via game.settings)
-HELLO_WORLD = ":)"
-MY_ABSOLUTE_SECRET = 12345
 
 """)
 

@@ -8,10 +8,6 @@
 # Should be set to False in production.
 DEBUG = True
 
-JSON_SETTINGS = {
-    "FOLDERS": (),
-    "FILE": "settings.json"
-}
 
 
 # Window size settings
@@ -26,30 +22,23 @@ WINDOW_MINHEIGHT = 599
 # Application and build metadata
 # APPNAME is used as the application identifier and may also define
 # the folder name when building/exporting the project.
-APPNAME = ".aaa_gameGameData"
 
-# Human-readable game name displayed in UI or window title.
-GAME_NAME = "My Game"
-
-# Short description of the game/project.
-GAME_DESCRIPTION = "A game built with the engine."
-
-# File version used for internal tracking of builds/resources.
-FILE_VERSION = "1.0.0.0"
-
-# Path to the game icon used in the executable/window.
-GAME_ICON = None
-
-# Copyright or rights notice string.
-GAME_RIGHT = "All rights reserved."
-
-# Public game version shown to users.
-GAME_VERSION = "1.0.0"
+GAME_METADATA = {
+    "APP_FOLDER": ".aaa_gameGameData",
+    "META": {
+        "GAME_TITLE": "My Game",
+        "GAME_DESCRIPTION": "A game built with RUDLGC Engine",
+        "GAME_ICON": None,
+        "GAME_VERSION": "1.0.0",
+        "COMPANY": "Write something...",
+        "FILE_VERSION": "1.0.0.0"  
+    }
+}
 
 
 
 # Rendering / window behavior
-VSYNC = 1
+VSYNC = 0
 FULLSCREEN = False
 BORDERLESS = False
 RESIZABLE = True
@@ -73,7 +62,6 @@ SOUND_VOLUME = 0.7
 # FPS - frames per second target for rendering
 # PPS - physics/update steps per second
 FPS = 240
-PPS = 60
 
 
 # Rendering quality settings
@@ -90,9 +78,14 @@ LINE_SIZE = 1.0
 # - accessible via game.settings if registered
 
 __CUSTOM_CATEGORY = {
-   "JUST-ATTR": ["HELLO_WORLD"],
+   "JUST-ATTR": ["HELLO_WORLD", "MY_DICT"],
    
 }
 
 HELLO_WORLD = ":)"
-SENSA = 1.0
+MY_DICT = {"num": {
+    "1": 1, 
+    "2": 2, 
+    "3": {}
+    }
+}
