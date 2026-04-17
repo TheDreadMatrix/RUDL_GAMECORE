@@ -208,7 +208,7 @@ def _ROUTER_PY(project_name: str):
     from {project_name}.scenes.example import ExampleScene
                            
     class SceneManager(SceneModel):
-        def __init__(self, game: GameType, help_text: str=''):
+        def __init__(self, game: GameType):
             super().__init__(game)
                            
             # FIRST OF WE SWITCHING TO DEFAULT START SCENE

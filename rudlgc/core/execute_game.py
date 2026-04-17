@@ -145,7 +145,7 @@ class Game:
             exit(1)
 
         try:
-            self._scene_router = module.SceneManager(self, "HERE THIS YOU CAN REGISTER YOUR SCENES LOL!!!")
+            self._scene_router = module.SceneManager(self)
         except Exception:
             self.logger._system_log("ERROR", f"You got error in {self.PROJECT_NAME}/router.py.")
             self.logger._system_log("ERROR", traceback.format_exc())
@@ -216,7 +216,7 @@ class Game:
                 self.__render()
             except Exception:
                 error_message = traceback.format_exc()
-                self.ERROR = error_message
+                self.ERROR = error_message if self.settings.DEBUG else "Oops...! You catched an error!!!"
                 self.api.redirectScene("error-scene")
                 self._scene_router.onException(error_message)
             

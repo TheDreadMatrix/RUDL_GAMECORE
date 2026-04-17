@@ -10,4 +10,5 @@
 8) Fix MANAGE_PY settings 1
 9) Add Json custom data settings
 10) Add collectstuff command
-11) Fix MANAGE_PY TEST-HEALTH
+11) Fix MANAGE_PY TEST-HEALTH 1
+12) Fix constant health

@@ -7,7 +7,7 @@ from AAA_game.scenes.menu import Menu
 from rudlgc.johnson import Joshua
 
 class SceneManager(SceneModel):
-    def __init__(self, game: GameType, help_text: str=''):
+    def __init__(self, game: GameType):
         super().__init__(game)
 
         self.settings = Joshua(self.game.paths.getSavesPath(file="settings.json"))

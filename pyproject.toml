@@ -33,7 +33,10 @@ where = ["."]
   "stuff/*.jpg",
   "stuff/*.ttf",
   "stuff/*.ogg",
-  "stuff/*.wav"
+  "stuff/*.wav",
+  "stuff/*.glsl",
+  "stuff/*.vert",
+  "stuff/*.frag"
 ]
 
 [project.scripts]
