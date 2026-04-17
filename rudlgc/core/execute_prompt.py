@@ -16,7 +16,8 @@ class _RUDLParser(argparse.ArgumentParser):
 
 def _rudlgc_admin():
     import webbrowser
-    from rudlgc.core.templates import _PROHIBITED_WORDS, _EXAMPLE_PY, _ROUTER_PY, _SETTINGS_PY, _MANAGE_PY, is_valid_name, _SCENE_PY
+    from rudlgc.core.templates.templates import _PROHIBITED_WORDS, _EXAMPLE_PY, _ROUTER_PY, _SETTINGS_PY, _MANAGE_PY
+    from rudlgc.core.templates.functions import is_valid_name
 
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
     sub_parser = parser.add_subparsers(dest="command")
@@ -92,7 +93,8 @@ def execute_console(execute_now: bool=False) -> int|None:
     import shutil
     import importlib
     import importlib.resources as res
-    from rudlgc.core.templates import _SCENE_PY, _BUILD_PY, is_valid_name, _group_by_category, check_security
+    from rudlgc.core.templates.templates import _SCENE_PY, _BUILD_PY, check_security
+    from rudlgc.core.templates.functions import is_valid_name, _group_by_category
 
     if execute_now:
         from rudlgc.core.execute_game import Game
