@@ -4,6 +4,7 @@ from rudlgc.contrib import GameType, AbstractScene
 from rudlgc.rudlums import Evalent, Keysym
 from rudlgc.johnson import Joshua, Xmlion
 
+
 class ExampleScene(AbstractScene):
     #This method is designed to initialize (create) objects.
     #Here you create objects once, which is better
@@ -24,14 +25,10 @@ class ExampleScene(AbstractScene):
 
 
         self.game.api.setWindowTitle(f"{self.game.getCurrentScene()}")
-        #self.game.request.setWindowRelative(True)
-        #self.game.request.setWindowGrab(True)
-        self.game.logger.trace(self.game.settings.OS_PLATFORM)
-        self.game.logger.trace(self.game.settings.HELLO_WORLD)
-        self.game.logger.trace(self.game.settings.MY_DICT["num"]["1"])
         
         self.time_fps = 0
         self.time_tps = 0
+        
 
 
     #This method is called every frame. 

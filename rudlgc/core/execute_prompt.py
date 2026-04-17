@@ -92,7 +92,7 @@ def execute_console(execute_now: bool=False) -> int|None:
     import shutil
     import importlib
     import importlib.resources as res
-    from rudlgc.core.templates import _SCENE_PY, _BUILD_PY, is_valid_name, _group_by_category
+    from rudlgc.core.templates import _SCENE_PY, _BUILD_PY, is_valid_name, _group_by_category, check_security
 
     if execute_now:
         from rudlgc.core.execute_game import Game
@@ -118,6 +118,7 @@ def execute_console(execute_now: bool=False) -> int|None:
     args = parser.parse_args()
 
     if args.command == "test-health":
+        check_security(parser)
         print("\033[32mManage is working very great!\033[0m")
         return 1
     

@@ -1,31 +1,22 @@
 {
     "window": {
         "window-size": {
-            "window-width": 800,
-            "window-height": 600,
-            "window-minwidth": 799,
-            "window-minheight": 599
+            "width": 800,
+            "height": 600,
+            "min-width": 799,
+            "min-height": 599
         },
         "window-attr": {
+            "vsync": 0,
             "fullscreen": false,
             "borderless": false,
-            "resizable": true,
-            "vsync": 0
+            "resizable": false
         }
     },
-
     "audio": {
-        "music-volume": 1.0,
-        "sound-volume": 1.0
+        "sound-volume": 1.0,
+        "music-volume": 1.0
     },
-
-    "frametime": {
-        "FPS": 240,
-        "PPS": 240
-    },
-
-    "render-abilyties": {
-        "point-size": 10.0,
-        "line-size": 10.0
-    }
+    "frametime": 120,
+    "my_custom": 20
 }

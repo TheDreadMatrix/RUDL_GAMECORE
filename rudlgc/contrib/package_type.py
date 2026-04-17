@@ -1,5 +1,17 @@
 from typing import *
 
+class _GameMetaType:
+    class _Meta:
+        GAME_ICON: str
+        GAME_TITLE: str
+        GAME_VERSION: str
+        GAME_DESCRIPTION: str
+        FILE_VERSION: str
+        COMPANY: str
+
+    APP_FOLDER: str
+    META: _Meta
+
 
 class _Settings:
     DEBUG: bool
@@ -14,23 +26,13 @@ class _Settings:
     BORDERLESS: bool
     RESIZABLE: bool
 
-    PPS: float
     FPS: float
 
     SHOW_FPS: bool
     SHOW_INFO: bool
 
-    GAME_ICON: str
-    GAME_NAME: str
-    GAME_VERSION: str
-    GAME_DESCRIPTION: str
+    GAME_METADATA: _GameMetaType
 
-    APPNAME: str
-    JSON_SETTINGS: str
-    FILE_VERSION: str
-    GAME_RIGHT: str
-
-    TITLE: str
     START_SCENE: str
     OS_PLATFORM: str
 

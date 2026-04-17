@@ -110,8 +110,9 @@ class Game:
             flags |= sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
         
         
-        self._window = sdl2.ext.Window(self.settings.GAME_METADATA["META"]["GAME_TITLE"], size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=flags)
+        self._window = sdl2.ext.Window(self.settings.GAME_METADATA.META.GAME_TITLE, size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=flags)
         self._window.show()
+        
 
         sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
         

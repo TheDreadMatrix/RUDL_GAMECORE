@@ -31,7 +31,9 @@ where = ["."]
 "rudlgc" = [
   "stuff/*.png",
   "stuff/*.jpg",
-  "stuff/error.jfif"
+  "stuff/*.ttf",
+  "stuff/*.ogg",
+  "stuff/*.wav"
 ]
 
 [project.scripts]

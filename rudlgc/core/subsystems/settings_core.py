@@ -23,6 +23,23 @@ def _get_os():
     
 
 
+
+class GameMetaData:
+    class Meta:
+        def __init__(self, GAME_METADATA: dict):
+            self.GAME_TITLE = GAME_METADATA.get("GAME_TITLE") or "NOT-FOUND-TITLE"
+            self.GAME_DESCRIPTION = GAME_METADATA.get("GAME_DESCRIPTION") or "NOT-FOUND-DESCRIPTION"
+            self.GAME_ICON = GAME_METADATA.get("GAME_ICON") or "NOT-FOUND-ICON"
+            self.GAME_VERSION = GAME_METADATA.get("GAME_VERSION") or "NOT-FOUND-GAME-VERSION"
+            self.COMPANY = GAME_METADATA.get("COMPANY") or "NOT-FOUND-COMPANY"
+            self.FILE_VERSION = GAME_METADATA.get("FILE_VERSION") or "NOT-FOUND-FILE-VERSION"
+
+    def __init__(self, GAME_METADATA: dict):
+        self.APP_FOLDER = GAME_METADATA.get("APP_FOLDER") or "NOT-FOUND-FOLDER" 
+        self.META = self.Meta(GAME_METADATA.get("META") or {})
+    
+
+
 class SettingsCore:
     _DEFAULTS = {
         "DEBUG": True,
@@ -84,6 +101,7 @@ class SettingsCore:
 
         self.GAME_METADATA = getattr(self.__settings_module, "GAME_METADATA", None)
         self._hasInRequiredSettings(self.GAME_METADATA, "GAME_METADATA")
+        self.GAME_METADATA = GameMetaData(self.GAME_METADATA)
 
 
         self.FPS = getattr(self.__settings_module, "FPS", 240)
