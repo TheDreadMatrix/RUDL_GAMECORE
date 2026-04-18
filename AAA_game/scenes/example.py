@@ -16,15 +16,21 @@ class ExampleScene(AbstractScene):
         self.data_read_json["count"] = 1000
         self.data_json.saveData(self.data_read_json)
 
+        self.glm = self.game._requirements.glm5
+        
+        
+
         #XML
         self.data_xml = Xmlion(self.game.paths.getConfigPath(file="text.xml"))
         self.data_read_xml = self.data_xml.readXML()
         self.data_read_xml["hello"] = "123"
         
         self.game.logger.trace(self.game.settings.DEBUG)
+        self.game.logger.traceMagenta(self.game.settings.GRAPHICS_API)
 
 
         self.game.api.setWindowTitle(f"{self.game.getCurrentScene()}")
+        
         
         self.time_fps = 0
         self.time_tps = 0

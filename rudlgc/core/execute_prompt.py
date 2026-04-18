@@ -136,19 +136,21 @@ def execute_console(execute_now: bool=False) -> int|None:
         from rudlgc.core.subsystems import SettingsCore, _get_os
 
         CATEGORY = {
+            "_PROHIBITED": ["OS_PLATFORM", "GRAPHICS_API"],
+
             "WINDOW-SIZES": ["WINDOW_WIDTH", "WINDOW_HEIGHT", "WINDOW_MINWIDTH", "WINDOW_MINHEIGHT"],
 
             "WINDOW-ATTR": ["FULLSCREEN", "BORDERLESS", "RESIZABLE", "VSYNC"],
 
             "GAME-META": ["GAME_METADATA"],
 
-            "DEBUG": ["DEBUG", "SHOW_FPS", "SHOW_INFO"],
+            "DEBUG": ["DEBUG", "SHOW_INFO"],
 
             "STARTUP": ["FPS", "START_SCENE"],
 
             "AUDIO": ["MUSIC_VOLUME", "SOUND_VOLUME"],
 
-            "CROSS-PLATFORM": ["OS_PLATFORM"],
+            "CROSS-PLATFORM": ["OS_PLATFORM", "GRAPHICS_API"],
 
             "RENDER-ATTR": ["LINE_SIZE", "POINT_SIZE"]
         } 
@@ -170,7 +172,7 @@ def execute_console(execute_now: bool=False) -> int|None:
 
             if attr in SettingsCore._DEFAULTS:
                 default_value = getattr(settings_module, attr)
-                defaults.append((attr, default_value if attr != "OS_PLATFORM" else str(_get_os()).upper()))
+                defaults.append((attr, default_value if attr not in CATEGORY["_PROHIBITED"] else str(_get_os()).upper()))
                 continue
 
             if re.fullmatch(r"[A-Z_]+", attr):
@@ -243,6 +245,7 @@ def execute_console(execute_now: bool=False) -> int|None:
         shutil.copy(src_image, dst_image)
 
     elif args.command == "build":
+        check_security(parser)
         print("That command not working yet...")
         return 0
 

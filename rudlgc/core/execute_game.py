@@ -7,10 +7,19 @@ import moderngl
 from importlib import import_module
 
 
+
+
 from rudlgc.core.subsystems import Logger, _callOnce
 from rudlgc.core.subsystems import RequestCore
 from rudlgc.core.subsystems import SettingsCore
 from rudlgc.core.subsystems import PathCore
+
+
+class Requirements:
+    mgl = moderngl
+    sdl = sdl2
+    pillow = __import__("PIL")
+    glm5 = __import__("glm")
 
 
 class Keyboard:
@@ -74,6 +83,7 @@ class Game:
         self.tick_time = 1 / self.settings.FPS
 
         #PRIVATE PROTECTED
+        self._requirements = Requirements()
         self._running = True
         self._current_scene_name = self.settings.START_SCENE
         self._screen_color = (0.8, 0.8, 0.8)
@@ -85,19 +95,26 @@ class Game:
         self._target_fps = self.settings.FPS
         self._accumulator = 0
 
-
-                
+        
+        #SETTINGS OF THE WINDOW AND CONTEXT
         if self.settings.DEBUG:
             self.logger._system_log("WARNING", "DEBUG mode is enabled")
-        self.logger._system_log("INFO", "RUDL Game Core build with SDL2 && OpenGL 3.3.0")
         
+        if self.settings.GRAPHICS_API == "OPENGL":
+            self.logger._system_log("WARNING", "Created OpenGL context")
+            sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_PROFILE_MASK, sdl2.SDL_GL_CONTEXT_PROFILE_CORE)
+            sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
+            sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_MINOR_VERSION, 3)
+        elif self.settings.GRAPHICS_API == "OPENGL_ES":
+            self.logger._system_log("WARNING", "Created OpenGL ES context")
+            sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_PROFILE_MASK,  sdl2.SDL_GL_CONTEXT_PROFILE_ES)
+            sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
+            sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_MINOR_VERSION, 0)
 
-        #SETTINGS OF THE WINDOW AND CONTEXT
-        sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_PROFILE_MASK, sdl2.SDL_GL_CONTEXT_PROFILE_CORE)
-        sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
-        sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_MINOR_VERSION, 3)
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_MULTISAMPLEBUFFERS, 1)
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_MULTISAMPLESAMPLES, 4) 
+        sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_DEPTH_SIZE, 24)
+        sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_ALPHA_SIZE, 8)
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_DOUBLEBUFFER, 1)
         
 
@@ -110,15 +127,19 @@ class Game:
             flags |= sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
         
         
-        self._window = sdl2.ext.Window(self.settings.GAME_METADATA.META.GAME_TITLE, size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), flags=flags)
-        self._window.show()
+        self._window = sdl2.ext.Window(self.settings.GAME_METADATA.META.GAME_TITLE, 
+                                       size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), 
+                                       position=(sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED),
+                                       flags=flags)
         
 
         sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
+        self._window.show()
         
 
         # GPU CONTEXT
         sdl2.SDL_GL_CreateContext(self._window.window)
+
         self._ctx = moderngl.create_context()
         self._ctx.viewport = (0, 0, self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
         self._ctx.enable(moderngl.DEPTH_TEST)
@@ -126,11 +147,13 @@ class Game:
         self._ctx.blend_func = (moderngl.SRC_ALPHA, moderngl.ONE_MINUS_SRC_ALPHA)
         self._ctx.point_size = self.settings.POINT_SIZE
         self._ctx.line_width = self.settings.LINE_SIZE
+    
 
         sdl2.SDL_GL_SetSwapInterval(self.settings.VSYNC) 
         
 
         #SCENE ROUTER FOR SCENE MANAGMENT
+        self.logger._system_log("INFO", "RUDL Game Core build with SDL2 && OpenGL 3.3.0")
         try:
             module = import_module(f"{self.PROJECT_NAME}.router")
         except ModuleNotFoundError:
@@ -230,6 +253,7 @@ class Game:
         sdl2.ext.quit()
 
         self.logger._system_log("INFO" if not self.ERROR else "ERROR", "Game succesfully exit" if not self.ERROR else "Game failure exit 2")
+        
         
 
 if __name__ == "__main__":

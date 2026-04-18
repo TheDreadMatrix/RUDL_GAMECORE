@@ -5,6 +5,5 @@ _WARNING_OFF_SDL.filterwarnings("ignore", message="Using SDL2 binaries from pysd
 
 OPENGL = 1
 OPENGL_ES = 2
-VULKAN = 4
 
 __version__ = "1.0.0"

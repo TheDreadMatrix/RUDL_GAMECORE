@@ -11,7 +11,7 @@ DEBUG = True
 
 
 # Window size settings
-WINDOW_WIDTH = 800
+WINDOW_WIDTH = 900
 WINDOW_HEIGHT = 600
 
 # Minimum allowed window size
@@ -49,7 +49,6 @@ START_SCENE = "example"
 
 
 # Debug UI options
-SHOW_FPS = True
 SHOW_INFO = True
 
 

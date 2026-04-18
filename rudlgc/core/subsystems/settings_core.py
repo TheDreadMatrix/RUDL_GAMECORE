@@ -7,20 +7,35 @@ from importlib import import_module
 def _get_os():
     system = platform.system().lower()
     machine = platform.machine().lower()
+    name_os = ""
 
     if system == "windows":
-        return "Windows"
+        name_os = "Windows"
     
     if system == "darwin":
         if "iphone" in machine or "ipad" in machine:
-            return "iOS"
-        return "macOS"
+            name_os = "iOS"
+        name_os = "macOS"
 
     if system == "linux":
         if ("ANDROID_ROOT" in os.environ or "ANDROID_DATA" in os.environ or "ANDROID_BOOTLOGO" in os.environ):
-            return "Android"
-        return "Linux"
+            name_os = "Android"
+        name_os =  "Linux"
+
+    return name_os.upper()
+
+
+def _get_support_api():
+    name_os = _get_os()
     
+    if name_os in ["WINDOWS", "LINUX"]:
+        return "OPENGL"
+    
+    if name_os in ["ANDROID"]:
+        return "OPENGL_ES"
+    
+    if name_os in ["IOS", "MACOS"]:
+        return "None"
 
 
 
@@ -57,7 +72,6 @@ class SettingsCore:
         "RESIZABLE": False,
 
         "START_SCENE": "empty-rudlgc",
-        "SHOW_FPS": True,
         "SHOW_INFO": True,
 
         "MUSIC_VOLUME": 1.0,
@@ -69,7 +83,8 @@ class SettingsCore:
         "POINT_SIZE": 10,
         "LINE_SIZE": 10,
 
-        "OS_PLATFORM": str(_get_os()).upper()
+        "OS_PLATFORM": _get_os(),
+        "GRAPHICS_API": _get_support_api()
 
 
         
@@ -108,7 +123,6 @@ class SettingsCore:
         
 
         self.START_SCENE = getattr(self.__settings_module, "START_SCENE", "empty-rudlgc")
-        self.SHOW_FPS = getattr(self.__settings_module, "SHOW_FPS", True)
         self.SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", True)
 
         self.MUSIC_VOLUME = getattr(self.__settings_module, "MUSIC_VOLUME", 1.0)
@@ -117,7 +131,8 @@ class SettingsCore:
         self.POINT_SIZE = getattr(self.__settings_module, "POINT_SIZE", 10)
         self.LINE_SIZE = getattr(self.__settings_module, "LINE_SIZE", 10)
 
-        self.OS_PLATFORM = str(_get_os()).upper()
+        self.OS_PLATFORM = _get_os()
+        self.GRAPHICS_API = _get_support_api()
 
         for attr in dir(self.__settings_module):
             if attr not in SettingsCore._DEFAULTS and not attr.startswith("__") and attr.isupper():

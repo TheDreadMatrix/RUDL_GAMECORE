@@ -10,10 +10,7 @@ class SceneManager(SceneModel):
     def __init__(self, game: GameType):
         super().__init__(game)
 
-        self.settings = Joshua(self.game.paths.getSavesPath(file="settings.json"))
-        self.settings_read = self.settings.readData()
-
-        self.loadSettings(self.settings_read)
+        
        
         #FIRST OF WE SWITCHING TO DEFAULT START SCENE
         self.game.api.redirectScene(self.game.settings.START_SCENE)
@@ -28,7 +25,7 @@ class SceneManager(SceneModel):
 
     #THIS METHOD APPEARS WHEN GAME IS ENDING. (NEED FOR SAVING DATA PROGRESS)
     def savingProgress(self):
-        self.saveSettings(self.settings, self.settings_read)
+        pass
 
 
     #THIS METHOD APPEARS WHEN AN ERROR OCCURS IN THE CODE.

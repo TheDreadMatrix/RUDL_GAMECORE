@@ -62,51 +62,6 @@ class SceneModel:
         self._current_scene_class.onRender()
 
 
-    def loadSettings(self, joshua_settings_data):
-        self.game.settings.WINDOW_WIDTH = joshua_settings_data["window"]["window-size"]["width"]
-        self.game.settings.WINDOW_HEIGHT = joshua_settings_data["window"]["window-size"]["height"]
-        self.game.settings.WINDOW_MINWIDTH = joshua_settings_data["window"]["window-size"]["min-width"]
-        self.game.settings.WINDOW_MINHEIGHT = joshua_settings_data["window"]["window-size"]["min-height"]
-
-        self.game.settings.VSYNC = joshua_settings_data["window"]["window-attr"]["vsync"]
-        self.game.settings.BORDERLESS = joshua_settings_data["window"]["window-attr"]["borderless"]
-        self.game.settings.FULLSCREEN = joshua_settings_data["window"]["window-attr"]["fullscreen"]
-        self.game.settings.RESIZABLE = joshua_settings_data["window"]["window-attr"]["resizable"]
-
-        self.game.settings.FPS = joshua_settings_data["frametime"]
-        self.game.settings.SOUND_VOLUME = joshua_settings_data["audio"]["sound-volume"]
-        self.game.settings.MUSIC_VOLUME = joshua_settings_data["audio"]["music-volume"]
-        self.game.api.updateSettings()
-
-
-    def saveSettings(self, joshua_settings_data, joshua_settings_data_read: None=None):
-        save_dict = {
-            "window": {
-                "window-size": {
-                    "width": self.game.settings.WINDOW_WIDTH,
-                    "height": self.game.settings.WINDOW_HEIGHT,
-                    "min-width": self.game.settings.WINDOW_MINWIDTH,
-                    "min-height": self.game.settings.WINDOW_MINHEIGHT
-                },
-                "window-attr": {
-                    "vsync": self.game.settings.VSYNC,
-                    "fullscreen": self.game.settings.FULLSCREEN,
-                    "borderless": self.game.settings.BORDERLESS,
-                    "resizable": self.game.settings.RESIZABLE
-                }
-            },
-            "audio": {
-                "sound-volume": self.game.settings.SOUND_VOLUME,
-                "music-volume": self.game.settings.MUSIC_VOLUME
-            },
-            "frametime": self.game.settings.FPS
-        }
-
-        joshua_settings_data.saveData(save_dict)
-        if joshua_settings_data_read is not None:
-            joshua_settings_data.saveData(joshua_settings_data_read)
-
-
     def savingProgress(self):
         pass
 

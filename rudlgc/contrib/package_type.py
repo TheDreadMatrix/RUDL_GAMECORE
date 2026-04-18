@@ -1,4 +1,8 @@
 from typing import *
+import PIL
+import glm
+import moderngl
+import sdl2
 
 class _GameMetaType:
     class _Meta:
@@ -35,6 +39,7 @@ class _Settings:
 
     START_SCENE: str
     OS_PLATFORM: str
+    GRAPHICS_API: str
 
     MUSIC_VOLUME: float
     SOUND_VOLUME: float
@@ -49,8 +54,10 @@ class _RequestType:
 
     def updateSettings(self) -> None: ...
 
-    def redirectScene(self, scene) -> None: ...
+    def redirectScene(self, scene: str) -> None: ...
     def restartScene(self) -> None: ...
+
+    def openUrl(self, url: str) -> None: ...
 
 
     def setScreenColor(self, r: float, g: float, b: float) -> None: ...
@@ -78,6 +85,13 @@ class _LoggerType:
     def trace(message: str, as_error: bool=False) -> None: ...
     @staticmethod
     def traceMagenta(message: str) -> None: ...
+
+
+class _RequirementsType:
+    mgl: moderngl
+    sdl: sdl2
+    pillow: PIL
+    glm5: glm
 
 
 
@@ -108,6 +122,8 @@ class GameType(Protocol):
 
     PROJECT_NAME: str
     ERROR: str
+
+    _requirements: _RequirementsType
 
     def getFps(self) -> float: ...
     def getCurrentScene(self) -> str: ...

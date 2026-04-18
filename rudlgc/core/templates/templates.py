@@ -245,7 +245,7 @@ def _ROUTER_PY(project_name: str):
 def _SETTINGS_PY(project_name: str):
     return textwrap.dedent(f"""
 # =============================================
-# {project_name.upper()} - SETTINGS CONFIGURATION FILE
+# {project_name.upper().replace("_", " ")} - SETTINGS CONFIGURATION FILE
 # =============================================
 
 # =========================================================
@@ -271,6 +271,9 @@ MY_ABSOLUTE_SECRET = 12345
 # Enables debug mode with logs and development tools.
 # Must be False in production builds.
 DEBUG = True
+
+# Shows information about Engine and Fps
+SHOW_INFO = True
 
 
 # =========================================================
@@ -332,14 +335,6 @@ FPS = 60   # rendering FPS cap
 MUSIC_VOLUME = 1.0
 SOUND_VOLUME = 1.0
 
-
-# =========================================================
-# DEBUG UI
-# =========================================================
-
-# Show performance and debug overlays
-SHOW_FPS = True
-SHOW_INFO = True
 
 
 # =========================================================
