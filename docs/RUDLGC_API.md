@@ -1,210 +1,150 @@
-
-
-
-
-# API
-self.game.api:
-
-self.game.api.openUrl( url: str) - open browser url
-self.game.api.closeGame( ) - close a game
-
-self.game.api.setScreenColor( r: float, g: float, b: float) - set clear color
-self.game.api.setWindowPosition( x: int, y: int) - set window position
-self.game.api.setWindowTitle( title: str) - set window title
-self.game.api.setWindowGrap( flag: bool) - set window grab
-self.game.api.setWindowRelative( flag: bool) - set rel for mouse using in 3D
-
-self.game.api.redirectScene( scene: str) - switching current scene to new
-self.game.api.restartScene( ) - restart a current scene
-
-self.game.api.updateSettings( ) - its not working yet
+# RUDLGC API
 
 # SETTINGS
 
-self.game.settings:
+self.game.settings || self.settings ::
+    DEBUG: bool
+    WINDOW_WIDTH: int
+    WINDOW_HEIGHT: int
+    WINDOW_MINWIDTH: int
+    WINDOW_MINHEIGHT: int
 
-self.game.settings.DEBUG: bool
+    VSYNC: int
+    FULLSCREEN: bool
+    BORDERLESS: bool
+    RESIZABLE: bool
 
-self.game.settings.WINDOW_WIDTH: int
-self.game.settings.WINDOW_HEIGHT: int
-self.game.settings.WINDOW_MINWIDTH: int
-self.game.settings.WINDOW_MINHEIGHT: int
+    FPS: float
 
-self.game.settings.VSYNC: int
-self.game.settings.FULLSCREEN: bool
-self.game.settings.BORDERLESS: bool
-self.game.settings.RESIZABLE: bool
+    SHOW_FPS: bool
+    SHOW_INFO: bool
 
-self.game.settings.FPS: float
+    GAME_METADATA: _GameMetaType ::
 
-self.game.settings.SHOW_FPS: bool
-self.game.settings.SHOW_INFO: bool
+        GAME_METADATA.APP_FOLDER: str
+        GAME_METADATA.META: dict
+        GAME_METADATA.ICON: str
+        GAME_METADATA.META.GAME_TITLE: str
+        GAME_METADATA.META.GAME_VERSION: str
+        GAME_METADATA.META.GAME_DESCRIPTION: str
+        GAME_METADATA.META.FILE_VERSION: str
+        GAME_METADATA.META.COMPANY: str
 
-self.game.settings.GAME_METADATA: _GameMetaType
-self.game.settings.GAME_METADATA.APP_FOLDER: str
-self.game.settings.GAME_METADATA.GAME_VERSION: str
-self.game.settings.GAME_METADATA.GAME_TITLE: str
-self.game.settings.GAME_METADATA.GAME_ICON: None|str
-self.game.settings.GAME_DESCRIPTION: str
-self.game.settings.GAME_METADATA.COMPANY: str
-self.game.settings.GAME_METADATA.FILE_VERSION: str
+    START_SCENE: str
+    OS_PLATFORM: str
+    GRAPHICS_API: str
 
-self.game.settings.START_SCENE: str
-self.game.settings.OS_PLATFORM: str
-self.game.settings.GRAPHICS_API: str
+    MUSIC_VOLUME: float
+    SOUND_VOLUME: float
 
-self.game.settings.MUSIC_VOLUME: float
-self.game.settings.SOUND_VOLUME: float
+    POINT_SIZE: float
+    LINE_SIZE: float
 
-self.game.settings.POINT_SIZE: float
-self.game.settings.LINE_SIZE: float
 
+# API
 
+self.game.api || self.api ::
 
-# LOGGER TRACE
-self.game.logger:
+    def closeGame(self) -> None: ...  \\Closes a game
 
-self.game.logger.trace( message: str, as_error: bool=False) - print message in console as "[h:m:s]-[TRACE-USER]: {message}"
-self.game.logger.traceMagenta( message: str) - also working but console color is peorple
+    def updateSettings(self) -> None: ...  \\Not working
 
-# KEYBOARD AND MOUSE
-self.game.keyboard:
+    def redirectScene(self, scene: str) -> None: ...  \\Switching the scene.
+    def restartScene(self) -> None: ...                \\Restart the current scene
 
-self.game.keyboard.isPressed( key: int) -> bool  - return True if we press the Key
+    def openUrl(self, url: str) -> None: ...            \\Open url in your browser
+    def chooseFile(self, message: str) -> str: ...      \\Dialog file
 
-self.game.mouse:
+    def isMinimilized(self, event) -> bool: ...         \\Is window minimilized?
+    def isMaximilized(self, event) -> bool: ...         \\Is window maximilized?
+    def isRestored(self, event) -> bool: ...            \\Is window restored?
+    def isResized(self, event) -> bool: ...             \\Is window resized?
+    def isFocusLost(self, event) -> bool: ...           \\Is window unfocused now?
+    def isFocusGain(self, event) -> bool: ...           \\Is window focused now?
 
-self.game.mouse.isLeft( ) -> bool - return True if press left button
-self.game.mouse.isMiddle( ) -> bool - return True if press middle button
-self.game.mouse.isRight( ) -> bool - return True if press right button
+    def createMessageBox(self, title: str, info: str, type_messagebox: int=0) -> None: ...   \\Creates small window
+    def setScreenColor(self, r: float, g: float, b: float) -> None: ...                       \\Clear screen color
+    def setWindowPosition(self, x: int, y: int) -> None: ...                                   \\Set Window position
+    def setWindowSize(self, w: int, h: int) -> None: ...                                        \\Set Window size
+    def setWindowTitle(self, title: str) -> None: ...                                            \\Set Window title
+    def setWindowGrab(self, flag: bool) -> None: ...                                              \\Set Window grap mouse event flag
+    def setWindowRelative(self, flag: bool) -> None: ...                                           \\Set Window mouse relative pos flag
 
-self.game.mouse.getPos( ) -> tuple(x, y) - return current [X, Y] mouse cursor position
-self.game.mouse.getRel( ) -> tuple(x, y) - return current [X, Y] mouse rel (Need for 3D games)
 
+# PATHS
 
-# PATHS 
+self.game.paths || self.paths ::
 
-self.game.paths:
+    def getConfigPath(self, *folder: str, file: str) -> str: ...      \\Path for .config/
+    def getSavesPath(self, *folder: str, file: str) -> str: ...        \\Path for .saves/
+    def getMusicsPath(self, *folder: str, file: str) -> str: ...        \\Path for musics/
+    def getSoundsPath(self, *folder: str, file: str) -> str: ...         \\Path for sounds/
+    def getAssetsPath(self, *folder: str, file: str) -> str: ...          \\Path for assets/
+    def getFontsPath(self, *folder: str, file: str) -> str: ...            \\Path for fonts/
+    def getShadersPath(self, *folder: str, file: str) -> str: ...           \\Path for shaders/
 
-self.game.paths.getConfigPath( *folder, file: str) -> str - return current path of PROJECT_NAME/.config
-self.game.paths.getSavesPath( *folder, file: str) -> str - return current path of PROJECT_NAME/.saves
-self.game.paths.getMusicsPath( *folder, file: str) -> str - return current path of PROJECT_NAME/musics
-self.game.paths.getSoundsPath( *folder, file: str) -> str - return current path of PROJECT_NAME/sounds
-self.game.paths.getAssetsPath( *folder, file: str) -> str - return current path of PROJECT_NAME/assets
-self.game.paths.getFontsPath( *folder, file: str) -> str - return current path of PROJECT_NAME/fonts
-self.game.paths.getShadersPath( *folder, file: str) -> str - return current path of PROJECT_NAME/shaders
 
-# GAME ATTRIBUTES
+# LOGGER
 
-self.game.delta_time: float - FPS time
-self.game.tick_time: float - TPS time
+self.game.logger || self.logger ::
 
-self.game.PROJECT_NAME: str - your project name
-self.game.ERROR: str - error message
+    
+    def trace(message: str, as_error: bool=False) -> None: ...              \\Print message like '[h:m:s]-[TRACE-USER]: {message}'
+    def traceMagenta(message: str) -> None: ...                              \\Also works but message is peorple
 
-self.game.getFps( ) -> float - return FPS
-self.game.getCurrentScene( ) -> return current scene
 
+# MOUSE
 
+self.game.mouse || self.mouse ::
 
+    def mouseEnter(self, event) -> bool: ...                            \\True if mouse enters into window
+    def mouseLeave(self, event) -> bool: ...                             \\True if mouse leaves from window
+    def mouseButtonDown(self, button: int, event) -> bool: ...            \\If button its down by [LEFT, MIDDLE, RIGHT]
+    def mouseButtonUp(self, button: int, event) -> bool: ...               \\Also works but realese
 
-# JOHNSON DATA
+    def isLeft(self) -> bool: ...                                       \\Is mouse pressed left button
+    def isMiddle(self) -> bool: ...                                      \\Is mouse pressed middle button
+    def isRight(self) -> bool: ...                                        \\Is mouse pressed right button
 
-from rudlgc.johnson import Joshua, Xmlion
+    def getPos(self) -> tuple[float, float]: ...                            \\Get current cursor pos
+    def getRel(self) -> tuple[float, float]: ...                             \\Get current rel cursor
+    def getWheel(self) -> float: ...                                          \\Get current wheel by middle 
 
-Joshua - for JSON:
 
-.readData() -> dict - returns dict of data
-.saveData(data: dict) - saves data to json file
+# KEYBOARD
 
+self.game.keyboard || self.keyboard ::
 
-Xmlion - for XML:
-.readXml() -> dict - returns dict of data
-.saveXml(data: dict) - saves data to xml file
+    def isPressDown(self, key: int, event) -> bool: ...                 \\Is keyboard pressed down
+    def isPressUp(self, key: int, event) -> bool: ...                    \\Is keyboard pressed up
+    def isPress(self, key: int) -> bool: ...                              \\Is keyboard also pressed
 
 
-//EXAMPLE:
-my_data = Joshua(json_path: str)
+# GAMEPAD
 
-//LOADING
-my_data_read = my_data.readData()
+BUT ITS NOT WORKING YET....
 
-//CHANGING
-my_data_read["some-var"] = 10
 
-//SAVING
-my_data.saveData(my_data_read)
 
+# GAME ATTRIBUTES AND METHODS
 
-Xmlion also working as Joshua but with some attributes in dict
+self.game ::
 
-# RUDLUMS (RUDL ENUMS)
+    delta_time: float
+    tick_time: float
 
-//WARNING THAT MODULE WILL BE DELETED AND WRITES INTO ENGINE CORE
+    PROJECT_NAME: str
+    ERROR: str
 
-from rudlgc.rudlums import Evalent, Keysym
+    def getFps(self) -> float: ...                  \\Shows current FPS
+    def getTps(self) -> float: ...                   \\Shows current TPS
+    def getCurrentScene(self) -> str: ...             \\Shows current scene
 
-Evalent - enums of Event
 
-Evalent.KEY_DOWN - var
 
-//EXAMPLE
+# IMPORTS
 
-def onEvent(self, event):
-    if event.type == Evalent.KEY_DOWN:
-        self.game.logger.trace("We pressed the key")
+rudlgc.johnson ::
 
-
-Keysym - enums of Keys Keyboard
-
-Keysym.A - var
-
-//EXAMPLE
-
-if self.game.keyboard.isPressed(Keysym.A):
-    self.game.logger.trace("We pressed Key A")
-
-
-
-
-
-
-# CONTRIBUTION SCENE|GAMETYPE|ANOTATIONS
-
-from rudlgc.contrib.package_type import AbstractScene, GameType
-from rudlgc.contrib.package_scenes import SceneEmpty, SceneError
-from rudlgc.contrib.package_model import SceneModel
-
-
-AbstractScene - its interface to our scenes 
-
-//EXAMPLE
-
-class Menu(AbstractScene): ...
-
-Btw its not neccesary you can not using them. Its need for anotation
-
-
-GameType - game type anotation
-
-Shows all variable, classes, methods.
-
-
-SceneEmpty - game scene stubs
-
-//EXAMPLE
-self.registerScene('stub-scene', lambda: SceneEmpty(game=game, text_title: str="My empty scene", text_about_scene: str="Nothing...", scene_switching: str="example-scene"))
-
-text_title - for window title
-text_about_scene - text in game about future scene your dreams your notes
-scene_switching - you can return to your scene
-
-
-SceneError - game error scene
-
-But you must register the engine build that scene to shows traceback error but you customizing them by inheritance
-
-MyNewEmptyScene(SceneEmpty): ...
-MyNewErrorScene(SceneError): ...
-
-self.registerScene('error-scene', lambda: MyNewErrorScene(game=game)) - building core scene
+    Joshua -> JSON
+    Xmlion -> Xmlion
