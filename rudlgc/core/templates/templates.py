@@ -144,7 +144,7 @@ class ExampleScene(PackageScene):
     #This method is designed to initialize (create) objects.
     #Here you create objects once, which is better
     def __init__(self, game: GameType):
-        self.game = game
+        super().__init__(game)
 
     #This method is called every frame.                    
     def onUpdate(self):
@@ -177,7 +177,8 @@ def _SCENE_PY(class_name: str):
 
     class {formatted_name}(PackageScene):
         def __init__(self, game: GameType):
-            self.game = game
+            super().__init__(game)
+            # Here we have self.keyboard, self.mouse, self.api
 
         def onUpdate(self):
             pass

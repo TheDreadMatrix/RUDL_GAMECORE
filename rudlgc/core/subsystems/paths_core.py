@@ -9,7 +9,7 @@ class PathCore:
     def __init__(self, game):
         PROJECT_DIR = game.PROJECT_NAME
         if hasattr(sys, "frozen"):
-            self._BASE_DATA_DIR = Path(platformdirs.user_data_dir(game.settings.APPNAME))
+            self._BASE_DATA_DIR = Path(platformdirs.user_data_dir(game.settings.GAME_METADATA.APP_FOLDER))
         else:
             self._BASE_DATA_DIR = Path.cwd() / PROJECT_DIR
 

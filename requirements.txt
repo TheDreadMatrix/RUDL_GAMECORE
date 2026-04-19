@@ -5,5 +5,3 @@ pysdl2
 pysdl2-dll
 pyglm
 pillow
-build
-twine

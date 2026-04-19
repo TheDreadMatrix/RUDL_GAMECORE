@@ -23,8 +23,7 @@ class Requirements:
 
 
 class Gamepad:
-    def __init__(self):
-        pass
+    NOT_WORKING = 0
 
 
 
@@ -52,7 +51,7 @@ class Mouse:
     def __init__(self):
         self.pos_x, self.pos_y = sdl2.c_int(), sdl2.c_int()
         self.rel_x, self.rel_y = 0, 0
-        self.wheel_x, self.wheel_y = 0, 0
+        self.wheel = 0
         self.buttons = None
 
     def updateThis(self): self.buttons = sdl2.SDL_GetMouseState(self.pos_x, self.pos_y)
@@ -62,18 +61,21 @@ class Mouse:
             self.rel_x, self.rel_y = event.motion.xrel, event.motion.yrel
 
         if event.type == sdl2.SDL_MOUSEWHEEL:
-            self.wheel_x, self.wheel_y = event.wheel.x, event.wheel.y
+            self.wheel = event.wheel.y
 
 
     def mouseEnter(self, event):
-        if event.type == sdl2.SDL_WINDOWEVENT:
-            return event.window.event == sdl2.SDL_WINDOWEVENT_ENTER
-        return False
+        return event.type == sdl2.SDL_WINDOWEVENT and event.window.event == sdl2.SDL_WINDOWEVENT_ENTER
 
     def mouseLeave(self, event):
-        if event.type == sdl2.SDL_WINDOWEVENT:
-            return event.window.event == sdl2.SDL_WINDOWEVENT_LEAVE
-        return False
+        return event.type == sdl2.SDL_WINDOWEVENT and event.window.event == sdl2.SDL_WINDOWEVENT_LEAVE
+        
+
+    def mouseButtonDown(self, button, event):
+        return event.type == sdl2.SDL_MOUSEBUTTONDOWN and event.button.button == button
+    
+    def mouseButtonUp(self, button, event):
+        return event.type == sdl2.SDL_MOUSEBUTTONUP and event.button.button == button
 
 
     def isLeft(self): return self.buttons & sdl2.SDL_BUTTON(sdl2.SDL_BUTTON_LEFT)
@@ -86,7 +88,7 @@ class Mouse:
     
     def getRel(self): return (self.rel_x, self.rel_y)
 
-    def getWheel(self): return (self.wheel_x, self.wheel_y)
+    def getWheel(self): return self.wheel
 
 
 
@@ -108,9 +110,10 @@ class Game:
 
         self.keyboard = Keyboard()
         self.mouse = Mouse()
+        self.gamepad = Gamepad()
 
         self.delta_time = 0
-        self.tick_time = 1 / self.settings.FPS
+        self.tick_time = 1 / 60
 
         #PRIVATE PROTECTED
         self._requirements = Requirements()
@@ -120,6 +123,9 @@ class Game:
 
         self._last_time = time.perf_counter()
         self._fps = 0.0
+        self._tps = 0.0
+        self._tick_count = 0
+        self._tick_timer = 0.0
         self._frame_count = 0
         self._fps_timer = 0.0
         self._target_fps = self.settings.FPS
@@ -211,6 +217,7 @@ class Game:
 
     
     def getFps(self): return self._fps
+    def getTps(self): return self._tps
     def getCurrentScene(self): return self._current_scene_name
 
 
@@ -242,13 +249,20 @@ class Game:
             self._scene_router._updateFixed()
             self._accumulator -= self.tick_time
 
+            self._tick_count += 1
+
         for event in sdl2.ext.get_events():
             if event.type == sdl2.SDL_QUIT:
                 self._running = False
             
             self.mouse.eventThis(event)
-
             self._scene_router._event(event)
+
+        self._tick_timer += self.delta_time
+        if self._tick_timer >= 1.0:
+            self._tps = self._tick_count
+            self._tick_count = 0
+            self._tick_timer = 0.0
 
 
     def __render(self):

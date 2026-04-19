@@ -18,7 +18,8 @@ dependencies = [
   "PyGLM",
   "pillow",
   "platformdirs",
-  "pyinstaller"
+  "pyinstaller",
+  "easygui"
 ]
 
 [tool.setuptools]
