@@ -1,15 +1,18 @@
 
 #There we import 'GameType' for anotation and 'AbstractScene' for ours scene
-from rudlgc.contrib import GameType, AbstractScene
+from rudlgc.contrib import GameType, PackageScene
 from rudlgc.rudlums import Evalent, Keysym
 from rudlgc.johnson import Joshua, Xmlion
 
 
-class ExampleScene(AbstractScene):
+class ExampleScene(PackageScene):
     #This method is designed to initialize (create) objects.
     #Here you create objects once, which is better
     def __init__(self, game: GameType):
         self.game = game
+        self.keyboard = game.keyboard
+        self.mouse = game.mouse
+
         #JSON
         self.data_json = Joshua(self.game.paths.getConfigPath(file="test.json"))
         self.data_read_json = self.data_json.readData()
@@ -34,25 +37,38 @@ class ExampleScene(AbstractScene):
         
         self.time_fps = 0
         self.time_tps = 0
+
+        self.game.api.createMessageBox("Hello", "none noe", type_messagebox=2)
         
 
 
     #This method is called every frame. 
     def onUpdate(self):
         self.time_fps += self.game.delta_time
-        self.game.api.setWindowTitle(f"FPS: {self.time_fps:.2f} - TPS: {self.time_tps:.2f} - FRAMERATE: {int(self.game.getFps())}")
+        self.game.api.setWindowTitle(f"{self.mouse.getPos()} - {self.mouse.getRel()} - {self.mouse.getWheel()}")
+
+
+        if self.keyboard.isPress(Keysym.LEFT): self.game.logger.trace("LEFT")
+        if self.keyboard.isPress(Keysym.RIGHT): self.game.logger.trace("RIGHT")
 
 
     def onFixedUpdate(self):
         self.time_tps += self.game.tick_time
         
-        if self.game.keyboard.isPressed(Keysym.LEFT): self.game.logger.trace("LEFT")
-        if self.game.keyboard.isPressed(Keysym.RIGHT): self.game.api.redirectScene('future-scene')
     
 
     #This method is called on any event, such as clicking, changing focus, etc.                      
     def onEvent(self, event):
-        pass
+        if self.game.api.isFocusLost(event):
+            self.game.logger.trace("LOST")
+
+        if self.game.api.isFocusGain(event):
+            self.game.logger.trace("GAINDE")
+        
+
+        if self.game.api.isResized(event):
+            self.game.logger.trace("resized")
+        
             
 
     #The method is called after 'onUpdate' is created to draw objects              

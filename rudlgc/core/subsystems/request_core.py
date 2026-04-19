@@ -6,6 +6,7 @@ import sdl2
 class RequestCore:
     def __init__(self, game):
         self.game = game
+        self.__message_box_dict = {0: sdl2.SDL_MESSAGEBOX_INFORMATION, 1: sdl2.SDL_MESSAGEBOX_ERROR, 2: sdl2.SDL_MESSAGEBOX_WARNING}
 
     def closeGame(self):
         self.game._running = False
@@ -20,8 +21,30 @@ class RequestCore:
 
     def openUrl(self, url): sdl2.SDL_OpenURL(url.encode())
 
+    def isMinimilized(self, event):
+        return event.type == sdl2.SDL_WINDOWEVENT and event.window.event == sdl2.SDL_WINDOWEVENT_MINIMIZED
+        
+    def isMaximilized(self, event):
+        return event.type == sdl2.SDL_WINDOWEVENT and event.window.event == sdl2.SDL_WINDOWEVENT_MAXIMIZED
+        
+    def isRestored(self, event):
+        return event.type == sdl2.SDL_WINDOWEVENT and event.window.event == sdl2.SDL_WINDOWEVENT_RESTORED
+        
+    def isResized(self, event):
+        return event.type == sdl2.SDL_WINDOWEVENT and event.window.event == sdl2.SDL_WINDOWEVENT_RESIZED
+    
+    def isFocusLost(self, event):
+        return event.type == sdl2.SDL_WINDOWEVENT and event.window.event == sdl2.SDL_WINDOWEVENT_FOCUS_LOST
+    
+    def isFocusGain(self, event):
+        return event.type == sdl2.SDL_WINDOWEVENT and event.window.event == sdl2.SDL_WINDOWEVENT_FOCUS_GAINED
+        
 
 
+    def createMessageBox(self, title, info, type_messagebox=0): 
+        sdl2.SDL_ShowSimpleMessageBox(self.__message_box_dict.get(type_messagebox, 0), title.encode(), info.encode(), None)
+
+        
     def setWindowGrab(self, flag): sdl2.SDL_SetWindowGrab(self.game._window.window, flag)
     def setWindowRelative(self, flag): sdl2.SDL_SetRelativeMouseMode(flag)
     def setScreenColor(self, r, g, b): self.game._screen_color = (r, g, b)

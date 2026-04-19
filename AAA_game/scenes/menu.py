@@ -1,7 +1,7 @@
 
-from rudlgc.contrib import GameType, AbstractScene
+from rudlgc.contrib import GameType, PackageScene
 
-class Menu(AbstractScene):
+class Menu(PackageScene):
     def __init__(self, game: GameType):
         self.game = game
         self.sdl2 = self.game.requirements.sdl2

@@ -22,6 +22,13 @@ class Requirements:
     glm5 = __import__("glm")
 
 
+class Gamepad:
+    def __init__(self):
+        pass
+
+
+
+
 class Keyboard:
     def __init__(self):
         self.keys = None
@@ -30,33 +37,56 @@ class Keyboard:
         self.keys = sdl2.SDL_GetKeyboardState(None)
 
 
-    def isPressed(self, key):
-        return self.keys[key]
+    def isPressDown(self, key, event):
+        if event.type == sdl2.SDL_KEYDOWN and event.key.repeat == 0:
+            return event.key.keysym.scancode == key
+
+    def isPressUp(self, key, event):
+        if event.type == sdl2.SDL_KEYUP and event.key.repeat == 0:
+            return event.key.keysym.scancode == key
+
+    def isPress(self, key): return self.keys[key]
 
 
 class Mouse:
     def __init__(self):
-        self.mx = sdl2.c_int()
-        self.my = sdl2.c_int()
+        self.pos_x, self.pos_y = sdl2.c_int(), sdl2.c_int()
+        self.rel_x, self.rel_y = 0, 0
+        self.wheel_x, self.wheel_y = 0, 0
         self.buttons = None
 
-    def updateThis(self):
-        self.buttons = sdl2.SDL_GetMouseState(self.mx, self.my)
+    def updateThis(self): self.buttons = sdl2.SDL_GetMouseState(self.pos_x, self.pos_y)
 
-    def isLeft(self):
-        return self.buttons & sdl2.SDL_BUTTON(sdl2.SDL_BUTTON_LEFT)
+    def eventThis(self, event):
+        if event.type == sdl2.SDL_MOUSEMOTION:
+            self.rel_x, self.rel_y = event.motion.xrel, event.motion.yrel
+
+        if event.type == sdl2.SDL_MOUSEWHEEL:
+            self.wheel_x, self.wheel_y = event.wheel.x, event.wheel.y
+
+
+    def mouseEnter(self, event):
+        if event.type == sdl2.SDL_WINDOWEVENT:
+            return event.window.event == sdl2.SDL_WINDOWEVENT_ENTER
+        return False
+
+    def mouseLeave(self, event):
+        if event.type == sdl2.SDL_WINDOWEVENT:
+            return event.window.event == sdl2.SDL_WINDOWEVENT_LEAVE
+        return False
+
+
+    def isLeft(self): return self.buttons & sdl2.SDL_BUTTON(sdl2.SDL_BUTTON_LEFT)
     
-    def isMiddle(self):
-        return self.buttons & sdl2.SDL_BUTTON(sdl2.SDL_BUTTON_MIDDLE)
+    def isMiddle(self): return self.buttons & sdl2.SDL_BUTTON(sdl2.SDL_BUTTON_MIDDLE)
     
-    def isRight(self):
-        return self.buttons & sdl2.SDL_BUTTON(sdl2.SDL_BUTTON_RIGHT)
+    def isRight(self): return self.buttons & sdl2.SDL_BUTTON(sdl2.SDL_BUTTON_RIGHT)
     
-    def getPos(self):
-        return (self.mx.value, self.my.value)
+    def getPos(self): return (self.pos_x.value, self.pos_y.value)
     
-    def getRel(self):
-        return [0, 0]
+    def getRel(self): return (self.rel_x, self.rel_y)
+
+    def getWheel(self): return (self.wheel_x, self.wheel_y)
 
 
 
@@ -65,7 +95,7 @@ class Mouse:
 
 class Game:
     def __init__(self):
-        sdl2.ext.init()
+        sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO | sdl2.SDL_INIT_GAMECONTROLLER)
     
         #FREE TO USE
         self.PROJECT_NAME = os.environ.get("RUDLGC_PROJECT_NAME", "NOT_FOUND")
@@ -177,6 +207,8 @@ class Game:
 
         
 
+        
+
     
     def getFps(self): return self._fps
     def getCurrentScene(self): return self._current_scene_name
@@ -213,6 +245,9 @@ class Game:
         for event in sdl2.ext.get_events():
             if event.type == sdl2.SDL_QUIT:
                 self._running = False
+            
+            self.mouse.eventThis(event)
+
             self._scene_router._event(event)
 
 

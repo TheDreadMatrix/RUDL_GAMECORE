@@ -1,4 +1,4 @@
-from . import GameType, AbstractScene
+from . import GameType, PackageScene
 from .package_scenes import SceneEmpty, SceneError
 import traceback as _error
 
@@ -12,7 +12,7 @@ class SceneModel:
             "empty-scene": lambda: SceneEmpty(game=game, text_title="Buildings Scene", text_about_scene="MOST USEFUL SCENE IN THE WORLD!!!", scene_switching=1),
             "error-scene": lambda: SceneError(game=game),
         }
-        self._current_scene_class = self._scene_dict.get(self.game.settings.START_SCENE, lambda: AbstractScene(game=game))()
+        self._current_scene_class = self._scene_dict.get(self.game.settings.START_SCENE, lambda: PackageScene(game=game))()
         
 
 

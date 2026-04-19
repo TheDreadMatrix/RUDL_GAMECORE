@@ -1,8 +1,8 @@
-from rudlgc.contrib import GameType, AbstractScene
+from rudlgc.contrib import GameType, PackageScene
 
 
 
-class SceneError(AbstractScene):
+class SceneError(PackageScene):
     def __init__(self, game: GameType):
         self.game = game
         self.game.api.setWindowTitle("RUDLGC Error")
@@ -31,7 +31,7 @@ class SceneError(AbstractScene):
 
     
 
-class SceneEmpty(AbstractScene):
+class SceneEmpty(PackageScene):
     def __init__(self, game: GameType, text_title: str, text_about_scene: str, scene_switching: str):
         self.game = game
         self.game.api.setWindowTitle(f"RUDLGC EMPTY: {text_title}")

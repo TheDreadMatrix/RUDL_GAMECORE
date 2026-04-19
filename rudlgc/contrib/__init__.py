@@ -1,9 +1,9 @@
-from .package_type import GameType, AbstractScene
+from .package_type import GameType, PackageScene
 from .package_model import SceneModel
 
 
 __all__ = [
     "GameType", 
     "SceneModel",
-    "AbstractScene"
+    "PackageScene"
 ]

@@ -138,9 +138,9 @@ _PROHIBITED_FUNCTIONS = [
 
 _EXAMPLE_PY = textwrap.dedent("""
 #There we import 'GameType' for anotation and 'AbstractScene' for ours scene
-from rudlgc.contrib import GameType, AbstractScene
+from rudlgc.contrib import GameType, PackageScene
                               
-class ExampleScene(AbstractScene):
+class ExampleScene(PackageScene):
     #This method is designed to initialize (create) objects.
     #Here you create objects once, which is better
     def __init__(self, game: GameType):
@@ -173,9 +173,9 @@ def _SCENE_PY(class_name: str):
     formatted_name = "".join(word.capitalize() for word in class_name.replace("_", " ").split())
 
     return textwrap.dedent(f"""
-    from rudlgc.contrib import GameType, AbstractScene
+    from rudlgc.contrib import GameType, PackageScene
 
-    class {formatted_name}(AbstractScene):
+    class {formatted_name}(PackageScene):
         def __init__(self, game: GameType):
             self.game = game
 
