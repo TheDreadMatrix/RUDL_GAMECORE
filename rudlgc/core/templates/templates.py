@@ -213,7 +213,7 @@ def _ROUTER_PY(project_name: str):
             super().__init__(game)
                            
             # FIRST OF WE SWITCHING TO DEFAULT START SCENE
-            self.game.api.redirectScene(self.game.settings.START_SCENE)
+            self.game.config_api.redirectScene(self.game.settings.START_SCENE)
             
             # HERE YOU CALLING 'self.registerScene' TO REGISTRATE TO GAME
             self.registerScene('example', lambda: ExampleScene(game=game))

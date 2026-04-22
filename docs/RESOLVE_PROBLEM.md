@@ -3,6 +3,8 @@ JOSHUA SETTINGS IN self.game.settings
 change|load CONSTANT save them to your file 
 
 
+['rudlgc', 'rudlgc.core', 'rudlgc.core.execute_prompt', 'rudlgc.core.templates', 'rudlgc.core.templates.templates', 'rudlgc.core.templates.functions', 'rudlgc.core.subsystems.logger_core', 'rudlgc.core.subsystems.request_core', 'rudlgc.core.subsystems.settings_core', 'rudlgc.core.subsystems.paths_core', 'rudlgc.core.subsystems', 'rudlgc.core.execute_game', 'rudlgc.contrib.package_type', 'rudlgc.contrib.package_scenes', 'rudlgc.contrib.package_model', 'rudlgc.contrib', 'rudlgc.rudlums', 'rudlgc.johnson']
+
 
 Custom json settings must be:
 your_custom_settings.json must be in PROJECT-NAME/.saves/
@@ -45,3 +47,35 @@ self.load_settings(self.settings_dataread)
 and in savingProgress we write
 
 self.save_settings()
+
+
+
+CustomShader:
+
+#include gcl
+
+void main(){
+    GclColor = GCL_getBaseShaderColor();
+}
+
+
+->->->
+
+#version 330 core
+
+in vec2 GclUv;
+out vec4 GclColor;
+
+uniform sampler2D GclTexture;
+uniform float GclAlpha;
+
+
+vec4 GCL_getBaseShaderColor(){
+    return texture(GclTexture, GclUv) * vec4(0, 0, 0, GclAlpha);
+}
+
+
+
+void main(){
+    GclColor = GCL_getBaseShaderColor();
+}

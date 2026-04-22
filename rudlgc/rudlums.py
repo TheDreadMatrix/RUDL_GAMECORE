@@ -1,6 +1,13 @@
 from enum import IntEnum
 
 
+class MessageNum(IntEnum):
+    INFO = 0
+    WARNING = 1
+    ERROR = 2
+
+
+
 class KeyNum(IntEnum):
     # ======================
     # Letters (0 - 25)

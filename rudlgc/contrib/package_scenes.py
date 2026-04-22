@@ -5,7 +5,7 @@ from rudlgc.contrib import GameType, PackageScene
 class SceneError(PackageScene):
     def __init__(self, game: GameType):
         self.game = game
-        self.game.api.setWindowTitle("RUDLGC Error")
+        self.game.window_api.setTitle("RUDLGC Error")
         
         self.game.logger._system_log("ERROR", "Catched error!!!")
         self.game.logger._system_log("ERROR", self.game.ERROR if self.game.ERROR else None)
@@ -21,7 +21,7 @@ class SceneError(PackageScene):
     
 
     def onRender(self):
-        self.game.api.setScreenColor(0, 0, 0)
+        self.game.window_api.clearColor(0, 0, 0)
     
 
     def onSave(self):

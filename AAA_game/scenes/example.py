@@ -1,7 +1,7 @@
 
 #There we import 'GameType' for anotation and 'AbstractScene' for ours scene
 from rudlgc.contrib import GameType, PackageScene
-from rudlgc.rudlums import MouseNum, KeyNum
+from rudlgc.rudlums import MouseNum, KeyNum, MessageNum
 
 
 class ExampleScene(PackageScene):
@@ -9,14 +9,13 @@ class ExampleScene(PackageScene):
     #Here you create objects once, which is better
     def __init__(self, game: GameType):
         super().__init__(game)
-        
-
-        self.api.setWindowTitle(f"{self.game.getCurrentScene()}")
-        
+    
         
 
     #This method is called every frame. 
     def onUpdate(self):
+        #self.api.setWindowTitle(f"{self.game.getFps()}")
+
         if self.keyboard.isPress(KeyNum.A):
             self.logger.trace("A")
 
@@ -30,23 +29,14 @@ class ExampleScene(PackageScene):
 
     #This method is called on any event, such as clicking, changing focus, etc.                      
     def onEvent(self, event):
-        if self.keyboard.isPressDown(KeyNum.LEFT, event):
-            self.logger.trace("Event left")
-
-        if self.keyboard.isPressUp(KeyNum.H, event):
-            self.logger.trace("Event H")
-
-        if self.mouse.mouseButtonDown(MouseNum.LEFT, event):
-            self.logger.trace("Left")
-
-        if self.mouse.mouseButtonUp(MouseNum.MIDDLE, event):
-            self.logger.trace("Right")
+        if self.event_api.isResized(event):
+            self.window_api.setTitle(f"{self.settings.WINDOW_WIDTH}x{self.settings.WINDOW_HEIGHT}")
         
             
 
     #The method is called after 'onUpdate' is created to draw objects              
     def onRender(self):
-        self.api.setScreenColor(0.0, 0.8, 0.9)
+        self.window_api.clearColor(0.0, 0.8, 0.9)
 
         
 
