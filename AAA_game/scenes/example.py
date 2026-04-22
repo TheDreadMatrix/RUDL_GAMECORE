@@ -1,8 +1,7 @@
 
 #There we import 'GameType' for anotation and 'AbstractScene' for ours scene
 from rudlgc.contrib import GameType, PackageScene
-from rudlgc.rudlums import Keysym, Mouse
-from rudlgc.johnson import Joshua, Xmlion
+from rudlgc.rudlums import MouseNum, KeyNum
 
 
 class ExampleScene(PackageScene):
@@ -10,6 +9,7 @@ class ExampleScene(PackageScene):
     #Here you create objects once, which is better
     def __init__(self, game: GameType):
         super().__init__(game)
+        
 
         self.api.setWindowTitle(f"{self.game.getCurrentScene()}")
         
@@ -17,7 +17,10 @@ class ExampleScene(PackageScene):
 
     #This method is called every frame. 
     def onUpdate(self):
-        pass
+        if self.keyboard.isPress(KeyNum.A):
+            self.logger.trace("A")
+
+        
 
 
     def onFixedUpdate(self):
@@ -27,10 +30,16 @@ class ExampleScene(PackageScene):
 
     #This method is called on any event, such as clicking, changing focus, etc.                      
     def onEvent(self, event):
-        if self.mouse.mouseButtonDown(Mouse.LEFT, event):
+        if self.keyboard.isPressDown(KeyNum.LEFT, event):
+            self.logger.trace("Event left")
+
+        if self.keyboard.isPressUp(KeyNum.H, event):
+            self.logger.trace("Event H")
+
+        if self.mouse.mouseButtonDown(MouseNum.LEFT, event):
             self.logger.trace("Left")
 
-        if self.mouse.mouseButtonUp(Mouse.MIDDLE, event):
+        if self.mouse.mouseButtonUp(MouseNum.MIDDLE, event):
             self.logger.trace("Right")
         
             

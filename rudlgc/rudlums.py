@@ -1,110 +1,146 @@
-import sdl2
+from enum import IntEnum
 
 
-class Keysym:
-    A = sdl2.SDL_SCANCODE_A
-    W = sdl2.SDL_SCANCODE_W
-    S = sdl2.SDL_SCANCODE_S
-    D = sdl2.SDL_SCANCODE_D
+class KeyNum(IntEnum):
+    # ======================
+    # Letters (0 - 25)
+    # ======================
+    A = 0
+    B = 1
+    C = 2
+    D = 3
+    E = 4
+    F = 5
+    G = 6
+    H = 7
+    I = 8
+    J = 9
+    K = 10
+    L = 11
+    M = 12
+    N = 13
+    O = 14
+    P = 15
+    Q = 16
+    R = 17
+    S = 18
+    T = 19
+    U = 20
+    V = 21
+    W = 22
+    X = 23
+    Y = 24
+    Z = 25
 
-    B = sdl2.SDL_SCANCODE_B
-    C = sdl2.SDL_SCANCODE_C
-    D = sdl2.SDL_SCANCODE_D
-    E = sdl2.SDL_SCANCODE_E
-    F = sdl2.SDL_SCANCODE_F
-    G = sdl2.SDL_SCANCODE_G
-    H = sdl2.SDL_SCANCODE_H
-    I = sdl2.SDL_SCANCODE_I
-    J = sdl2.SDL_SCANCODE_J
-    K = sdl2.SDL_SCANCODE_K
-    L = sdl2.SDL_SCANCODE_L
-    M = sdl2.SDL_SCANCODE_M
-    N = sdl2.SDL_SCANCODE_N
-    O = sdl2.SDL_SCANCODE_O
-    P = sdl2.SDL_SCANCODE_P
-    Q = sdl2.SDL_SCANCODE_Q
-    R = sdl2.SDL_SCANCODE_R
-    T = sdl2.SDL_SCANCODE_T
-    U = sdl2.SDL_SCANCODE_U
-    V = sdl2.SDL_SCANCODE_V
-    X = sdl2.SDL_SCANCODE_X
-    Y = sdl2.SDL_SCANCODE_Y
-    Z = sdl2.SDL_SCANCODE_Z
+    # ======================
+    # Numbers (top row) (30 - 39)
+    # ======================
+    NUM_0 = 30
+    NUM_1 = 31
+    NUM_2 = 32
+    NUM_3 = 33
+    NUM_4 = 34
+    NUM_5 = 35
+    NUM_6 = 36
+    NUM_7 = 37
+    NUM_8 = 38
+    NUM_9 = 39
 
-    SPACE = sdl2.SDL_SCANCODE_SPACE
-    ENTER = sdl2.SDL_SCANCODE_RETURN
-    ESC = sdl2.SDL_SCANCODE_ESCAPE
-    TAB = sdl2.SDL_SCANCODE_TAB
-    CAPS = sdl2.SDL_SCANCODE_CAPSLOCK
+    # ======================
+    # Numpad (KP) (40 - 49)
+    # ======================
+    KP_0 = 40
+    KP_1 = 41
+    KP_2 = 42
+    KP_3 = 43
+    KP_4 = 44
+    KP_5 = 45
+    KP_6 = 46
+    KP_7 = 47
+    KP_8 = 48
+    KP_9 = 49
 
-    BACKSPACE = sdl2.SDL_SCANCODE_BACKSPACE
-    DELETE = sdl2.SDL_SCANCODE_DELETE
-    INSERT = sdl2.SDL_SCANCODE_INSERT
-    HOME = sdl2.SDL_SCANCODE_HOME
-    END = sdl2.SDL_SCANCODE_END
-    PAGEUP = sdl2.SDL_SCANCODE_PAGEUP
-    PAGEDOWN = sdl2.SDL_SCANCODE_PAGEDOWN
+    KP_PLUS = 50
+    KP_MINUS = 51
+    KP_MULTIPLY = 52
+    KP_DIVIDE = 53
+    KP_DOT = 54
+    KP_ENTER = 55
 
-    SHIFT = sdl2.SDL_SCANCODE_LSHIFT
-    CTRL = sdl2.SDL_SCANCODE_LCTRL
-    ALT = sdl2.SDL_SCANCODE_LALT
-    
-    RSHIFT = sdl2.SDL_SCANCODE_RSHIFT
-    RCTRL = sdl2.SDL_SCANCODE_RCTRL
-    RALT = sdl2.SDL_SCANCODE_RALT
+    # ======================
+    # Movement (60 - 69)
+    # ======================
+    UP = 60
+    DOWN = 61
+    LEFT = 62
+    RIGHT = 63
 
-    
-    UP = sdl2.SDL_SCANCODE_UP
-    DOWN = sdl2.SDL_SCANCODE_DOWN
-    LEFT = sdl2.SDL_SCANCODE_LEFT
-    RIGHT = sdl2.SDL_SCANCODE_RIGHT
+    # ======================
+    # Controls (70 - 89)
+    # ======================
+    SPACE = 70
+    ENTER = 71
+    ESC = 72
+    TAB = 73
+    CAPS = 74
+    BACKSPACE = 75
+    DELETE = 76
+    INSERT = 77
+    HOME = 78
+    END = 79
+    PAGE_UP = 80
+    PAGE_DOWN = 81
 
-    NUM_1 = sdl2.SDL_SCANCODE_1
-    NUM_2 = sdl2.SDL_SCANCODE_2
-    NUM_3 = sdl2.SDL_SCANCODE_3
-    NUM_4 = sdl2.SDL_SCANCODE_4
-    NUM_5 = sdl2.SDL_SCANCODE_5
-    NUM_6 = sdl2.SDL_SCANCODE_6
-    NUM_7 = sdl2.SDL_SCANCODE_7
-    NUM_8 = sdl2.SDL_SCANCODE_8
-    NUM_9 = sdl2.SDL_SCANCODE_9
-    NUM_0 = sdl2.SDL_SCANCODE_0
+    # ======================
+    # Modifiers (90 - 99)
+    # ======================
+    LSHIFT = 90
+    RSHIFT = 91
+    LCTRL = 92
+    RCTRL = 93
+    LALT = 94
+    RALT = 95
 
-    KP_0 = sdl2.SDL_SCANCODE_KP_0
-    KP_1 = sdl2.SDL_SCANCODE_KP_1
-    KP_2 = sdl2.SDL_SCANCODE_KP_2
-    KP_3 = sdl2.SDL_SCANCODE_KP_3
-    KP_4 = sdl2.SDL_SCANCODE_KP_4
-    KP_5 = sdl2.SDL_SCANCODE_KP_5
-    KP_6 = sdl2.SDL_SCANCODE_KP_6
-    KP_7 = sdl2.SDL_SCANCODE_KP_7
-    KP_8 = sdl2.SDL_SCANCODE_KP_8
-    KP_9 = sdl2.SDL_SCANCODE_KP_9
+    # ======================
+    # Function keys (100 - 111)
+    # ======================
+    F1 = 100
+    F2 = 101
+    F3 = 102
+    F4 = 103
+    F5 = 104
+    F6 = 105
+    F7 = 106
+    F8 = 107
+    F9 = 108
+    F10 = 109
+    F11 = 110
+    F12 = 111
 
-    KP_PLUS = sdl2.SDL_SCANCODE_KP_PLUS
-    KP_MINUS = sdl2.SDL_SCANCODE_KP_MINUS
-    KP_MULTIPLY = sdl2.SDL_SCANCODE_KP_MULTIPLY
-    KP_DIVIDE = sdl2.SDL_SCANCODE_KP_DIVIDE
-    KP_ENTER = sdl2.SDL_SCANCODE_KP_ENTER
-    KP_DOT = sdl2.SDL_SCANCODE_KP_DECIMAL
+    # ======================
+    # Special / system (120+)
+    # ======================
+    PRINTSCREEN = 120
+    SCROLLLOCK = 121
+    PAUSE = 122
 
-    F1 = sdl2.SDL_SCANCODE_F1
-    F2 = sdl2.SDL_SCANCODE_F2
-    F3 = sdl2.SDL_SCANCODE_F3
-    F4 = sdl2.SDL_SCANCODE_F4
-    F5 = sdl2.SDL_SCANCODE_F5
-    F6 = sdl2.SDL_SCANCODE_F6
-    F7 = sdl2.SDL_SCANCODE_F7
-    F8 = sdl2.SDL_SCANCODE_F8
-    F9 = sdl2.SDL_SCANCODE_F9
-    F10 = sdl2.SDL_SCANCODE_F10
-    F11 = sdl2.SDL_SCANCODE_F11
-    F12 = sdl2.SDL_SCANCODE_F12
+    # punctuation
+    GRAVE = 130
+    MINUS = 131
+    EQUALS = 132
+    LBRACKET = 133
+    RBRACKET = 134
+    BACKSLASH = 135
+    SEMICOLON = 136
+    APOSTROPHE = 137
+    COMMA = 138
+    PERIOD = 139
+    SLASH = 140
 
 
-class Mouse:
-    LEFT = sdl2.SDL_BUTTON_LEFT
-    MIDDLE = sdl2.SDL_BUTTON_MIDDLE
-    RIGHT = sdl2.SDL_BUTTON_RIGHT
 
+class MouseNum(IntEnum):
+    LEFT = 0
+    MIDDLE = 1
+    RIGHT = 3
 
