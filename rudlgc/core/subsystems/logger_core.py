@@ -1,23 +1,6 @@
 from datetime import datetime
 
-def _callOnce(error_message):
-    def decorator(func):
-        called = False
 
-        def wrapper(*args, **kwargs):
-            nonlocal called
-
-            if called:
-                now = datetime.now().strftime("%H:%M:%S")
-                print(f"\033[91m[{now}]-[ERROR]: {error_message}\033[0m")
-                print(f"\033[91m[{now}]-[ERROR]: Game failure exit\033[0m")
-                exit(1)
-
-            called = True
-            return func(*args, **kwargs)
-
-        return wrapper
-    return decorator
 
 
 

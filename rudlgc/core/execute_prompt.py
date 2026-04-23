@@ -1,5 +1,7 @@
 from pathlib import Path
 import argparse
+import sys
+
 
 
 
@@ -11,6 +13,13 @@ class _RUDLParser(argparse.ArgumentParser):
 
 
 
+def getRudlgcAllModulesParts():
+    rudlgc_modules = []
+    for module in sys.modules.keys():
+        if "rudlgc" in module:
+            rudlgc_modules.append(module)
+
+    print(rudlgc_modules)
 
 
 
@@ -45,14 +54,14 @@ def _rudlgc_admin():
 
 
         #CREATING ALL FOLDERS AND FILES
-        all_folders = ["musics", "sounds", "assets", "fonts", "shaders", ".config", ".saves", "scenes", "utils"]
+        all_folders = ["musics", "sounds", "images", "fonts", "shaders", ".config", ".saves"]
         for folder in all_folders:
-            folder_path = PROJECT_BASE_PATH / folder
+            folder_path = PROJECT_BASE_PATH / "assets" / folder
             folder_path.mkdir(parents=True, exist_ok=True)
 
         (PROJECT_BASE_PATH / "__init__.py").write_text("#MODULE FILE")
 
-        for folder in ["utils", "scenes"]:
+        for folder in ["my_utils", "scenes"]:
             code_folder_path = PROJECT_BASE_PATH / folder
             code_folder_path.mkdir(parents=True, exist_ok=True)
             (code_folder_path / "__init__.py").write_text("#SUBMODULE FILE")
@@ -86,7 +95,7 @@ def _rudlgc_admin():
 
 
 
-def execute_console(execute_now: bool=False) -> int|None:
+def execute_console() -> int|None:
     import os
     import re
     import json
@@ -96,9 +105,6 @@ def execute_console(execute_now: bool=False) -> int|None:
     from rudlgc.core.templates.templates import _SCENE_PY, _BUILD_PY, check_security
     from rudlgc.core.templates.functions import is_valid_name, _group_by_category
 
-    if execute_now:
-        from rudlgc.core.execute_game import Game
-        Game()._run()
 
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
     sub_parser = parser.add_subparsers(dest="command")
@@ -127,16 +133,22 @@ def execute_console(execute_now: bool=False) -> int|None:
 
     if args.command in ["run", "r", "start", "play"]:
         from rudlgc.core.execute_game import Game
-        Game()._run()
+        game = Game()
+        if game.settings.DEBUG:
+            game.logger._system_log("WARNING", "DEBUG mode is enabled")
+            game._connectDebugServer()
+        game._initGame()
+        game._run()
         return 1
 
 
 
     elif args.command == "settings":
-        from rudlgc.core.subsystems import SettingsCore, _get_os
+        from rudlgc.core.subsystems import SettingsCore
+        from rudlgc.core import _getOs
 
         CATEGORY = {
-            "_PROHIBITED": ["OS_PLATFORM", "GRAPHICS_API"],
+            "_PROHIBITED": ["OS_PLATFORM"],
 
             "WINDOW-SIZES": ["WINDOW_WIDTH", "WINDOW_HEIGHT", "WINDOW_MINWIDTH", "WINDOW_MINHEIGHT"],
 
@@ -150,7 +162,7 @@ def execute_console(execute_now: bool=False) -> int|None:
 
             "AUDIO": ["MUSIC_VOLUME", "SOUND_VOLUME"],
 
-            "CROSS-PLATFORM": ["OS_PLATFORM", "GRAPHICS_API"],
+            "CROSS-PLATFORM": ["OS_PLATFORM"],
 
             "RENDER-ATTR": ["LINE_SIZE", "POINT_SIZE"]
         } 
@@ -172,7 +184,7 @@ def execute_console(execute_now: bool=False) -> int|None:
 
             if attr in SettingsCore._DEFAULTS:
                 default_value = getattr(settings_module, attr)
-                defaults.append((attr, default_value if attr not in CATEGORY["_PROHIBITED"] else str(_get_os()).upper()))
+                defaults.append((attr, default_value if attr not in CATEGORY["_PROHIBITED"] else _getOs()))
                 continue
 
             if re.fullmatch(r"[A-Z_]+", attr):

@@ -8,26 +8,59 @@ from importlib import import_module
 
 
 
-from rudlgc.core.subsystems import Logger, _callOnce
-from rudlgc.core.subsystems import (GameConfigApi, 
-                                    WindowApi, 
-                                    EventApi, 
-                                    SystemApi)
+from rudlgc.core.subsystems import Logger
+from rudlgc.core.subsystems import (GameConfigApi, WindowApi, EventApi, SystemApi)
 
 from rudlgc.core.subsystems import SettingsCore
 from rudlgc.core.subsystems import PathCore
 
-from rudlgc.core.subsystems.input_game import Keyboard, Mouse, Gamepad
+from rudlgc.core.subsystems.input_game import Keyboard, Mouse, Gamepad, Touchpad
+
+from rudlgc.core import _callOnce, _getOs
 
 
-from rudlgc.core.backends import OpenGLBackend
+BACKEND_CLASS = None
+if _getOs() in ["WINDOWS", "LINUX", "ANDROID"]:
+    from rudlgc.core.backends.opengl import OpenGLBackend
+    BACKEND_CLASS = OpenGLBackend
+
 
 
 class Requirements:
-    mgl = __import__("moderngl")
-    sdl = sdl2
-    pillow = __import__("PIL")
-    glm5 = __import__("glm")
+    def __init__(self, logger):
+        self.os = _getOs()
+        self.logger = logger
+        
+        self.mgl = None
+        self.glm = None
+        self.pil = None
+        self.sdl = None
+
+        self._loadImports()
+
+   
+    def _safeImport(self, name):
+        try:
+            return import_module(name)
+        except Exception as e:
+            self.logger._system_log("ERROR", f"[WARN] Cannot import {name}: {e}")
+            return None
+        
+    def _loadImports(self):
+        self.pillow = self._safeImport("PIL")
+        self.glm5 = self._safeImport("glm")
+        self.sdl = self._safeImport("sdl2")
+        
+        if self.os in ("WINDOWS", "LINUX"):
+            self.mgl = self._safeImport("moderngl")
+            
+        elif self.os == "ANDROID":
+            self.mgl = None
+
+        else:
+            self.logger._system_log("ERROR", f"Can not work with systems: {self.os}")
+
+
 
 
 
@@ -52,12 +85,13 @@ class Game:
         self.keyboard = Keyboard()
         self.mouse = Mouse()
         self.gamepad = Gamepad()
+        self.touchpad = Touchpad()
 
         self.delta_time = 0
         self.tick_time = 1 / 60
 
         #PRIVATE PROTECTED
-        self._requirements = Requirements()
+        self._requirements = Requirements(self.logger)
         self._running = True
         self._current_scene_name = self.settings.START_SCENE
         
@@ -74,11 +108,7 @@ class Game:
 
         
         #SETTINGS OF THE WINDOW AND CONTEXT
-        if self.settings.DEBUG:
-            self.logger._system_log("WARNING", "DEBUG mode is enabled")
-        
-        
-        self.backend_render = OpenGLBackend(self)
+        self.backend_render = BACKEND_CLASS(self)
         self.backend_render.createVersion()
 
         self._window = sdl2.ext.Window(self.settings.GAME_METADATA.META.GAME_TITLE, 
@@ -94,9 +124,14 @@ class Game:
 
         # GPU CONTEXT
         self.backend_render.createContext()
+
+
+    def _connectDebugServer(self):
+        self.logger._system_log("WARNING", "Connected to Debug Server")
         
         
-        self.window_api = WindowApi(self, self.backend_render)
+    def _initGame(self):
+        self.window_api = WindowApi(self)
         self.event_api = EventApi(self)
         self.config_api = GameConfigApi(self)
         self.system_api = SystemApi(self)
@@ -194,7 +229,7 @@ class Game:
         sdl2.SDL_GL_SwapWindow(self._window.window)
 
 
-    @_callOnce("It is strictly forbidden to call private functions and methods.")
+    @_callOnce()
     def _run(self): 
         frame_start = time.perf_counter()
         while self._running:

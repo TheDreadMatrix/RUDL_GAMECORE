@@ -19,14 +19,14 @@ class PathCore:
             self._RESOURCE_DIR = Path.cwd() / PROJECT_DIR
             
 
-        self.musics_dir = self._RESOURCE_DIR / "musics"
-        self.sounds_dir = self._RESOURCE_DIR / "sounds"
-        self.assets_dir = self._RESOURCE_DIR / "assets"
-        self.fonts_dir = self._RESOURCE_DIR / "fonts"
-        self.shaders_dir = self._RESOURCE_DIR / "shaders"
+        self.musics_dir = self._RESOURCE_DIR / "assets" / "musics"
+        self.sounds_dir = self._RESOURCE_DIR / "assets" / "sounds"
+        self.assets_dir = self._RESOURCE_DIR / "assets" / "images"
+        self.fonts_dir = self._RESOURCE_DIR / "assets" / "fonts"
+        self.shaders_dir = self._RESOURCE_DIR / "assets" / "shaders"
 
-        self.config_dir = self._BASE_DATA_DIR / ".config"
-        self.saves_dir = self._BASE_DATA_DIR / ".saves"
+        self.config_dir = self._BASE_DATA_DIR / "assets" / ".config"
+        self.saves_dir = self._BASE_DATA_DIR / "assets" / ".saves"
 
     def _build_path(self, base: Path, *folders, file: str | None = None):
         path = base

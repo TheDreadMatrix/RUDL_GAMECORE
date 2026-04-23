@@ -3,10 +3,10 @@
 
 
 class WindowApi:
-    def __init__(self, game, backend):
+    def __init__(self, game):
         self.sdl = game._requirements.sdl
         self._window = game._window
-        self._backend = backend
+        self._backend = game.backend_render
 
 
     def setGrab(self, grab_flag): 

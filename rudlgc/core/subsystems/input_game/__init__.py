@@ -1,1 +1,1 @@
-from .inputs import Keyboard, Mouse, Gamepad
+from .inputs import Keyboard, Mouse, Gamepad, Touchpad

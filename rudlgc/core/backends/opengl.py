@@ -1,5 +1,5 @@
-from rudlgc.core.backends import BaseClassBackend
-
+from rudlgc.core.backends.base_backend import BaseClassBackend
+from rudlgc.core import _callOnce
 
 
 class OpenGLBackend(BaseClassBackend):
@@ -9,10 +9,11 @@ class OpenGLBackend(BaseClassBackend):
         self.mgl = game._requirements.mgl
 
         
-
+    @_callOnce()
     def showInfo(self):
         self.game.logger._system_log("INFO", self.context.info)
 
+    @_callOnce()
     def createFlags(self):
         flags = self.sdl.SDL_WINDOW_OPENGL
         if self.settings.RESIZABLE:
@@ -23,14 +24,14 @@ class OpenGLBackend(BaseClassBackend):
             flags |= self.sdl.SDL_WINDOW_FULLSCREEN_DESKTOP
         return flags
     
-
+    @_callOnce()
     def createVersion(self):
-        if self.settings.GRAPHICS_API == "OPENGL":
+        if self.settings.OS_PLATFORM in ["WINDOWS", "LINUX"]:
             self.game.logger._system_log("WARNING", "Created OpenGL context")
             self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_PROFILE_MASK, self.sdl.SDL_GL_CONTEXT_PROFILE_CORE)
             self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
             self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_MINOR_VERSION, 3)
-        elif self.settings.GRAPHICS_API == "OPENGL_ES":
+        elif self.settings.OS_PLATFORM in ["ANDROID"]:
             self.game.logger._system_log("WARNING", "Created OpenGL ES context")
             self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_PROFILE_MASK,  self.sdl.SDL_GL_CONTEXT_PROFILE_ES)
             self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
@@ -42,7 +43,7 @@ class OpenGLBackend(BaseClassBackend):
         self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_ALPHA_SIZE, 8)
         self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_DOUBLEBUFFER, 1)
         
-
+    @_callOnce()
     def createContext(self):
         # SDL CONTEXT
         self.sdl.SDL_GL_CreateContext(self.game._window.window)
@@ -75,6 +76,10 @@ class OpenGLBackend(BaseClassBackend):
     def setProjectile2D(self, width, height):
         self.projection_2d = self.glm.ortho(0, width, 0, height, -1, 1)
         self.ubo.write(self.projection_2d.to_bytes())
+
+
+    def createTexture(self, filename):
+        pass
 
 
     def setPointSize(self, size):

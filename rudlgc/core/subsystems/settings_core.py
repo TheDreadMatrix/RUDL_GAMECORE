@@ -1,41 +1,11 @@
 import os
-import platform
 import traceback
 from importlib import import_module
 
-
-def _get_os():
-    system = platform.system().lower()
-    machine = platform.machine().lower()
-    name_os = ""
-
-    if system == "windows":
-        name_os = "Windows"
-    
-    if system == "darwin":
-        if "iphone" in machine or "ipad" in machine:
-            name_os = "iOS"
-        name_os = "macOS"
-
-    if system == "linux":
-        if ("ANDROID_ROOT" in os.environ or "ANDROID_DATA" in os.environ or "ANDROID_BOOTLOGO" in os.environ):
-            name_os = "Android"
-        name_os =  "Linux"
-
-    return name_os.upper()
+from rudlgc.core import _getOs
 
 
-def _get_support_api():
-    name_os = _get_os()
-    
-    if name_os in ["WINDOWS", "LINUX"]:
-        return "OPENGL"
-    
-    if name_os in ["ANDROID"]:
-        return "OPENGL_ES"
-    
-    if name_os in ["IOS", "MACOS"]:
-        return "None"
+
 
 
 
@@ -83,8 +53,8 @@ class SettingsCore:
         "POINT_SIZE": 10,
         "LINE_SIZE": 10,
 
-        "OS_PLATFORM": _get_os(),
-        "GRAPHICS_API": _get_support_api()
+        "OS_PLATFORM": _getOs(),
+        
 
 
         
@@ -131,8 +101,8 @@ class SettingsCore:
         self.POINT_SIZE = getattr(self.__settings_module, "POINT_SIZE", 10)
         self.LINE_SIZE = getattr(self.__settings_module, "LINE_SIZE", 10)
 
-        self.OS_PLATFORM = _get_os()
-        self.GRAPHICS_API = _get_support_api()
+        self.OS_PLATFORM = _getOs()
+        
 
         for attr in dir(self.__settings_module):
             if attr not in SettingsCore._DEFAULTS and not attr.startswith("__") and attr.isupper():

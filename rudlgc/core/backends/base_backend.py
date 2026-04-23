@@ -13,6 +13,8 @@ class BaseClassBackend:
         self.settings = game.settings
         self.subInitBufferData(self.glm)
 
+    def createTexture(self):
+        pass
 
     def showInfo(self):
         pass

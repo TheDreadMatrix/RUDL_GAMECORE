@@ -2,8 +2,12 @@ JOSHUA SETTINGS IN self.game.settings
 
 change|load CONSTANT save them to your file 
 
-
+V0.1.1
 ['rudlgc', 'rudlgc.core', 'rudlgc.core.execute_prompt', 'rudlgc.core.templates', 'rudlgc.core.templates.templates', 'rudlgc.core.templates.functions', 'rudlgc.core.subsystems.logger_core', 'rudlgc.core.subsystems.request_core', 'rudlgc.core.subsystems.settings_core', 'rudlgc.core.subsystems.paths_core', 'rudlgc.core.subsystems', 'rudlgc.core.execute_game', 'rudlgc.contrib.package_type', 'rudlgc.contrib.package_scenes', 'rudlgc.contrib.package_model', 'rudlgc.contrib', 'rudlgc.rudlums', 'rudlgc.johnson']
+
+
+V0.1.2
+['rudlgc', 'rudlgc.core', 'rudlgc.core.execute_prompt', 'rudlgc.core.templates', 'rudlgc.core.templates.templates', 'rudlgc.core.templates.functions', 'rudlgc.core.subsystems.logger_core', 'rudlgc.core.subsystems.api_game.request_core', 'rudlgc.core.subsystems.api_game.window_api', 'rudlgc.core.subsystems.api_game.event_api', 'rudlgc.core.subsystems.api_game.system_api', 'rudlgc.core.subsystems.api_game', 'rudlgc.core.subsystems.settings_core', 'rudlgc.core.subsystems.paths_core', 'rudlgc.core.subsystems', 'rudlgc.core.subsystems.input_game.inputs', 'rudlgc.core.subsystems.input_game', 'rudlgc.core.backends', 'rudlgc.core.backends.base_backend', 'rudlgc.core.backends.opengl', 'rudlgc.core.execute_game', 'rudlgc.contrib.package_type', 'rudlgc.contrib.package_scenes', 'rudlgc.contrib.package_model', 'rudlgc.contrib', 'rudlgc.rudlums', 'rudlgc.johnson']
 
 
 Custom json settings must be:
