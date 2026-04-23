@@ -21,6 +21,9 @@ class WindowApi:
     def setWindowPos(self, x, y):
         self._window.position = (x, y)
 
+    def setWindowMinlimit(self, min_x, min_y):
+        self.sdl.SDL_SetWindowMinimumSize(self._window.window, min_x, min_y)
+
     def setTitle(self, title):
         self._window.title = title
 

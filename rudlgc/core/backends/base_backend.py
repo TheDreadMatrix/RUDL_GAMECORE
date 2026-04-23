@@ -2,7 +2,39 @@
 
 
 class BaseClassBackend:
-    def __init__(self):
+    NAME_CONTEXT="NONE"
+    def __init__(self, game):
+        self.game = game
+        
+        # SETTINGS
+        self.glm = game._requirements.glm5
+        self.sdl = game._requirements.sdl
+
+        self.settings = game.settings
+        self.subInitBufferData(self.glm)
+
+
+    def showInfo(self):
+        pass
+
+    def createContext(self):
+        pass
+
+
+    def createFlags(self):
+        pass
+
+
+    def createVersion(self):
+        pass
+
+    def setPointSize(self, size):
+        pass
+
+    def setLineWidth(self, width):
+        pass
+
+    def setViewPort(self, width, height):
         pass
 
 
@@ -17,4 +49,8 @@ class BaseClassBackend:
 
 
     def clearColor(self, r, g, b):
+        pass
+
+
+    def setProjectile2D(self, width, height):
         pass

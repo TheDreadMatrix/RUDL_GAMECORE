@@ -10,7 +10,8 @@ class GameConfigApi:
     def closeGame(self):
         self.__game._running = False
 
-
+    def setFps(self, fps):
+        self.__game._target_fps = fps
 
     def redirectScene(self, scene):
         self.__game._current_scene_name = scene

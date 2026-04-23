@@ -3,14 +3,17 @@ import sdl2
 import sdl2.ext
 import time
 import traceback
-import moderngl
 from importlib import import_module
 
 
 
 
 from rudlgc.core.subsystems import Logger, _callOnce
-from rudlgc.core.subsystems import GameConfigApi, WindowApi, EventApi
+from rudlgc.core.subsystems import (GameConfigApi, 
+                                    WindowApi, 
+                                    EventApi, 
+                                    SystemApi)
+
 from rudlgc.core.subsystems import SettingsCore
 from rudlgc.core.subsystems import PathCore
 
@@ -18,11 +21,10 @@ from rudlgc.core.subsystems.input_game import Keyboard, Mouse, Gamepad
 
 
 from rudlgc.core.backends import OpenGLBackend
-from rudlgc.core.settings import WindowManager
 
 
 class Requirements:
-    mgl = moderngl
+    mgl = __import__("moderngl")
     sdl = sdl2
     pillow = __import__("PIL")
     glm5 = __import__("glm")
@@ -76,14 +78,13 @@ class Game:
             self.logger._system_log("WARNING", "DEBUG mode is enabled")
         
         
-        window_manager = WindowManager(self)
-        window_manager._createVersionOpenGL()
-
+        self.backend_render = OpenGLBackend(self)
+        self.backend_render.createVersion()
 
         self._window = sdl2.ext.Window(self.settings.GAME_METADATA.META.GAME_TITLE, 
                                        size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), 
                                        position=(sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED),
-                                       flags=window_manager._createFlagOpenGL())
+                                       flags=self.backend_render.createFlags())
         
 
         sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
@@ -92,20 +93,18 @@ class Game:
         
 
         # GPU CONTEXT
-        sdl2.SDL_GL_CreateContext(self._window.window)
-        sdl2.SDL_GL_SetSwapInterval(self.settings.VSYNC) 
-
-
-        self.backend_render = OpenGLBackend(self.settings, self._requirements)
+        self.backend_render.createContext()
+        
+        
         self.window_api = WindowApi(self, self.backend_render)
         self.event_api = EventApi(self)
         self.config_api = GameConfigApi(self)
+        self.system_api = SystemApi(self)
 
         
         
 
         #SCENE ROUTER FOR SCENE MANAGMENT
-        self.logger._system_log("INFO", "RUDL Game Core build with SDL2 && OpenGL 3.3.0")
         try:
             module = import_module(f"{self.PROJECT_NAME}.router")
         except ModuleNotFoundError:
@@ -127,7 +126,7 @@ class Game:
             self.logger._system_log("ERROR", "Game failure exit")
             exit(1)    
 
-        
+        self.logger._system_log("INFO", "RUDL Game Core build with SDL2 && OpenGL 3.3.0")
 
         
 

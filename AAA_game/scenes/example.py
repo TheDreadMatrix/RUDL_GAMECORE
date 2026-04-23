@@ -10,7 +10,7 @@ class ExampleScene(PackageScene):
     def __init__(self, game: GameType):
         super().__init__(game)
     
-        
+        self.window_api.setTitle("Hello world")
 
     #This method is called every frame. 
     def onUpdate(self):

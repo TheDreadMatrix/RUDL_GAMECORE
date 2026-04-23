@@ -238,16 +238,30 @@ def execute_console(execute_now: bool=False) -> int|None:
 
 
     elif args.command == "collectstuff":
-        return 0
-        src_image = res.files()
-        dst_image = Path.cwd() / os.environ.get("RUDLGC_PROJECT_NAME") / "assets"
+        
+        src_image = res.files("rudlgc") / "stuff"
+        dst_image = Path.cwd() / os.environ.get("RUDLGC_PROJECT_NAME") / "assets" / "stuff"
+        shutil.copytree(src_image, dst_image, dirs_exist_ok=True)
 
-        shutil.copy(src_image, dst_image)
+        print("\033[32mAdmin stuff succesfully copied to your dirs!\033[0m")
+        return 1
 
     elif args.command == "build":
         check_security(parser)
         print("That command not working yet...")
         return 0
+    
+        # 1. Create file start build.py
+        # 2. Uses Game core for creating propety game
+        # 3. Creating version.txt 
+        # 4. Building to exe create APP-FOLDER and dekstop icon
+        # rudlgc-build/
+        #       pre_build.py
+        #       version.txt
+        #       build.py
+        #       post_build.py
+        # 
+        # build-game/MyGame.exe
 
 
 
