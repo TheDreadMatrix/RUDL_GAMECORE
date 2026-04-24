@@ -83,3 +83,19 @@ vec4 GCL_getBaseShaderColor(){
 void main(){
     GclColor = GCL_getBaseShaderColor();
 }
+
+
+
+
+
+game.resources
+
+game.resources.addImage(path, id: str)
+game.resources.addMusic(path, id: str)
+
+game.resources.removeImage(path, id: str)
+
+
+game.resouces._getItemImage(id: str)
+
+

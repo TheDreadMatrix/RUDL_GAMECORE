@@ -18,7 +18,7 @@ def main():
 
     # Pass CLI arguments to your engine
     execute_console()
-    getRudlgcAllModulesParts()
+    
 
 
 if __name__ == "__main__":

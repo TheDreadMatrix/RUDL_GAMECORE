@@ -16,13 +16,19 @@ from rudlgc.core.subsystems import PathCore
 
 from rudlgc.core.subsystems.input_game import Keyboard, Mouse, Gamepad, Touchpad
 
+from rudlgc.core.resources_items import ResourcesItems
 from rudlgc.core import _callOnce, _getOs
 
 
-BACKEND_CLASS = None
-if _getOs() in ["WINDOWS", "LINUX", "ANDROID"]:
+_BACKEND_CLASS = None
+_OS = _getOs()
+if _OS in ["WINDOWS", "LINUX"]:
     from rudlgc.core.backends.opengl import OpenGLBackend
-    BACKEND_CLASS = OpenGLBackend
+    _BACKEND_CLASS = OpenGLBackend
+elif _OS in ["MACOS", "IOS"]:
+    _BACKEND_CLASS = "SomeMetalBackend"
+elif _OS == "ANDROID":
+    _BACKEND_CLASS = "SomeOpenGLesBackend"
 
 
 
@@ -47,9 +53,10 @@ class Requirements:
             return None
         
     def _loadImports(self):
-        self.pillow = self._safeImport("PIL")
+        self.pil = self._safeImport("PIL.Image")
         self.glm5 = self._safeImport("glm")
         self.sdl = self._safeImport("sdl2")
+        
         
         if self.os in ("WINDOWS", "LINUX"):
             self.mgl = self._safeImport("moderngl")
@@ -72,7 +79,7 @@ class Requirements:
 
 class Game:
     def __init__(self):
-        sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO | sdl2.SDL_INIT_GAMECONTROLLER)
+        sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO | sdl2.SDL_INIT_AUDIO)
     
         #FREE TO USE
         self.PROJECT_NAME = os.environ.get("RUDLGC_PROJECT_NAME", "NOT_FOUND")
@@ -108,7 +115,7 @@ class Game:
 
         
         #SETTINGS OF THE WINDOW AND CONTEXT
-        self.backend_render = BACKEND_CLASS(self)
+        self.backend_render = _BACKEND_CLASS(self)
         self.backend_render.createVersion()
 
         self._window = sdl2.ext.Window(self.settings.GAME_METADATA.META.GAME_TITLE, 
@@ -120,17 +127,24 @@ class Game:
         sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
         self._window.show()
         
-        
-
         # GPU CONTEXT
         self.backend_render.createContext()
+        self.backend_render.setPointSize(self.settings.POINT_SIZE)
+        self.backend_render.setLineWidth(self.settings.LINE_SIZE)
+
+        self.backend_render.setViewPort(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
+        self.backend_render.setProjectile2D(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
 
 
+
+    @_callOnce()
     def _connectDebugServer(self):
         self.logger._system_log("WARNING", "Connected to Debug Server")
         
         
+    @_callOnce()
     def _initGame(self):
+        self.resources = ResourcesItems(self)
         self.window_api = WindowApi(self)
         self.event_api = EventApi(self)
         self.config_api = GameConfigApi(self)

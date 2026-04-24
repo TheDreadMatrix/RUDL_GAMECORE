@@ -26,16 +26,10 @@ class OpenGLBackend(BaseClassBackend):
     
     @_callOnce()
     def createVersion(self):
-        if self.settings.OS_PLATFORM in ["WINDOWS", "LINUX"]:
-            self.game.logger._system_log("WARNING", "Created OpenGL context")
-            self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_PROFILE_MASK, self.sdl.SDL_GL_CONTEXT_PROFILE_CORE)
-            self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
-            self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_MINOR_VERSION, 3)
-        elif self.settings.OS_PLATFORM in ["ANDROID"]:
-            self.game.logger._system_log("WARNING", "Created OpenGL ES context")
-            self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_PROFILE_MASK,  self.sdl.SDL_GL_CONTEXT_PROFILE_ES)
-            self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
-            self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_MINOR_VERSION, 0)
+        self.game.logger._system_log("WARNING", "Created OpenGL context")
+        self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_PROFILE_MASK, self.sdl.SDL_GL_CONTEXT_PROFILE_CORE)
+        self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
+        self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_MINOR_VERSION, 3)
 
         self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_MULTISAMPLEBUFFERS, 1)
         self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_MULTISAMPLESAMPLES, 4) 
@@ -74,12 +68,22 @@ class OpenGLBackend(BaseClassBackend):
 
 
     def setProjectile2D(self, width, height):
-        self.projection_2d = self.glm.ortho(0, width, 0, height, -1, 1)
+        self.projection_2d = self.glm.ortho(0, width, height, 0, -1, 1)
         self.ubo.write(self.projection_2d.to_bytes())
 
+                         
+    def createTexture(self, path):
+        img = self.pil.open(path).convert("RGBA")
+        
+        texture = self.context.texture(img.size, 4, img.tobytes())
+        texture.filter = (self.mgl.LINEAR, self.mgl.LINEAR)
 
-    def createTexture(self, filename):
-        pass
+        return texture
+    
+    def createNonTexture(self):
+        return self.context.texture((256, 256), 3, self.UNDEFINED_TEXTURE_BYTE)
+        
+
 
 
     def setPointSize(self, size):

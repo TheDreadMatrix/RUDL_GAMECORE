@@ -11,11 +11,14 @@ class Sprite2D:
 
 
         self.__Position = self.__glm.vec2(0, 0)
-        self.__Size = self.__glm.vec2(0, 0)
+        self.__Size = self.__glm.vec2(300, 450)
         self.__Layer = 0
 
         self.__Alpha = 1
-        self.__Texture = None  #UNDEF TEXTURE
+        self.__Texture = game.backend_render.createNonTexture()
+
+        self.__program = custom_shader._program if custom_shader else game.backend_render.context.program(CustomShader._DEFAULT_VERTEX_SHADER, CustomShader._DEFAULT_FRAGMENT_SHADER)
+        self.__vao = game.backend_render.context.vertex_array(self.__program, [(game.backend_render.vbo, "2f 2f", "inPos", "inUv")], index_buffer=game.backend_render.ebo)
         
 
 
@@ -31,11 +34,20 @@ class Sprite2D:
     def setAlpha(self, alpha: float):
         self.__Alpha = alpha
 
-    def setTexture(self):
-        self.__Texture = None
+    def setTexture(self, id):
+        self.__Texture = self.game.resources._getItemImage(id)
 
     
     def showMe(self):
-        pass
+        self.__Texture.use(0)
+
+        self.__program["GclAlpha"] = self.__Alpha
+        self.__program["GclTexture"] = 0
+
+        self.__program["unLayer"] = self.__Layer
+        self.__program["unPos"] = self.__Position
+        self.__program["unSize"] = self.__Size
+
+        self.__vao.render()
 
     

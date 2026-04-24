@@ -7,6 +7,21 @@ class MessageNum(IntEnum):
     ERROR = 2
 
 
+class ImageFlag(IntEnum):
+    FILTER = 100
+    TEXTURE_MIPMAP = 101
+    TEXTURE_ANOSOTROPY = 102
+
+    NEAREST = 0
+    LINEAR = 1
+    NEAR_NEAREST = 2
+    LINE_LINEAR = 3
+    LINE_NEAREST = 4
+    NEAR_LINEAR = 5
+
+    
+
+
 
 class KeyNum(IntEnum):
     # ======================

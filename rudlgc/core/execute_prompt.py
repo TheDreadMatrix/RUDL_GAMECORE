@@ -133,6 +133,7 @@ def execute_console() -> int|None:
 
     if args.command in ["run", "r", "start", "play"]:
         from rudlgc.core.execute_game import Game
+        check_security(parser)
         game = Game()
         if game.settings.DEBUG:
             game.logger._system_log("WARNING", "DEBUG mode is enabled")

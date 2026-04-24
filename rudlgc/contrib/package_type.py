@@ -85,12 +85,18 @@ class _SystemApiType:
 
 
 
+class _ResourcesManager:
+    def addImage(self, path: str, id: str) -> None: ...
+    def removeImage(self, id: str) -> None: ...
+
+
 class _PathsType:
     def getConfigPath(self, *folder: str, file: str) -> str: ...
     def getSavesPath(self, *folder: str, file: str) -> str: ...
     def getMusicsPath(self, *folder: str, file: str) -> str: ...
     def getSoundsPath(self, *folder: str, file: str) -> str: ...
     def getAssetsPath(self, *folder: str, file: str) -> str: ...
+    def getImagesPath(self, *folder: str, file: str) -> str: ...
     def getFontsPath(self, *folder: str, file: str) -> str: ...
     def getShadersPath(self, *folder: str, file: str) -> str: ...
     
@@ -141,6 +147,8 @@ class GameType(Protocol):
     event_api: _EventApiType
     system_api: _SystemApiType
 
+    resources: _ResourcesManager
+
     settings: _Settings
     paths: _PathsType
     logger: _LoggerType
@@ -176,6 +184,8 @@ class PackageScene:
         self.event_api = game.event_api
         self.config_api = game.config_api
         self.system_api = game.system_api
+
+        self.resources = game.resources
 
         self.settings = game.settings
         self.paths = game.paths
