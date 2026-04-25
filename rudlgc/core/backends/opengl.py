@@ -81,7 +81,10 @@ class OpenGLBackend(BaseClassBackend):
         return texture
     
     def createNonTexture(self):
-        return self.context.texture((256, 256), 3, self.UNDEFINED_TEXTURE_BYTE)
+        texture = self.context.texture((256, 256), 3, self.UNDEFINED_TEXTURE_BYTE)
+        texture.filter = (self.mgl.LINEAR, self.mgl.LINEAR)
+        
+        return texture
         
 
 

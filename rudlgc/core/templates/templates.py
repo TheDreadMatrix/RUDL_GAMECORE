@@ -209,11 +209,10 @@ def _ROUTER_PY(project_name: str):
     from {project_name}.scenes.example import ExampleScene
                            
     class SceneManager(SceneModel):
-        def __init__(self, game: GameType):
-            super().__init__(game)
+        def onRegistration(self, game: GameType)
                            
             # FIRST OF WE SWITCHING TO DEFAULT START SCENE
-            self.game.config_api.redirectScene(self.game.settings.START_SCENE)
+            self.START_SCENE = 'example'
             
             # HERE YOU CALLING 'self.registerScene' TO REGISTRATE TO GAME
             self.registerScene('example', lambda: ExampleScene(game=game))
@@ -316,13 +315,6 @@ FULLSCREEN = False
 BORDERLESS = False
 RESIZABLE = True
 
-
-# =========================================================
-# ENGINE RUNTIME
-# =========================================================
-
-# First scene loaded on startup
-START_SCENE = "example"
 
 # Frame timing settings
 FPS = 60   # rendering FPS cap

@@ -1,11 +1,11 @@
-
+from rudlgc.core import lru_cache
 
 
 
 
 class ResourcesItems:
     def __init__(self, game):
-
+        self.logger = game.logger
         self.backend_render = game.backend_render
 
         self._imageDict = {}
@@ -14,8 +14,10 @@ class ResourcesItems:
         self._soundDict = {}
         
 
-
-    def addImage(self, path, item_id):
+    @lru_cache(maxsize=512)
+    def addImage(self, path, item_id, ignore=False):
+        if not ignore:
+            self.logger._system_log("INFO", f"'{item_id}' has been registered")
         self._imageDict.update({item_id: self.backend_render.createTexture(path)})
 
     def addFont(self, path, item_id):
@@ -28,7 +30,9 @@ class ResourcesItems:
         pass
 
 
-    def removeImage(self, item_id):
+    def removeImage(self, item_id, ignore=False):
+        if not ignore:
+            self.logger._system_log("INFO", f"'{item_id}' has been deleted")
         if item_id in self._imageDict:
             del self._imageDict[item_id]
         

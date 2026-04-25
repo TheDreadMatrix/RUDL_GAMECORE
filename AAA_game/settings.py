@@ -10,13 +10,7 @@ DEBUG = True
 
 
 
-# Window size settings
-WINDOW_WIDTH = 900
-WINDOW_HEIGHT = 600
 
-# Minimum allowed window size
-WINDOW_MINWIDTH = 799
-WINDOW_MINHEIGHT = 599
 
 
 # Application and build metadata
@@ -38,23 +32,18 @@ GAME_METADATA = {
 
 
 # Rendering / window behavior
-VSYNC = 0
-FULLSCREEN = False
-BORDERLESS = False
-RESIZABLE = True
+
 
 
 # Entry scene loaded at startup.
-START_SCENE = "example"
+
 
 
 # Debug UI options
-SHOW_INFO = True
 
 
-# Audio settings (range typically 0.0 - 1.0)
-MUSIC_VOLUME = 0.5
-SOUND_VOLUME = 0.7
+
+
 
 
 # Engine timing settings
@@ -63,9 +52,7 @@ SOUND_VOLUME = 0.7
 FPS = 240
 
 
-# Rendering quality settings
-POINT_SIZE = 1.0
-LINE_SIZE = 1.0
+
 
 # =========================
 # CUSTOM CONFIGURATION

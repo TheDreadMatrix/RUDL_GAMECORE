@@ -1,8 +1,9 @@
 import platformdirs
 from pathlib import Path
-from functools import lru_cache
 import sys
 
+
+from rudlgc.core import lru_cache
 
 
 

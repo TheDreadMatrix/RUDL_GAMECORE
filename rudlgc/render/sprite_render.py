@@ -8,6 +8,7 @@ class Sprite2D:
         self.__glm = game._requirements.glm5
 
         self.game = game
+        self.backend_render = game.backend_render
 
 
         self.__Position = self.__glm.vec2(0, 0)
@@ -17,8 +18,10 @@ class Sprite2D:
         self.__Alpha = 1
         self.__Texture = game.backend_render.createNonTexture()
 
-        self.__program = custom_shader._program if custom_shader else game.backend_render.context.program(CustomShader._DEFAULT_VERTEX_SHADER, CustomShader._DEFAULT_FRAGMENT_SHADER)
-        self.__vao = game.backend_render.context.vertex_array(self.__program, [(game.backend_render.vbo, "2f 2f", "inPos", "inUv")], index_buffer=game.backend_render.ebo)
+        self.__program = custom_shader._program if custom_shader else \
+            self.backend_render.context.program(CustomShader._DEFAULT_VERTEX_SHADER, CustomShader._DEFAULT_FRAGMENT_SHADER)
+        
+        self.__vao = game.backend_render.context.vertex_array(self.__program, [(self.backend_render.vbo, "2f 2f", "inPos", "inUv")], index_buffer=self.backend_render.ebo)
         
 
 
@@ -34,12 +37,13 @@ class Sprite2D:
     def setAlpha(self, alpha: float):
         self.__Alpha = alpha
 
-    def setTexture(self, id):
-        self.__Texture = self.game.resources._getItemImage(id)
+    def setTexture(self, id: str):
+        self.__Texture = self.game.resources._getItemImage(id) or self.backend_render.createNonTexture()
 
     
     def showMe(self):
         self.__Texture.use(0)
+        self.backend_render.context.depth_mask = False
 
         self.__program["GclAlpha"] = self.__Alpha
         self.__program["GclTexture"] = 0
@@ -49,5 +53,7 @@ class Sprite2D:
         self.__program["unSize"] = self.__Size
 
         self.__vao.render()
+
+        self.backend_render.context.depth_mask = True 
 
     

@@ -3,25 +3,21 @@ from rudlgc.contrib import SceneModel, GameType
 from rudlgc.contrib.package_scenes import SceneEmpty
 #THERE WE IMPORT OURS SCENES
 from AAA_game.scenes.example import ExampleScene
-from AAA_game.scenes.menu import Menu
-from rudlgc.johnson import Joshua
+
+
 
 class SceneManager(SceneModel):
-    def __init__(self, game: GameType):
-        super().__init__(game)
+    def onRegistration(self, game: GameType):
 
-        
-       
+        self.START_SCENE = "example"
         #FIRST OF WE SWITCHING TO DEFAULT START SCENE
-        self.game.config_api.redirectScene(self.game.settings.START_SCENE)
+        #self.game.config_api.redirectScene(self.game.settings.START_SCENE)
 
         #HERE YOU CALLING 'self.registerScene' TO REGISTRATE TO GAME
-        self.registerScene('future-scene', lambda: SceneEmpty(game=game, text_title="FutureScene", text_about_scene="Hello World!", scene_switching="example"), ignore=True)
+        self.registerScene('future-scene', lambda: SceneEmpty(game=game, title="FutureScene", text_scene="Hello World!", switch="example"), ignore=True)
         self.registerScene('example', lambda: ExampleScene(game=game), ignore=True)
-        self.registerScene('menu', lambda: Menu(game=game), ignore=True)
-        #ONLY ONE RULE IF YOU PUSH UNDEFINED SCENE YOUR CAN CRASH THE PROGRAM
-        #SO ITS NOT GOOD IDEA, PLEASE BE ACCURACY, GOOD LUCK
-
+        
+        
 
     #THIS METHOD APPEARS WHEN GAME IS ENDING. (NEED FOR SAVING DATA PROGRESS)
     def savingProgress(self):

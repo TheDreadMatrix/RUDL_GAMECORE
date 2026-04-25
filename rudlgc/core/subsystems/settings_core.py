@@ -27,7 +27,7 @@ class GameMetaData:
 
 class SettingsCore:
     _DEFAULTS = {
-        "DEBUG": True,
+        "DEBUG": False,
 
         "WINDOW_WIDTH": 800,
         "WINDOW_HEIGHT": 600,
@@ -39,9 +39,9 @@ class SettingsCore:
         "VSYNC": 0,
         "FULLSCREEN": False,
         "BORDERLESS": False,
-        "RESIZABLE": False,
+        "RESIZABLE": True,
 
-        "START_SCENE": "empty-rudlgc",
+       
         "SHOW_INFO": True,
 
         "MUSIC_VOLUME": 1.0,
@@ -72,34 +72,33 @@ class SettingsCore:
         self.__game = game
 
         self.DEBUG = getattr(self.__settings_module, "DEBUG", True)
+        self._hasInRequiredSettings(self.DEBUG, "DEBUG")
 
-        self.WINDOW_WIDTH = getattr(self.__settings_module, "WINDOW_WIDTH", 800)
-        self.WINDOW_HEIGHT = getattr(self.__settings_module, "WINDOW_HEIGHT", 600)
+        self.WINDOW_WIDTH = getattr(self.__settings_module, "WINDOW_WIDTH", self._DEFAULTS.get("WINDOW_WIDTH"))
+        self.WINDOW_HEIGHT = getattr(self.__settings_module, "WINDOW_HEIGHT", self._DEFAULTS.get("WINDOW_HEIGHT"))
 
-        self.WINDOW_MINWIDTH = getattr(self.__settings_module, "WINDOW_MINWIDTH", 799)
-        self.WINDOW_MINHEIGHT = getattr(self.__settings_module, "WINDOW_MINHEIGHT", 599)
+        self.WINDOW_MINWIDTH = getattr(self.__settings_module, "WINDOW_MINWIDTH", self._DEFAULTS.get("WINDOW_MINWIDTH"))
+        self.WINDOW_MINHEIGHT = getattr(self.__settings_module, "WINDOW_MINHEIGHT", self._DEFAULTS.get("WINDOW_MINHEIGHT"))
 
-        self.VSYNC = getattr(self.__settings_module, "VSYNC", 0)
-        self.FULLSCREEN = getattr(self.__settings_module, "FULLSCREEN", False)
-        self.BORDERLESS = getattr(self.__settings_module, "BORDERLESS", False)
-        self.RESIZABLE = getattr(self.__settings_module, "RESIZABLE", False)
+        self.VSYNC = getattr(self.__settings_module, "VSYNC", self._DEFAULTS.get("VSYNC"))
+        self.FULLSCREEN = getattr(self.__settings_module, "FULLSCREEN", self._DEFAULTS.get("FULLSCREEN"))
+        self.BORDERLESS = getattr(self.__settings_module, "BORDERLESS", self._DEFAULTS.get("BORDERLESS"))
+        self.RESIZABLE = getattr(self.__settings_module, "RESIZABLE", self._DEFAULTS.get("RESIZABLE"))
 
         self.GAME_METADATA = getattr(self.__settings_module, "GAME_METADATA", None)
         self._hasInRequiredSettings(self.GAME_METADATA, "GAME_METADATA")
         self.GAME_METADATA = GameMetaData(self.GAME_METADATA)
 
 
-        self.FPS = getattr(self.__settings_module, "FPS", 240)
+        self.FPS = getattr(self.__settings_module, "FPS", self._DEFAULTS.get("FPS"))
         
+        self.SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", self._DEFAULTS.get("SHOW_INFO"))
 
-        self.START_SCENE = getattr(self.__settings_module, "START_SCENE", "empty-rudlgc")
-        self.SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", True)
+        self.MUSIC_VOLUME = getattr(self.__settings_module, "MUSIC_VOLUME", self._DEFAULTS.get("MUSIC_VOLUME"))
+        self.SOUND_VOLUME = getattr(self.__settings_module, "SOUND_VOLUME", self._DEFAULTS.get("SOUND_VOLUME"))
 
-        self.MUSIC_VOLUME = getattr(self.__settings_module, "MUSIC_VOLUME", 1.0)
-        self.SOUND_VOLUME = getattr(self.__settings_module, "SOUND_VOLUME", 1.0)
-
-        self.POINT_SIZE = getattr(self.__settings_module, "POINT_SIZE", 10)
-        self.LINE_SIZE = getattr(self.__settings_module, "LINE_SIZE", 10)
+        self.POINT_SIZE = getattr(self.__settings_module, "POINT_SIZE", self._DEFAULTS.get("POINT_SIZE"))
+        self.LINE_SIZE = getattr(self.__settings_module, "LINE_SIZE", self._DEFAULTS.get("LINE_SIZE"))
 
         self.OS_PLATFORM = _getOs()
         

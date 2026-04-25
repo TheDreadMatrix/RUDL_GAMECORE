@@ -100,7 +100,7 @@ class Game:
         #PRIVATE PROTECTED
         self._requirements = Requirements(self.logger)
         self._running = True
-        self._current_scene_name = self.settings.START_SCENE
+        self._current_scene_name = "empty-scene"
         
 
         self._last_time = time.perf_counter()
@@ -169,6 +169,8 @@ class Game:
 
         try:
             self._scene_router = module.SceneManager(self)
+            self._scene_router.onRegistration(self)
+            self._scene_router._startGameLoop()
         except Exception:
             self.logger._system_log("ERROR", f"You got error in {self.PROJECT_NAME}/router.py.")
             self.logger._system_log("ERROR", traceback.format_exc())

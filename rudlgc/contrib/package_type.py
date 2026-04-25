@@ -86,8 +86,8 @@ class _SystemApiType:
 
 
 class _ResourcesManager:
-    def addImage(self, path: str, id: str) -> None: ...
-    def removeImage(self, id: str) -> None: ...
+    def addImage(self, path: str, id: str, ignore: bool=False) -> None: ...
+    def removeImage(self, id: str, ignore: bool=False) -> None: ...
 
 
 class _PathsType:
@@ -192,6 +192,7 @@ class PackageScene:
         self.logger = game.logger
 
         self._requirements = game._requirements
+        print("Init", self.__class__.__name__)
 
     def onFixedUpdate(self):
         pass
@@ -207,6 +208,9 @@ class PackageScene:
     
     def onSave(self):
         pass
+
+    def __del__(self):
+        print("deleted", self.__class__.__name__)
 
     
 

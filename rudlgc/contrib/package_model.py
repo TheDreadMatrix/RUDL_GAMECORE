@@ -7,13 +7,23 @@ class SceneModel:
     def __init__(self, game: GameType):
         self.game = game
 
+        self.START_SCENE = "empty-scene"
+
         self._state_of_scene = ""
         self._scene_dict = {
             "empty-scene": lambda: SceneEmpty(game=game, text_title="Buildings Scene", text_about_scene="MOST USEFUL SCENE IN THE WORLD!!!", scene_switching=1),
             "error-scene": lambda: SceneError(game=game),
         }
-        self._current_scene_class = self._scene_dict.get(self.game.settings.START_SCENE, lambda: PackageScene(game=game))()
         
+        
+    def onRegistration(self, game: GameType):
+        pass
+
+
+    def _startGameLoop(self):
+        self.game._current_scene_name = self.START_SCENE
+        self._state_of_scene = self.START_SCENE
+        self._current_scene_class = self._scene_dict.get(self.game._current_scene_name)()
 
 
     def registerScene(self, name: str, scene, ignore: bool=False):
@@ -37,7 +47,6 @@ class SceneModel:
 
     def _update(self):
         state = self.game.getCurrentScene()
-        
         if state != self._state_of_scene:
             self._state_of_scene = state
             try:

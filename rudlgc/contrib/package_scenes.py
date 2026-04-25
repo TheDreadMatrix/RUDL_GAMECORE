@@ -4,11 +4,11 @@ from rudlgc.contrib import GameType, PackageScene
 
 class SceneError(PackageScene):
     def __init__(self, game: GameType):
-        self.game = game
-        self.game.window_api.setTitle("RUDLGC Error")
+        super().__init__(game)
+        self.window_api.setTitle("RUDLGC Error")
         
-        self.game.logger._system_log("ERROR", "Catched error!!!")
-        self.game.logger._system_log("ERROR", self.game.ERROR if self.game.ERROR else None)
+        self.logger._system_log("ERROR", "Catched error!!!")
+        self.logger._system_log("ERROR", self.game.ERROR if self.game.ERROR else None)
 
 
 
@@ -21,7 +21,7 @@ class SceneError(PackageScene):
     
 
     def onRender(self):
-        self.game.window_api.clearColor(0, 0, 0)
+        self.window_api.clearColor(0, 0, 0)
     
 
     def onSave(self):
@@ -32,9 +32,10 @@ class SceneError(PackageScene):
     
 
 class SceneEmpty(PackageScene):
-    def __init__(self, game: GameType, text_title: str, text_about_scene: str, scene_switching: str):
-        self.game = game
-        self.game.api.setWindowTitle(f"RUDLGC EMPTY: {text_title}")
+    def __init__(self, game: GameType, title: str, text_scene: str, switch: str):
+        super().__init__(game)
+        if title != "Ignore":
+            self.window_api.setTitle(f"RUDLGC EMPTY: {title}")
 
         
 
@@ -49,7 +50,7 @@ class SceneEmpty(PackageScene):
     
 
     def onRender(self):
-        self.game.api.setScreenColor(0, 0, 0)
+        self.window_api.clearColor(0, 0, 0)
     
 
     def onSave(self):

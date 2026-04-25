@@ -153,13 +153,11 @@ def execute_console() -> int|None:
 
             "WINDOW-SIZES": ["WINDOW_WIDTH", "WINDOW_HEIGHT", "WINDOW_MINWIDTH", "WINDOW_MINHEIGHT"],
 
-            "WINDOW-ATTR": ["FULLSCREEN", "BORDERLESS", "RESIZABLE", "VSYNC"],
+            "WINDOW-ATTR": ["FULLSCREEN", "BORDERLESS", "RESIZABLE", "VSYNC", "FPS"],
 
             "GAME-META": ["GAME_METADATA"],
 
             "DEBUG": ["DEBUG", "SHOW_INFO"],
-
-            "STARTUP": ["FPS", "START_SCENE"],
 
             "AUDIO": ["MUSIC_VOLUME", "SOUND_VOLUME"],
 
