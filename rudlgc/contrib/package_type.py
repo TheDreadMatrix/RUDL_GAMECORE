@@ -86,7 +86,11 @@ class _SystemApiType:
 
 
 class _ResourcesManager:
-    def addImage(self, path: str, id: str, ignore: bool=False) -> None: ...
+    def addImage(self, path: str, item_id: str, ignore: bool=False) -> None: ...
+    def addFont(self, path: str, item_id: str, ignore: bool=False) -> None: ...
+    def addMusic(self, path: str, item_id: str, ignore: bool=False) -> None: ...
+    def addSound(self, path: str, item_id: str, ignore: bool=False) -> None: ...
+    
     def removeImage(self, id: str, ignore: bool=False) -> None: ...
 
 
@@ -192,7 +196,7 @@ class PackageScene:
         self.logger = game.logger
 
         self._requirements = game._requirements
-        print("Init", self.__class__.__name__)
+        self.logger._system_log("INFO", f"Created scene: {self.__class__.__name__}")
 
     def onFixedUpdate(self):
         pass
@@ -210,7 +214,7 @@ class PackageScene:
         pass
 
     def __del__(self):
-        print("deleted", self.__class__.__name__)
+        pass
 
     
 

@@ -11,7 +11,7 @@ class SceneModel:
 
         self._state_of_scene = ""
         self._scene_dict = {
-            "empty-scene": lambda: SceneEmpty(game=game, text_title="Buildings Scene", text_about_scene="MOST USEFUL SCENE IN THE WORLD!!!", scene_switching=1),
+            "empty-scene": lambda: SceneEmpty(game=game, title="Buildings Scene", text_scene="MOST USEFUL SCENE IN THE WORLD!!!", switch=1),
             "error-scene": lambda: SceneError(game=game),
         }
         
@@ -23,7 +23,7 @@ class SceneModel:
     def _startGameLoop(self):
         self.game._current_scene_name = self.START_SCENE
         self._state_of_scene = self.START_SCENE
-        self._current_scene_class = self._scene_dict.get(self.game._current_scene_name)()
+        self._current_scene_class = self._scene_dict.get(self.game._current_scene_name, self._scene_dict["empty-scene"])()
 
 
     def registerScene(self, name: str, scene, ignore: bool=False):

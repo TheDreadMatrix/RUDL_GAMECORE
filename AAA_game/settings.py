@@ -8,7 +8,8 @@
 # Should be set to False in production.
 DEBUG = True
 
-
+WIDTH = 900
+HEIGHT = 600
 
 
 

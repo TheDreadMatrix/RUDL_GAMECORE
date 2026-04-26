@@ -29,10 +29,10 @@ class SettingsCore:
     _DEFAULTS = {
         "DEBUG": False,
 
-        "WINDOW_WIDTH": 800,
-        "WINDOW_HEIGHT": 600,
-        "WINDOW_MINWIDTH": 799,
-        "WINDOW_MINHEIGHT": 599,
+        "WIDTH": 800,
+        "HEIGHT": 600,
+        "MIN_WIDTH": 799,
+        "MIN_HEIGHT": 599,
 
         "GAME_METADATA": None,
 
@@ -74,11 +74,11 @@ class SettingsCore:
         self.DEBUG = getattr(self.__settings_module, "DEBUG", True)
         self._hasInRequiredSettings(self.DEBUG, "DEBUG")
 
-        self.WINDOW_WIDTH = getattr(self.__settings_module, "WINDOW_WIDTH", self._DEFAULTS.get("WINDOW_WIDTH"))
-        self.WINDOW_HEIGHT = getattr(self.__settings_module, "WINDOW_HEIGHT", self._DEFAULTS.get("WINDOW_HEIGHT"))
+        self.WINDOW_WIDTH = getattr(self.__settings_module, "WIDTH", self._DEFAULTS.get("WIDTH"))
+        self.WINDOW_HEIGHT = getattr(self.__settings_module, "HEIGHT", self._DEFAULTS.get("HEIGHT"))
 
-        self.WINDOW_MINWIDTH = getattr(self.__settings_module, "WINDOW_MINWIDTH", self._DEFAULTS.get("WINDOW_MINWIDTH"))
-        self.WINDOW_MINHEIGHT = getattr(self.__settings_module, "WINDOW_MINHEIGHT", self._DEFAULTS.get("WINDOW_MINHEIGHT"))
+        self.WINDOW_MINWIDTH = getattr(self.__settings_module, "MIN_WIDTH", self._DEFAULTS.get("MIN_WIDTH"))
+        self.WINDOW_MINHEIGHT = getattr(self.__settings_module, "MIN_HEIGHT", self._DEFAULTS.get("MIN_HEIGHT"))
 
         self.VSYNC = getattr(self.__settings_module, "VSYNC", self._DEFAULTS.get("VSYNC"))
         self.FULLSCREEN = getattr(self.__settings_module, "FULLSCREEN", self._DEFAULTS.get("FULLSCREEN"))

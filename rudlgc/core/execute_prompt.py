@@ -59,18 +59,21 @@ def _rudlgc_admin():
             folder_path = PROJECT_BASE_PATH / "assets" / folder
             folder_path.mkdir(parents=True, exist_ok=True)
 
-        (PROJECT_BASE_PATH / "__init__.py").write_text("#MODULE FILE")
+        (PROJECT_BASE_PATH / "__init__.py").write_text("# Module file")
 
         for folder in ["my_utils", "scenes"]:
             code_folder_path = PROJECT_BASE_PATH / folder
             code_folder_path.mkdir(parents=True, exist_ok=True)
-            (code_folder_path / "__init__.py").write_text("#SUBMODULE FILE")
+            (code_folder_path / "__init__.py").write_text("# Submodule file")
 
         #HERE WE WRITES EXAMPLE CODE
         (PROJECT_BASE_PATH / "scenes" / "example.py").write_text(_EXAMPLE_PY)
         (PROJECT_BASE_PATH / "router.py").write_text(_ROUTER_PY(args.project_name))
         (PROJECT_BASE_PATH / "settings.py").write_text(_SETTINGS_PY(args.project_name))
-        (Path.cwd() / f"manage_{args.project_name.lower()}.py").write_text(_MANAGE_PY(args.project_name))
+        (PROJECT_BASE_PATH / "utils" / "utils.py").write_text("# Here write some utilits")
+
+        (Path.cwd() / "manage.py").write_text(_MANAGE_PY(args.project_name))
+        
 
         print("\033[32mProject succesfully created!\033[0m")
         return 1
@@ -145,13 +148,13 @@ def execute_console() -> int|None:
 
 
     elif args.command == "settings":
-        from rudlgc.core.subsystems import SettingsCore
+        from rudlgc.core.templates.subsystems import SettingsCore
         from rudlgc.core import _getOs
 
         CATEGORY = {
             "_PROHIBITED": ["OS_PLATFORM"],
 
-            "WINDOW-SIZES": ["WINDOW_WIDTH", "WINDOW_HEIGHT", "WINDOW_MINWIDTH", "WINDOW_MINHEIGHT"],
+            "WINDOW-SIZES": ["WIDTH", "HEIGHT", "MIN_WIDTH", "MIN_HEIGHT"],
 
             "WINDOW-ATTR": ["FULLSCREEN", "BORDERLESS", "RESIZABLE", "VSYNC", "FPS"],
 
