@@ -1,13 +1,14 @@
-from rudlgc.contrib import GameType
-from rudlgc.render import CustomShader
-
+from rudlgc.render import CustomShader, Renderer
 
 
 class Sprite2D:
-    def __init__(self, game: GameType, custom_shader: CustomShader|None=None):
+    def __init__(self, game, renderer: Renderer, custom_shader: CustomShader|None=None):
         self.__glm = game._requirements.glm5
 
         self.game = game
+        self.renderer = renderer
+        self.renderer.sprites.append(self)
+
         self.backend_render = game.backend_render
 
 
@@ -33,6 +34,7 @@ class Sprite2D:
 
     def setLayer(self, layer: int):
         self.__Layer = layer
+        self.renderer.needSort = True
 
     def setAlpha(self, alpha: float):
         self.__Alpha = alpha
@@ -40,20 +42,31 @@ class Sprite2D:
     def setTexture(self, id: str):
         self.__Texture = self.game.resources._getItemImage(id) or self.backend_render.createNonTexture()
 
+
+    def getLayer(self):
+        return self.__Layer
+    
+    def getSize(self):
+        return self.__Size
+    
+    def getAlpha(self):
+        return self.__Alpha
+    
+    def getPosition(self):
+        return self.__Position
+
     
     def showMe(self):
         self.__Texture.use(0)
-        self.backend_render.context.depth_mask = False
 
         self.__program["GclAlpha"] = self.__Alpha
         self.__program["GclTexture"] = 0
 
-        self.__program["unLayer"] = self.__Layer
         self.__program["unPos"] = self.__Position
         self.__program["unSize"] = self.__Size
 
         self.__vao.render()
 
-        self.backend_render.context.depth_mask = True 
+        
 
     

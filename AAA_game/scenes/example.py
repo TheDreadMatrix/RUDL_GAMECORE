@@ -11,27 +11,27 @@ class ExampleScene(PackageScene):
     def __init__(self, game: GameType):
         super().__init__(game)
     
-        self.resources.addImage(self.paths.getImagesPath(file="childs.png"), "out-image", ignore=True)
-        
 
-        self.sprite = Sprite2D(game)
+        self.sprite = Sprite2D(game, renderer=self.renderer)
         self.sprite.setSize(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
         self.sprite.setTexture("out-image")
-        self.sprite.setAlpha(1)
         self.sprite.setLayer(1)
+        
 
-        self.sprite_2 = Sprite2D(game)
+        self.sprite_2 = Sprite2D(game, renderer=self.renderer)
         self.sprite_2.setSize(300, 450)
-        self.sprite_2.setTexture("out-image")
-        self.sprite_2.setAlpha(0.7)
-        self.sprite_2.setLayer(2)
+        self.sprite_2.setTexture("my-icon")
+        self.sprite_2.setLayer(1)
+        
 
         self.x, self.y = 0, 0
 
 
     #This method is called every frame. 
     def onUpdate(self):
-        #self.api.setWindowTitle(f"{self.game.getFps()}")
+        self.window_api.setTitle(f"{self.game.getFps()}")
+
+
         if self.keyboard.isPress(KeyNum.A):
             self.x -= 230 * self.game.delta_time
 
@@ -67,8 +67,7 @@ class ExampleScene(PackageScene):
     def onRender(self):
         self.window_api.clearColor(0.0, 0.8, 0.9)
 
-        self.sprite.showMe()
-        self.sprite_2.showMe()        
+        self.renderer.render()
 
         
 

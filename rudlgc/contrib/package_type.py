@@ -4,6 +4,8 @@ import glm
 import moderngl
 import sdl2
 
+from rudlgc.render import Renderer
+
 class _GameMetaType:
     class _Meta:
         GAME_ICON: str
@@ -22,8 +24,7 @@ class _Settings:
 
     WINDOW_WIDTH: int
     WINDOW_HEIGHT: int
-    WINDOW_MINWIDTH: int
-    WINDOW_MINHEIGHT: int
+
 
     VSYNC: int
     FULLSCREEN: bool
@@ -109,8 +110,7 @@ class _PathsType:
 class _LoggerType:
     @staticmethod
     def trace(message: str, as_error: bool=False) -> None: ...
-    @staticmethod
-    def traceMagenta(message: str) -> None: ...
+    
 
 
 class _RequirementsType:
@@ -196,7 +196,9 @@ class PackageScene:
         self.logger = game.logger
 
         self._requirements = game._requirements
-        self.logger._system_log("INFO", f"Created scene: {self.__class__.__name__}")
+        self.renderer = Renderer()
+
+        self.logger._system_log("SCENE", f"Created scene: {self.__class__.__name__}")
 
     def onFixedUpdate(self):
         pass

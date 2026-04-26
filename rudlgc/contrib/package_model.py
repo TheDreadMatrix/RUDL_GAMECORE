@@ -19,6 +19,9 @@ class SceneModel:
     def onRegistration(self, game: GameType):
         pass
 
+    def onResourcesCreate(self, game: GameType):
+        pass
+
 
     def _startGameLoop(self):
         self.game._current_scene_name = self.START_SCENE

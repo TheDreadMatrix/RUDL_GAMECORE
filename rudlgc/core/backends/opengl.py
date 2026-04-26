@@ -50,7 +50,7 @@ class OpenGLBackend(BaseClassBackend):
         self.setPointSize(self.settings.POINT_SIZE)
         self.setLineWidth(self.settings.LINE_SIZE)
 
-        self._enable(self.mgl.DEPTH_TEST)
+        #self._enable(self.mgl.DEPTH_TEST)
         self._enable(self.mgl.BLEND)
 
         self.context.blend_func = (self.mgl.SRC_ALPHA, self.mgl.ONE_MINUS_SRC_ALPHA)

@@ -23,6 +23,7 @@ GAME_METADATA = {
     "META": {
         "GAME_TITLE": "My Game",
         "GAME_DESCRIPTION": "A game built with RUDLGC Engine",
+        "GAME_ICON_TRUE": "icon68.png",
         "GAME_ICON": None,
         "GAME_VERSION": "1.0.0",
         "COMPANY": "Write something...",

@@ -8,7 +8,8 @@ class Logger:
     COLORS = {
         "INFO": "\033[94m", 
         "WARNING": "\033[33m",
-        "MAGENTA-USER": "\033[35m",
+        "RESOURCE": "\033[35m",
+        "SCENE": "\033[36m",
         "TRACE-USER": "\033[92m",
         "ERROR": "\033[91m",
         "RESET": "\033[0m"
@@ -21,12 +22,6 @@ class Logger:
         reset = Logger.COLORS["RESET"]
         print(f"{color}[{now}]-[TRACE-USER]: {message}{reset}")
 
-    @staticmethod
-    def traceMagenta(message):
-        now = datetime.now().strftime("%H:%M:%S")
-        color = Logger.COLORS["MAGENTA-USER"]
-        reset = Logger.COLORS["RESET"]
-        print(f"{color}[{now}]-[TRACE-USER]: {message}{reset}")
 
     @staticmethod
     def _system_log(tag, message):

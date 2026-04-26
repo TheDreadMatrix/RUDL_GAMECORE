@@ -1,4 +1,3 @@
-from rudlgc.contrib import GameType
 import textwrap
 
 
@@ -32,14 +31,13 @@ class CustomShader:
 
         uniform vec2 unSize;
         uniform vec2 unPos;
-        uniform float unLayer;    
+        
 
 
         void main(){
             vec2 finalPos = inPos * unSize + unPos;
-            float finalZayer = float(unLayer) * 0.01;
 
-            gl_Position = unProj * vec4(finalPos, finalZayer, 1.0);
+            gl_Position = unProj * vec4(finalPos, 0.0, 1.0);
 
 
             GclUv = inUv;                                
@@ -61,7 +59,7 @@ class CustomShader:
         }
     """)
 
-    def __init__(self, game: GameType, *folders: tuple[str], filename: str):
+    def __init__(self, game, *folders: tuple[str], filename: str):
         file_path = game.paths.getShadersPath(*folders, file=filename)
 
 

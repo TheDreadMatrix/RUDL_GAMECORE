@@ -123,8 +123,12 @@ class Game:
                                        position=(sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED),
                                        flags=self.backend_render.createFlags())
         
+        if self.settings.GAME_METADATA.META.GAME_ICON_TRUE != "NOT-FOUND-ICON-TRUE":
+            icon_surface = sdl2.ext.load_img(self.paths.getImagesPath(file=self.settings.GAME_METADATA.META.GAME_ICON_TRUE))
+            sdl2.SDL_SetWindowIcon(self._window.window, icon_surface)
+            sdl2.SDL_FreeSurface(icon_surface)
 
-        sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
+        sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings._WINDOW_MINWIDTH, self.settings._WINDOW_MINHEIGHT)
         self._window.show()
         
         # GPU CONTEXT
@@ -169,6 +173,7 @@ class Game:
 
         try:
             self._scene_router = module.SceneManager(self)
+            self._scene_router.onResourcesCreate(self)
             self._scene_router.onRegistration(self)
             self._scene_router._startGameLoop()
         except Exception:

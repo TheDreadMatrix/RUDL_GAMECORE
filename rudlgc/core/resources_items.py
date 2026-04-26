@@ -44,7 +44,7 @@ class ResourcesItems:
     # PRIVATE PROTECTED
     def __showMessage(self, item_id, ignore, msg_type):
         if not ignore:
-            self.logger._system_log("INFO", f"'{item_id}' has been deleted" if not msg_type else f"'{item_id}' has been registered")
+            self.logger._system_log("RESOURCE", f"'{item_id}' has been deleted" if not msg_type else f"'{item_id}' has been registered")
 
 
     def _getItemImage(self, item_id):

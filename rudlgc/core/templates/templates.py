@@ -290,6 +290,7 @@ GAME_METADATA = {{
     "META": {{
         "GAME_TITLE": "My Game",
         "GAME_DESCRIPTION": "A game built with RUDLGC Engine",
+        "GAME_ICON_TRUE": None,
         "GAME_ICON": None,
         "GAME_VERSION": "1.0.0",
         "COMPANY": "Write something...",
@@ -302,12 +303,12 @@ GAME_METADATA = {{
 # WINDOW / DISPLAY SETTINGS
 # =========================================================
 
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WIDTH = 800
+HEIGHT = 600
 
 # Minimum allowed window size
-WINDOW_MINWIDTH = 799
-WINDOW_MINHEIGHT = 599
+MIN_WIDTH = 799
+MIN_HEIGHT = 599
 
 # Window behavior flags
 VSYNC = 0 # must be [-1, 0, 1]
