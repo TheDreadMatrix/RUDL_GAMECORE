@@ -148,7 +148,7 @@ def execute_console() -> int|None:
 
 
     elif args.command == "settings":
-        from rudlgc.core.templates.subsystems import SettingsCore
+        from rudlgc.core.subsystems import SettingsCore
         from rudlgc.core import _getOs
 
         CATEGORY = {

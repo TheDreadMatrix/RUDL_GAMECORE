@@ -8,13 +8,13 @@ from importlib import import_module
 
 
 
-from rudlgc.core.templates.subsystems import Logger
-from rudlgc.core.templates.subsystems import (GameConfigApi, WindowApi, EventApi, SystemApi)
+from rudlgc.core.subsystems import Logger
+from rudlgc.core.subsystems import (GameConfigApi, WindowApi, EventApi, SystemApi)
 
-from rudlgc.core.templates.subsystems import SettingsCore
-from rudlgc.core.templates.subsystems import PathCore
+from rudlgc.core.subsystems import SettingsCore
+from rudlgc.core.subsystems import PathCore
 
-from rudlgc.core.templates.subsystems.input_game import Keyboard, Mouse, Gamepad, Touchpad
+from rudlgc.core.subsystems.input_game import Keyboard, Mouse, Gamepad, Touchpad
 
 from rudlgc.core.resources_items import ResourcesItems
 from rudlgc.core import _callOnce, _getOs
