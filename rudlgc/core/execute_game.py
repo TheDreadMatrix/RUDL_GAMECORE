@@ -1,6 +1,11 @@
-import os
+
 import sdl2
 import sdl2.ext
+import sdl2.sdlmixer as mixer
+
+
+
+import os
 import time
 import traceback
 from importlib import import_module
@@ -23,12 +28,14 @@ from rudlgc.core import _callOnce, _getOs
 _BACKEND_CLASS = None
 _OS = _getOs()
 if _OS in ["WINDOWS", "LINUX"]:
-    from rudlgc.core.backends.opengl import OpenGLBackend
+    from rudlgc.core.graphic_backend.opengl import OpenGLBackend
     _BACKEND_CLASS = OpenGLBackend
 elif _OS in ["MACOS", "IOS"]:
     _BACKEND_CLASS = "SomeMetalBackend"
 elif _OS == "ANDROID":
     _BACKEND_CLASS = "SomeOpenGLesBackend"
+
+from rudlgc.core.audio_backend.sdlmixerbackend import SdlmixerBackend
 
 
 
@@ -41,6 +48,7 @@ class Requirements:
         self.glm = None
         self.pil = None
         self.sdl = None
+        self.audio = None
 
         self._loadImports()
 
@@ -56,6 +64,7 @@ class Requirements:
         self.pil = self._safeImport("PIL.Image")
         self.glm5 = self._safeImport("glm")
         self.sdl = self._safeImport("sdl2")
+        self.audio = self._safeImport("sdl2.sdlmixer")
         
         
         if self.os in ("WINDOWS", "LINUX"):
@@ -80,6 +89,7 @@ class Requirements:
 class Game:
     def __init__(self):
         sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO | sdl2.SDL_INIT_AUDIO)
+        mixer.Mix_OpenAudio(44100, mixer.MIX_DEFAULT_FORMAT, 2, 1024)
     
         #FREE TO USE
         self.PROJECT_NAME = os.environ.get("RUDLGC_PROJECT_NAME", "NOT_FOUND")
@@ -118,13 +128,13 @@ class Game:
         self.backend_render = _BACKEND_CLASS(self)
         self.backend_render.createVersion()
 
-        self._window = sdl2.ext.Window(self.settings.GAME_METADATA.META.GAME_TITLE, 
+        self._window = sdl2.ext.Window(self.settings._GAME_METADATA.META.GAME_TITLE, 
                                        size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), 
                                        position=(sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED),
                                        flags=self.backend_render.createFlags())
         
-        if self.settings.GAME_METADATA.META.GAME_ICON_TRUE != "NOT-FOUND-ICON-TRUE":
-            icon_surface = sdl2.ext.load_img(self.paths.getImagesPath(file=self.settings.GAME_METADATA.META.GAME_ICON_TRUE))
+        if self.settings._GAME_METADATA.META.GAME_ICON_TRUE != "NOT-FOUND-ICON-TRUE":
+            icon_surface = sdl2.ext.load_img(self.paths.getImagesPath(file=self.settings._GAME_METADATA.META.GAME_ICON_TRUE))
             sdl2.SDL_SetWindowIcon(self._window.window, icon_surface)
             sdl2.SDL_FreeSurface(icon_surface)
 
@@ -154,7 +164,7 @@ class Game:
         self.config_api = GameConfigApi(self)
         self.system_api = SystemApi(self)
 
-        
+        self.audio = SdlmixerBackend(self)
         
 
         #SCENE ROUTER FOR SCENE MANAGMENT
@@ -182,7 +192,7 @@ class Game:
             self.logger._system_log("ERROR", "Game failure exit")
             exit(1)    
 
-        self.logger._system_log("INFO", "RUDL Game Core build with SDL2 && OpenGL 3.3.0")
+        self.logger._system_log("INFO", "RUDL Game Core '1.0.0-alpha' build with SDL2 && OpenGL 3.3.0")
 
         
 
@@ -277,7 +287,7 @@ class Game:
 
 
         self._scene_router.savingProgress()
-
+        mixer.Mix_CloseAudio()
         sdl2.ext.quit()
         self.logger._system_log("INFO" if not self.ERROR else "ERROR", "Game succesfully exit" if not self.ERROR else "Game failure exit 2")
         

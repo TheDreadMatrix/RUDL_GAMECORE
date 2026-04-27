@@ -26,10 +26,12 @@ class ResourcesItems:
     
     def addMusic(self, path, item_id, ignore=False):
         self.__showMessage(item_id, ignore, 1)
+        self._musicDict.update({item_id: path})
 
    
     def addSound(self, path, item_id, ignore=False):
         self.__showMessage(item_id, ignore, 1)
+        self._soundDict.update({item_id: path})
 
 
     # DELETING RESOURCES
@@ -38,7 +40,18 @@ class ResourcesItems:
 
         if item_id in self._imageDict:
             del self._imageDict[item_id]
-        
+
+    def removeMusic(self, item_id, ignore=False):
+        self.__showMessage(item_id, ignore, 0)
+
+        if item_id in self._musicDict:
+            del self._musicDict[item_id]
+
+    def removeSound(self, item_id, ignore=False):
+        self.__showMessage(item_id, ignore, 0)
+
+        if item_id in self._soundDict:
+            del self._soundDict[item_id]
 
 
     # PRIVATE PROTECTED

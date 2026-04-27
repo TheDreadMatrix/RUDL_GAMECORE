@@ -3,7 +3,7 @@ from .package_scenes import SceneEmpty, SceneError
 import traceback as _error
 
 
-class SceneModel:
+class RouterModel:
     def __init__(self, game: GameType):
         self.game = game
 
@@ -31,7 +31,7 @@ class SceneModel:
 
     def registerScene(self, name: str, scene, ignore: bool=False):
         if not ignore:
-            self.game.logger._system_log("INFO", f"Scene '{name}' has been registered.")
+            self.game.logger._system_log("SCENE", f"Scene '{name}' has been registered.")
         self._scene_dict.update({name: scene})
 
 

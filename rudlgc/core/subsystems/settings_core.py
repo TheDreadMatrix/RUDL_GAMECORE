@@ -72,32 +72,40 @@ class SettingsCore:
 
         self.__game = game
 
-        self.DEBUG = getattr(self.__settings_module, "DEBUG", True)
-        self._hasInRequiredSettings(self.DEBUG, "DEBUG")
-
+    
         self.WINDOW_WIDTH = getattr(self.__settings_module, "WIDTH", self._DEFAULTS.get("WIDTH"))
         self.WINDOW_HEIGHT = getattr(self.__settings_module, "HEIGHT", self._DEFAULTS.get("HEIGHT"))
 
         self._WINDOW_MINWIDTH = getattr(self.__settings_module, "MIN_WIDTH", self._DEFAULTS.get("MIN_WIDTH"))
         self._WINDOW_MINHEIGHT = getattr(self.__settings_module, "MIN_HEIGHT", self._DEFAULTS.get("MIN_HEIGHT"))
 
+        # WINDOW ATTR
         self.VSYNC = getattr(self.__settings_module, "VSYNC", self._DEFAULTS.get("VSYNC"))
         self.FULLSCREEN = getattr(self.__settings_module, "FULLSCREEN", self._DEFAULTS.get("FULLSCREEN"))
         self.BORDERLESS = getattr(self.__settings_module, "BORDERLESS", self._DEFAULTS.get("BORDERLESS"))
         self.RESIZABLE = getattr(self.__settings_module, "RESIZABLE", self._DEFAULTS.get("RESIZABLE"))
 
-        self.GAME_METADATA = getattr(self.__settings_module, "GAME_METADATA", None)
-        self._hasInRequiredSettings(self.GAME_METADATA, "GAME_METADATA")
-        self.GAME_METADATA = GameMetaData(self.GAME_METADATA)
+
+        # META
+        self._GAME_METADATA = getattr(self.__settings_module, "GAME_METADATA", None)
+        self._hasInRequiredSettings(self._GAME_METADATA, "GAME_METADATA")
+        self._GAME_METADATA = GameMetaData(self._GAME_METADATA)
 
 
+        # FPS AND DEBUG
         self.FPS = getattr(self.__settings_module, "FPS", self._DEFAULTS.get("FPS"))
         
         self.SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", self._DEFAULTS.get("SHOW_INFO"))
+        self.DEBUG = getattr(self.__settings_module, "DEBUG", True)
+        self._hasInRequiredSettings(self.DEBUG, "DEBUG")
 
+
+        # AUDIO
         self.MUSIC_VOLUME = getattr(self.__settings_module, "MUSIC_VOLUME", self._DEFAULTS.get("MUSIC_VOLUME"))
         self.SOUND_VOLUME = getattr(self.__settings_module, "SOUND_VOLUME", self._DEFAULTS.get("SOUND_VOLUME"))
 
+
+        # RENDER CROSSPLATFORM
         self.POINT_SIZE = getattr(self.__settings_module, "POINT_SIZE", self._DEFAULTS.get("POINT_SIZE"))
         self.LINE_SIZE = getattr(self.__settings_module, "LINE_SIZE", self._DEFAULTS.get("LINE_SIZE"))
 
@@ -115,5 +123,8 @@ class SettingsCore:
             self.__game.logger._system_log("ERROR", f"{his_name} is not declarated in {os.getenv("RUDLGC_PROJECT_SETTINGS")}/settings.py")
             self.__game.logger._system_log("ERROR", "Game failure exit")
             exit(1)
+
+
+    
 
     

@@ -10,20 +10,20 @@ class ExampleScene(PackageScene):
     #Here you create objects once, which is better
     def __init__(self, game: GameType):
         super().__init__(game)
-    
+        
 
         self.sprite = Sprite2D(game, renderer=self.renderer)
         self.sprite.setSize(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
         self.sprite.setTexture("out-image")
-        self.sprite.setLayer(1)
+        
         
 
         self.sprite_2 = Sprite2D(game, renderer=self.renderer)
         self.sprite_2.setSize(300, 450)
         self.sprite_2.setTexture("my-icon")
-        self.sprite_2.setLayer(1)
         
-
+        
+        
         self.x, self.y = 0, 0
 
 
@@ -57,6 +57,8 @@ class ExampleScene(PackageScene):
             self.sprite_2.setLayer(2)
             self.sprite.setLayer(1)
 
+        
+
         if self.event_api.isResized(event):
             self.sprite.setSize(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
             self.window_api.setTitle(f"{self.settings.WINDOW_WIDTH}x{self.settings.WINDOW_HEIGHT}")
@@ -73,4 +75,4 @@ class ExampleScene(PackageScene):
 
     #The method is called when the scene switches to another, otherwise the useful date must save here             
     def onSave(self):
-        pass
+        super().onSave()

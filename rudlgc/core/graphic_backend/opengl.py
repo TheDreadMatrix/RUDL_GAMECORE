@@ -1,8 +1,8 @@
-from rudlgc.core.backends.base_backend import BaseClassBackend
+from rudlgc.core.graphic_backend.base_graphic_backend import BaseGraphicBackend
 from rudlgc.core import _callOnce
 
 
-class OpenGLBackend(BaseClassBackend):
+class OpenGLBackend(BaseGraphicBackend):
     NAME_CONTEXT = "OPENGL"
     def __init__(self, game):
         super().__init__(game)
@@ -33,8 +33,6 @@ class OpenGLBackend(BaseClassBackend):
 
         self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_MULTISAMPLEBUFFERS, 1)
         self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_MULTISAMPLESAMPLES, 4) 
-        self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_DEPTH_SIZE, 24)
-        self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_ALPHA_SIZE, 8)
         self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_DOUBLEBUFFER, 1)
         
     @_callOnce()

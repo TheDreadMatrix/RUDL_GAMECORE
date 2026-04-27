@@ -1,22 +1,6 @@
-from typing import *
-import PIL
-import glm
-import moderngl
-import sdl2
+import typing
 
-from rudlgc.render import Renderer
 
-class _GameMetaType:
-    class _Meta:
-        GAME_ICON: str
-        GAME_TITLE: str
-        GAME_VERSION: str
-        GAME_DESCRIPTION: str
-        FILE_VERSION: str
-        COMPANY: str
-
-    APP_FOLDER: str
-    META: _Meta
 
 
 class _Settings:
@@ -33,14 +17,9 @@ class _Settings:
 
     FPS: float
 
-    SHOW_FPS: bool
     SHOW_INFO: bool
 
-    GAME_METADATA: _GameMetaType
-
-    START_SCENE: str
     OS_PLATFORM: str
-    GRAPHICS_API: str
 
     MUSIC_VOLUME: float
     SOUND_VOLUME: float
@@ -92,7 +71,9 @@ class _ResourcesManager:
     def addMusic(self, path: str, item_id: str, ignore: bool=False) -> None: ...
     def addSound(self, path: str, item_id: str, ignore: bool=False) -> None: ...
     
-    def removeImage(self, id: str, ignore: bool=False) -> None: ...
+    def removeImage(self, item_id: str, ignore: bool=False) -> None: ...
+    def removeMusic(self, item_id: str, ignore: bool=False) -> None: ...
+    def removeSound(self, item_id: str, ignore: bool=False) -> None: ...
 
 
 class _PathsType:
@@ -113,15 +94,15 @@ class _LoggerType:
     
 
 
-class _RequirementsType:
-    mgl: moderngl
-    sdl: sdl2
-    pillow: PIL
-    glm5: glm
+
 
 
 class _Gamepad:
     NOT_WORKING: int
+
+
+class _Touchpad:
+    NOW_WORKING: int
 
 
 class _Keyboard:
@@ -145,13 +126,14 @@ class _Mouse:
 
 
 
-class GameType(Protocol):
+class GameType(typing.Protocol):
     config_api: _RequestType
     window_api: _WindowApiType
     event_api: _EventApiType
     system_api: _SystemApiType
 
     resources: _ResourcesManager
+    audio: typing.Any
 
     settings: _Settings
     paths: _PathsType
@@ -162,12 +144,11 @@ class GameType(Protocol):
 
     keyboard: _Keyboard
     gamepad: _Gamepad
+    touchpad: _Touchpad
     mouse: _Mouse
 
     PROJECT_NAME: str
     ERROR: str
-
-    _requirements: _RequirementsType
 
     def getFps(self) -> float: ...
     def getTps(self) -> float: ...
@@ -177,46 +158,5 @@ class GameType(Protocol):
 
 
 
-class PackageScene:
-    def __init__(self, game: GameType):
-        self.game = game
 
-        self.keyboard = game.keyboard
-        self.mouse = game.mouse
-
-        self.window_api = game.window_api
-        self.event_api = game.event_api
-        self.config_api = game.config_api
-        self.system_api = game.system_api
-
-        self.resources = game.resources
-
-        self.settings = game.settings
-        self.paths = game.paths
-        self.logger = game.logger
-
-        self._requirements = game._requirements
-        self.renderer = Renderer()
-
-        self.logger._system_log("SCENE", f"Created scene: {self.__class__.__name__}")
-
-    def onFixedUpdate(self):
-        pass
-
-    def onUpdate(self): 
-        pass
-
-    def onEvent(self, event):
-        pass
-
-    def onRender(self):
-        pass
-    
-    def onSave(self):
-        pass
-
-    def __del__(self):
-        pass
-
-    
 

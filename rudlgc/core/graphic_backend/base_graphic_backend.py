@@ -1,7 +1,7 @@
 
 
 
-class BaseClassBackend:
+class BaseGraphicBackend:
     NAME_CONTEXT="NONE"
     def __init__(self, game):
         self.game = game

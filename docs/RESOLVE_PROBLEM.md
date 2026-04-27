@@ -99,3 +99,20 @@ game.resources.removeImage(path, id: str)
 game.resouces._getItemImage(id: str)
 
 
+
+
+
+
+
+
+
+
+
+game.resources.addMusic(..., "my-music")
+
+
+self.music.playMusic("my-music")
+self.music.autoSavingBySettings = True
+
+
+self.music.stopMusic("my-music")
