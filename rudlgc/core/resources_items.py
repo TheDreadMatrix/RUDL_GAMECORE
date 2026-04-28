@@ -9,7 +9,7 @@ class ResourcesItems:
         self.backend_render = game.backend_render
 
         self._imageDict = {}
-        self._fontDict = {}
+        self._fontDict = {}  
         self._musicDict = {}
         self._soundDict = {}
         

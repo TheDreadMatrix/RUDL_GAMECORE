@@ -21,6 +21,9 @@ class ExampleScene(PackageScene):
         self.sprite_2 = Sprite2D(game, renderer=self.renderer)
         self.sprite_2.setSize(300, 450)
         self.sprite_2.setTexture("my-icon")
+
+       
+        self.logger.trace(self.settings.OS_PLATFORM)
         
         
         
@@ -29,33 +32,30 @@ class ExampleScene(PackageScene):
 
     #This method is called every frame. 
     def onUpdate(self):
-        self.window_api.setTitle(f"{self.game.getFps()}")
+        self.window_api.setTitle(f"{self.game.getFps():.2f}")
 
-
-        if self.keyboard.isPress(KeyNum.A):
-            self.x -= 230 * self.game.delta_time
-
-        if self.keyboard.isPress(KeyNum.D):
-            self.x += 230 * self.game.delta_time
-
-        self.sprite.setPosition(self.x, self.y)
+        
 
         
 
 
     def onFixedUpdate(self):
-        pass
+        if self.keyboard.isPress(KeyNum.A):
+            self.x -= 230 * self.game.tick_time
+
+        if self.keyboard.isPress(KeyNum.D):
+            self.x += 230 * self.game.tick_time
+
+        self.sprite.setPosition(self.x, self.y)
         
     
 
     #This method is called on any event, such as clicking, changing focus, etc.                      
     def onEvent(self, event):
         if self.keyboard.isPressDown(KeyNum.R, event):
-            self.sprite_2.setLayer(1)
-            self.sprite.setLayer(2)
+            self.settings.FPS = 1000
         elif self.keyboard.isPressDown(KeyNum.T, event):
-            self.sprite_2.setLayer(2)
-            self.sprite.setLayer(1)
+            self.settings.FPS = 60
 
         
 

@@ -39,14 +39,9 @@ class OpenGLBackend(BaseGraphicBackend):
     def createContext(self):
         # SDL CONTEXT
         self.sdl.SDL_GL_CreateContext(self.game._window.window)
-        self.sdl.SDL_GL_SetSwapInterval(self.settings.VSYNC) 
 
         # CONTEXT
         self.context = self.mgl.create_context()
-
-        self.setViewPort(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
-        self.setPointSize(self.settings.POINT_SIZE)
-        self.setLineWidth(self.settings.LINE_SIZE)
 
         #self._enable(self.mgl.DEPTH_TEST)
         self._enable(self.mgl.BLEND)

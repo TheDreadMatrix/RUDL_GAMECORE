@@ -7,6 +7,7 @@ from datetime import datetime
 class Logger:
     COLORS = {
         "INFO": "\033[94m", 
+        "SUCCESS": "\033[34m",
         "WARNING": "\033[33m",
         "RESOURCE": "\033[35m",
         "SCENE": "\033[36m",

@@ -13,11 +13,11 @@ from importlib import import_module
 
 
 
-from rudlgc.core.subsystems import Logger
+from rudlgc.core.subsystems.logger_core import Logger
 from rudlgc.core.subsystems import (GameConfigApi, WindowApi, EventApi, SystemApi)
 
-from rudlgc.core.subsystems import SettingsCore
-from rudlgc.core.subsystems import PathCore
+from rudlgc.core.subsystems.settings_core import SettingsCore
+from rudlgc.core.subsystems.paths_core import PathCore
 
 from rudlgc.core.subsystems.input_game import Keyboard, Mouse, Gamepad, Touchpad
 
@@ -138,17 +138,17 @@ class Game:
             sdl2.SDL_SetWindowIcon(self._window.window, icon_surface)
             sdl2.SDL_FreeSurface(icon_surface)
 
-        sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings._WINDOW_MINWIDTH, self.settings._WINDOW_MINHEIGHT)
+        sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
         self._window.show()
         
         # GPU CONTEXT
         self.backend_render.createContext()
         self.backend_render.setPointSize(self.settings.POINT_SIZE)
-        self.backend_render.setLineWidth(self.settings.LINE_SIZE)
+        self.backend_render.setLineWidth(self.settings.LINE_WIDTH)
 
         self.backend_render.setViewPort(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
         self.backend_render.setProjectile2D(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
-
+        sdl2.SDL_GL_SetSwapInterval(self.settings.VSYNC) 
 
 
     @_callOnce()
@@ -165,6 +165,8 @@ class Game:
         self.system_api = SystemApi(self)
 
         self.audio = SdlmixerBackend(self)
+
+        self.logger._system_log("INFO", "RUDL Game Core '1.0.0-alpha' build with SDL2 && OpenGL 3.3.0")
         
 
         #SCENE ROUTER FOR SCENE MANAGMENT
@@ -190,11 +192,7 @@ class Game:
             self.logger._system_log("ERROR", f"You got error in {self.PROJECT_NAME}/router.py.")
             self.logger._system_log("ERROR", traceback.format_exc())
             self.logger._system_log("ERROR", "Game failure exit")
-            exit(1)    
-
-        self.logger._system_log("INFO", "RUDL Game Core '1.0.0-alpha' build with SDL2 && OpenGL 3.3.0")
-
-        
+            exit(1)
 
     
     def getFps(self): return self._fps
@@ -258,6 +256,7 @@ class Game:
         self.backend_render.clearColor(0.9, 0.9, 0.9)
         self._scene_router._render()
         sdl2.SDL_GL_SwapWindow(self._window.window)
+        
 
 
     @_callOnce()
@@ -275,17 +274,14 @@ class Game:
             try:
                 self.__update()  
                 self.__render()
+                self.__limit_fps(frame_start)
             except Exception:
                 error_message = traceback.format_exc()
                 self.ERROR = error_message if self.settings.DEBUG else "Oops...! You catched an error!!!"
                 self.config_api.redirectScene("error-scene")
                 self._scene_router.onException(error_message)
             
-            self.__limit_fps(frame_start)
-
-            
-
-
+        
         self._scene_router.savingProgress()
         mixer.Mix_CloseAudio()
         sdl2.ext.quit()

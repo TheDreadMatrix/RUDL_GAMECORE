@@ -166,7 +166,7 @@ def execute_console() -> int|None:
 
             "CROSS-PLATFORM": ["OS_PLATFORM"],
 
-            "RENDER-ATTR": ["LINE_SIZE", "POINT_SIZE"]
+            "RENDER-ATTR": ["LINE_WIDTH", "POINT_SIZE"]
         } 
         
         settings_module = importlib.import_module(os.environ.get("RUDLGC_PROJECT_SETTINGS"))

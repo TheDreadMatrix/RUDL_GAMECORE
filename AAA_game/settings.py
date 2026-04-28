@@ -18,6 +18,12 @@ HEIGHT = 600
 # APPNAME is used as the application identifier and may also define
 # the folder name when building/exporting the project.
 
+JSON_SETTINGS = {
+    "FOLDER": [],
+    "FILE": None
+}
+
+
 GAME_METADATA = {
     "APP_FOLDER": ".aaa_gameGameData",
     "META": {

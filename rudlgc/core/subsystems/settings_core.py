@@ -28,37 +28,21 @@ class GameMetaData:
 
 class SettingsCore:
     _DEFAULTS = {
-        "DEBUG": False,
-
-        "WIDTH": 800,
-        "HEIGHT": 600,
-        "MIN_WIDTH": 799,
-        "MIN_HEIGHT": 599,
+        "WIDTH": 800, "HEIGHT": 600, "MIN_WIDTH": 799, "MIN_HEIGHT": 599,
 
         "GAME_METADATA": None,
 
-        "VSYNC": 0,
-        "FULLSCREEN": False,
-        "BORDERLESS": False,
-        "RESIZABLE": True,
+        "VSYNC": 0, "FULLSCREEN": False, "BORDERLESS": False, "RESIZABLE": True,
 
-       
-        "SHOW_INFO": True,
+        "DEBUG": False, "SHOW_INFO": True,
 
-        "MUSIC_VOLUME": 1.0,
-        "SOUND_VOLUME": 1.0,
+        "MUSIC_VOLUME": 1.0, "SOUND_VOLUME": 1.0,
 
-        "FPS": 240,
+        "FPS": 60,
         
-
-        "POINT_SIZE": 10,
-        "LINE_SIZE": 10,
+        "POINT_SIZE": 10, "LINE_WIDTH": 10,
 
         "OS_PLATFORM": _getOs(),
-        
-
-
-        
     }
 
     def __init__(self, game):
@@ -69,21 +53,19 @@ class SettingsCore:
             game.logger._system_log("ERROR", "Game failure exit")
             exit(1)
 
-
-        self.__game = game
-
+        self.__GAME = game
     
-        self.WINDOW_WIDTH = getattr(self.__settings_module, "WIDTH", self._DEFAULTS.get("WIDTH"))
-        self.WINDOW_HEIGHT = getattr(self.__settings_module, "HEIGHT", self._DEFAULTS.get("HEIGHT"))
+        self._WINDOW_WIDTH = getattr(self.__settings_module, "WIDTH", self._DEFAULTS.get("WIDTH"))
+        self._WINDOW_HEIGHT = getattr(self.__settings_module, "HEIGHT", self._DEFAULTS.get("HEIGHT"))
 
         self._WINDOW_MINWIDTH = getattr(self.__settings_module, "MIN_WIDTH", self._DEFAULTS.get("MIN_WIDTH"))
         self._WINDOW_MINHEIGHT = getattr(self.__settings_module, "MIN_HEIGHT", self._DEFAULTS.get("MIN_HEIGHT"))
 
         # WINDOW ATTR
-        self.VSYNC = getattr(self.__settings_module, "VSYNC", self._DEFAULTS.get("VSYNC"))
-        self.FULLSCREEN = getattr(self.__settings_module, "FULLSCREEN", self._DEFAULTS.get("FULLSCREEN"))
-        self.BORDERLESS = getattr(self.__settings_module, "BORDERLESS", self._DEFAULTS.get("BORDERLESS"))
-        self.RESIZABLE = getattr(self.__settings_module, "RESIZABLE", self._DEFAULTS.get("RESIZABLE"))
+        self._VSYNC = getattr(self.__settings_module, "VSYNC", self._DEFAULTS.get("VSYNC"))
+        self._FULLSCREEN = getattr(self.__settings_module, "FULLSCREEN", self._DEFAULTS.get("FULLSCREEN"))
+        self._BORDERLESS = getattr(self.__settings_module, "BORDERLESS", self._DEFAULTS.get("BORDERLESS"))
+        self._RESIZABLE = getattr(self.__settings_module, "RESIZABLE", self._DEFAULTS.get("RESIZABLE"))
 
 
         # META
@@ -93,11 +75,12 @@ class SettingsCore:
 
 
         # FPS AND DEBUG
-        self.FPS = getattr(self.__settings_module, "FPS", self._DEFAULTS.get("FPS"))
-        
-        self.SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", self._DEFAULTS.get("SHOW_INFO"))
-        self.DEBUG = getattr(self.__settings_module, "DEBUG", True)
-        self._hasInRequiredSettings(self.DEBUG, "DEBUG")
+        self._FPS = getattr(self.__settings_module, "FPS", self._DEFAULTS.get("FPS"))
+        self._SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", self._DEFAULTS.get("SHOW_INFO"))
+
+
+        self._DEBUG = getattr(self.__settings_module, "DEBUG", True)
+        self._hasInRequiredSettings(self._DEBUG, "DEBUG")
 
 
         # AUDIO
@@ -106,10 +89,10 @@ class SettingsCore:
 
 
         # RENDER CROSSPLATFORM
-        self.POINT_SIZE = getattr(self.__settings_module, "POINT_SIZE", self._DEFAULTS.get("POINT_SIZE"))
-        self.LINE_SIZE = getattr(self.__settings_module, "LINE_SIZE", self._DEFAULTS.get("LINE_SIZE"))
+        self._POINT_SIZE = getattr(self.__settings_module, "POINT_SIZE", self._DEFAULTS.get("POINT_SIZE"))
+        self._LINE_WIDTH = getattr(self.__settings_module, "LINE_WIDTH", self._DEFAULTS.get("LINE_WIDTH"))
 
-        self.OS_PLATFORM = _getOs()
+        self._OS_PLATFORM = _getOs()
         
 
         for attr in dir(self.__settings_module):
@@ -123,6 +106,97 @@ class SettingsCore:
             self.__game.logger._system_log("ERROR", f"{his_name} is not declarated in {os.getenv("RUDLGC_PROJECT_SETTINGS")}/settings.py")
             self.__game.logger._system_log("ERROR", "Game failure exit")
             exit(1)
+
+
+    # READ_ONLY
+    @property
+    def OS_PLATFORM(self):
+        return self._OS_PLATFORM
+    
+    @OS_PLATFORM.setter
+    def OS_PLATFORM(self, other): raise AttributeError("Class attribute is read-only")
+    
+
+    @property
+    def WINDOW_WIDTH(self):
+        return self._WINDOW_WIDTH
+    
+    @WINDOW_WIDTH.setter
+    def WINDOW_WIDTH(self, other): raise AttributeError("Class attribute is read-only")
+        
+    
+    @property
+    def WINDOW_HEIGHT(self):
+        return self._WINDOW_HEIGHT
+    
+    @WINDOW_HEIGHT.setter
+    def WINDOW_HEIGHT(self, other): raise AttributeError("Class attribute is read-only")
+
+
+    @property
+    def WINDOW_MINWIDTH(self):
+        return self._WINDOW_MINWIDTH
+    
+    @WINDOW_MINWIDTH.setter
+    def WINDOW_MINWIDTH(self, other): raise AttributeError("Class attribute is read-only")
+
+    
+    @property
+    def WINDOW_MINHEIGHT(self):
+        return self._WINDOW_MINHEIGHT
+    
+    @WINDOW_MINHEIGHT.setter
+    def WINDOW_MINHEIGHT(self, other): raise AttributeError("Class attribute is read-only") 
+    
+
+    # READ-WRITE
+    @property
+    def DEBUG(self):
+        return self._DEBUG
+    
+    @DEBUG.setter
+    def DEBUG(self, other):
+        self._DEBUG = other
+
+
+    @property
+    def FPS(self):
+        return self._FPS
+    
+    @FPS.setter
+    def FPS(self, other):
+        self._FPS = min(other, 360)
+        self.__GAME._target_fps = self._FPS
+        
+
+
+
+    @property
+    def RESIZABLE(self):
+        return self._RESIZABLE
+    
+    @property
+    def FULLSCREEN(self):
+        return self._FULLSCREEN
+    
+    @property
+    def BORDERLESS(self):
+        return self._BORDERLESS
+    
+    @property
+    def VSYNC(self):
+        return self._VSYNC
+    
+
+
+    @property
+    def POINT_SIZE(self):
+        return self._POINT_SIZE
+    
+
+    @property
+    def LINE_WIDTH(self):
+        return self._LINE_WIDTH
 
 
     

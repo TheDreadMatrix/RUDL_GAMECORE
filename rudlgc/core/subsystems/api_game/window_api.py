@@ -12,6 +12,9 @@ class WindowApi:
     def setGrab(self, grab_flag): 
         self.sdl.SDL_SetWindowGrap(self._window.window, grab_flag)
 
+    def setVsync(self, vsync_mode):
+        self.sdl.SDL_GL_SwapInterval(vsync_mode)
+
     def setRelative(self, rel_flag):
         self.sdl.SDL_SetRelativeMouseMode(rel_flag)
 
