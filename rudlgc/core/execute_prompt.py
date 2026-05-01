@@ -112,13 +112,11 @@ def execute_console() -> int|None:
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
     sub_parser = parser.add_subparsers(dest="command")
 
-    #JUST COMMAND
-    sub_parser.add_parser("test-health")
 
     #BASICS COMMAND
     sub_parser.add_parser("run", help="Running the game", aliases=["r", "start", "play"])
-    sub_parser.add_parser("build", help="Building game into EXE")
-    sub_parser.add_parser("settings", help="Shows list of settings", aliases=["set", "s", "checkout"])
+    sub_parser.add_parser("build", help="Building game into EXE", aliases=["b", "pack", "desktop"])
+    sub_parser.add_parser("settings", help="Shows list of settings", aliases=["show", "s", "checkout"])
     sub_parser.add_parser("collectstuff", help="Copy build-in images to your project for building")
 
     newscene = sub_parser.add_parser("newscene", help="Creates new scene for your project")
@@ -128,18 +126,17 @@ def execute_console() -> int|None:
 
     args = parser.parse_args()
 
-    if args.command == "test-health":
-        check_security(parser)
-        print("\033[32mManage is working very great!\033[0m")
-        return 1
-    
 
     if args.command in {"run", "r", "start", "play"}:
         from rudlgc.core.execute_game import Game
+        import subprocess
+
+        # CHECKING OUR PROJECT
         check_security(parser)
+        subprocess.Popen(["rudlgc-debug"])
+
         game = Game()
         if game.settings.DEBUG:
-            game.logger._system_log("WARNING", "DEBUG mode is enabled")
             game._connectDebugServer()
         game._initGame()
 
@@ -151,7 +148,7 @@ def execute_console() -> int|None:
 
 
 
-    elif args.command in {"settings", "checkout", "set", "s"}:
+    elif args.command in {"settings", "checkout", "show", "s"}:
         from rudlgc.core.subsystems.settings_core import SettingsCore
         from rudlgc.core import _getOs
 
@@ -162,7 +159,7 @@ def execute_console() -> int|None:
 
             "WINDOW-ATTR": ["WINDOW_MODE", "VSYNC", "FPS"],
 
-            "GAME-IN": ["GAME_METADATA", "SETTINGS"],
+            "GAME-IN": ["GAME_METADATA"],
 
             "DEBUG": ["DEBUG", "SHOW_INFO"],
 
@@ -255,16 +252,21 @@ def execute_console() -> int|None:
 
 
 
+
+
     elif args.command == "collectstuff":
-        
         src_image = res.files("rudlgc") / "stuff"
         dst_image = Path.cwd() / os.environ.get("RUDLGC_PROJECT_NAME") / "assets" / "stuff"
         shutil.copytree(src_image, dst_image, dirs_exist_ok=True)
 
         print("\033[32mAdmin stuff succesfully copied to your dirs!\033[0m")
         return 1
+    
 
-    elif args.command == "build":
+
+
+
+    elif args.command in {"build", "b", "pack", "desktop"}:
         check_security(parser)
         print("That command not working yet...")
         return 0

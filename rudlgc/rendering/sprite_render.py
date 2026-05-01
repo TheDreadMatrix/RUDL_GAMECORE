@@ -1,4 +1,4 @@
-from rudlgc.render import CustomShader, Renderer
+from rudlgc.rendering import CustomShader, Renderer
 
 
 class Sprite2D:

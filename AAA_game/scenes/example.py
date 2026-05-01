@@ -1,8 +1,8 @@
 
 #There we import 'GameType' for anotation and 'AbstractScene' for ours scene
 from rudlgc.packages import GameType, PackageScene
-from rudlgc.rudlums import MouseNum, KeyNum, MessageNum, ImageFlag
-from rudlgc.render.sprite_render import Sprite2D
+from rudlgc.rudlums import MouseNum, KeyNum, MessageNum
+from rudlgc.rendering.sprite_render import Sprite2D
 
 
 class ExampleScene(PackageScene):
@@ -55,10 +55,7 @@ class ExampleScene(PackageScene):
         elif self.keyboard.isPressDown(KeyNum.T, event):
             self.settings.FPS = 30
 
-        
 
-        if self.event_api.isResized(event):
-            self.config_api.redirectScene("none-scene")
         
             
 

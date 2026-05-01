@@ -7,6 +7,7 @@ import sdl2.sdlmixer as mixer
 
 import os
 import time
+import socket
 import traceback
 from importlib import import_module
 
@@ -16,6 +17,7 @@ from importlib import import_module
 from rudlgc.core.subsystems.logger_core import Logger
 from rudlgc.core.subsystems import (GameConfigApi, WindowApi, EventApi, SystemApi)
 
+from rudlgc.core.subsystems.requirements import Requirements
 from rudlgc.core.subsystems.settings_core import SettingsCore
 from rudlgc.core.subsystems.paths_core import PathCore
 
@@ -34,52 +36,6 @@ elif _OS in ["MACOS", "IOS"]:
     _BACKEND_CLASS = "SomeMetalBackend"
 elif _OS == "ANDROID":
     _BACKEND_CLASS = "SomeOpenGLesBackend"
-
-
-
-
-class Requirements:
-    def __init__(self, logger):
-        self.os = _getOs()
-        self.logger = logger
-        
-        self.mgl = None
-        self.glm = None
-        self.pil = None
-        self.sdl = None
-        self.audio = None
-
-        self._loadImports()
-
-   
-    def _safeImport(self, name):
-        try:
-            return import_module(name)
-        except Exception as e:
-            self.logger._system_log("ERROR", f"[WARN] Cannot import {name}: {e}")
-            return None
-        
-    def _loadImports(self):
-        self.pil = self._safeImport("PIL.Image")
-        self.glm5 = self._safeImport("glm")
-        self.sdl = self._safeImport("sdl2")
-        self.audio = self._safeImport("sdl2.sdlmixer")
-        
-        
-        if self.os in ("WINDOWS", "LINUX"):
-            self.mgl = self._safeImport("moderngl")
-            
-        elif self.os == "ANDROID":
-            self.mgl = None
-
-        else:
-            self.logger._system_log("ERROR", f"Can not work with systems: {self.os}")
-
-
-
-
-
-
 
 
 
@@ -153,6 +109,9 @@ class Game:
     @_callOnce()
     def _connectDebugServer(self):
         self.logger._system_log("WARNING", "Connected to Debug Server")
+        self.debug_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.debug_client.connect(("127.0.0.1", 6767))
+
         
         
     @_callOnce()
@@ -281,8 +240,6 @@ class Game:
             
         
         self._scene_router.savingProgress()
-        mixer.Mix_CloseAudio()
-        sdl2.ext.quit()
         self.logger._system_log("INFO" if not self.ERROR else "ERROR", "Game succesfully exit" if not self.ERROR else "Game failure exit 2")
         
         

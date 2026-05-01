@@ -3,7 +3,7 @@ from rudlgc.packages import GameType
 
 #from rudlgc.render import Sprite2D
 from rudlgc.rudlums import KeyNum
-from rudlgc.render import Renderer
+from rudlgc.rendering import Renderer
 
 
 class PackageScene:

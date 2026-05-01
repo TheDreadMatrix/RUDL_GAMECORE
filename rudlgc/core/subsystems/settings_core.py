@@ -32,7 +32,7 @@ class SettingsCore:
     _DEFAULTS = {
         "WIDTH": 800, "HEIGHT": 600, "MIN_WIDTH": 799, "MIN_HEIGHT": 599,
 
-        "GAME_METADATA": None, "SETTINGS": None,
+        "GAME_METADATA": None,
 
         "VSYNC": -1, "WINDOW_MODE": 0,
 

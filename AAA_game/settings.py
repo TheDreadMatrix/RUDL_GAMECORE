@@ -6,7 +6,11 @@
 
 # DEBUG mode enables additional logs and development features.
 # Should be set to False in production.
+
+
+
 DEBUG = True
+SHOW_INFO = True
 
 WIDTH = 900
 HEIGHT = 600
@@ -15,18 +19,26 @@ HEIGHT = 600
 # 1 - resize
 # 2 - borderless 
 # 3 - fullscreen
-WINDOW_MODE = 0
+WINDOW_MODE = 1
 
+WIDTH = 800
+HEIGHT = 600
+
+MIN_WIDTH = 400
+MIN_HEIGHT = 300
+
+VSYNC = 1
 
 
 # Application and build metadata
 # APPNAME is used as the application identifier and may also define
 # the folder name when building/exporting the project.
 
-#SETTINGS = {
-#    "FOLDERS": [],
- #   "FILE": "settings.json"
-#}
+RUDLGC_APP_BACKEND = "SDL-MANIA" # [SDL_MANIA, KIVY, GLFW]
+
+RUDLGC_AUDIO_BACKEND = "SOLOUD" # [SOLOUD, MIXER_MANIA]
+
+RUDLGC_GRAPHICS_BACKEND = "OPENGL" # [VULKAN, OPENGL, ES]
 
 
 GAME_METADATA = {
@@ -45,7 +57,8 @@ GAME_METADATA = {
 
 
 # Rendering / window behavior
-
+POINT_SIZE = 10
+LINE_WIDTH = 10
 
 
 # Entry scene loaded at startup.
@@ -54,7 +67,10 @@ GAME_METADATA = {
 
 # Debug UI options
 
+MUSIC_VOLUME = 0.5
+SOUND_VOLUME = 0.5
 
+OS_PLATFORM = "hello"
 
 
 
@@ -77,14 +93,9 @@ FPS = 240
 # - accessible via game.settings if registered
 
 __CUSTOM_CATEGORY = {
-   "JUST-ATTR": ["HELLO_WORLD", "MY_DICT"],
+   "JUST-ATTR": ["HELLO_WORLD"],
    
 }
 
 HELLO_WORLD = ":)"
-MY_DICT = {"num": {
-    "1": 1, 
-    "2": 2, 
-    "3": {}
-    }
-}
+
