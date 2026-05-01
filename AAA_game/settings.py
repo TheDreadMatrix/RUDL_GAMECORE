@@ -11,6 +11,11 @@ DEBUG = True
 WIDTH = 900
 HEIGHT = 600
 
+# 0 - default
+# 1 - resize
+# 2 - borderless 
+# 3 - fullscreen
+WINDOW_MODE = 0
 
 
 
@@ -18,10 +23,10 @@ HEIGHT = 600
 # APPNAME is used as the application identifier and may also define
 # the folder name when building/exporting the project.
 
-JSON_SETTINGS = {
-    "FOLDER": [],
-    "FILE": None
-}
+#SETTINGS = {
+#    "FOLDERS": [],
+ #   "FILE": "settings.json"
+#}
 
 
 GAME_METADATA = {

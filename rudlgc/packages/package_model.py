@@ -29,9 +29,8 @@ class RouterModel:
         self._current_scene_class = self._scene_dict.get(self.game._current_scene_name, self._scene_dict["empty-scene"])()
 
 
-    def registerScene(self, name: str, scene, ignore: bool=False):
-        if not ignore:
-            self.game.logger._system_log("SCENE", f"Scene '{name}' has been registered.")
+    def registerScene(self, name: str, scene):
+        self.game.logger._system_log("SCENE", f"Scene '{name}' has been registered.")
         self._scene_dict.update({name: scene})
 
 

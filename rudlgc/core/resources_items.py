@@ -14,50 +14,49 @@ class ResourcesItems:
         self._soundDict = {}
         
     # ADD ITEM TO MANAGER
-    def addImage(self, path, item_id, ignore=False):
-        self.__showMessage(item_id, ignore, 1)
+    def addImage(self, path, item_id):
+        self.__showMessage(item_id, 1)
 
         self._imageDict.update({item_id: self.backend_render.createTexture(path)})
 
     
-    def addFont(self, path, item_id, ignore=False):
-        self.__showMessage(item_id, ignore, 1)
+    def addFont(self, path, item_id):
+        self.__showMessage(item_id, 1)
 
     
-    def addMusic(self, path, item_id, ignore=False):
-        self.__showMessage(item_id, ignore, 1)
+    def addMusic(self, path, item_id):
+        self.__showMessage(item_id, 1)
         self._musicDict.update({item_id: path})
 
    
-    def addSound(self, path, item_id, ignore=False):
-        self.__showMessage(item_id, ignore, 1)
+    def addSound(self, path, item_id):
+        self.__showMessage(item_id, 1)
         self._soundDict.update({item_id: path})
 
 
     # DELETING RESOURCES
-    def removeImage(self, item_id, ignore=False):
-        self.__showMessage(item_id, ignore, 0)
+    def removeImage(self, item_id):
+        self.__showMessage(item_id, 0)
 
         if item_id in self._imageDict:
             del self._imageDict[item_id]
 
-    def removeMusic(self, item_id, ignore=False):
-        self.__showMessage(item_id, ignore, 0)
+    def removeMusic(self, item_id):
+        self.__showMessage(item_id, 0)
 
         if item_id in self._musicDict:
             del self._musicDict[item_id]
 
-    def removeSound(self, item_id, ignore=False):
-        self.__showMessage(item_id, ignore, 0)
+    def removeSound(self, item_id):
+        self.__showMessage(item_id, 0)
 
         if item_id in self._soundDict:
             del self._soundDict[item_id]
 
 
     # PRIVATE PROTECTED
-    def __showMessage(self, item_id, ignore, msg_type):
-        if not ignore:
-            self.logger._system_log("RESOURCE", f"'{item_id}' has been deleted" if not msg_type else f"'{item_id}' has been registered")
+    def __showMessage(self, item_id, msg_type):
+        self.logger._system_log("RESOURCE", f"'{item_id}' has been deleted" if not msg_type else f"'{item_id}' has been registered")
 
 
     def _getItemImage(self, item_id):

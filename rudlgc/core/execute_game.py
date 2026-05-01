@@ -35,7 +35,6 @@ elif _OS in ["MACOS", "IOS"]:
 elif _OS == "ANDROID":
     _BACKEND_CLASS = "SomeOpenGLesBackend"
 
-from rudlgc.core.audio_backend.sdlmixerbackend import SdlmixerBackend
 
 
 
@@ -164,7 +163,6 @@ class Game:
         self.config_api = GameConfigApi(self)
         self.system_api = SystemApi(self)
 
-        self.audio = SdlmixerBackend(self)
 
         self.logger._system_log("INFO", "RUDL Game Core '1.0.0-alpha' build with SDL2 && OpenGL 3.3.0")
         
@@ -235,8 +233,8 @@ class Game:
                 self._running = False
             
             if event.type == sdl2.SDL_WINDOWEVENT and event.window.event == sdl2.SDL_WINDOWEVENT_RESIZED:
-                self.settings.WINDOW_WIDTH = event.window.data1
-                self.settings.WINDOW_HEIGHT = event.window.data2
+                self.settings._WINDOW_WIDTH = event.window.data1
+                self.settings._WINDOW_HEIGHT = event.window.data2
 
                 self.backend_render.setViewPort(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
                 self.backend_render.setProjectile2D(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)

@@ -118,7 +118,7 @@ def execute_console() -> int|None:
     #BASICS COMMAND
     sub_parser.add_parser("run", help="Running the game", aliases=["r", "start", "play"])
     sub_parser.add_parser("build", help="Building game into EXE")
-    sub_parser.add_parser("settings", help="Shows list of settings")
+    sub_parser.add_parser("settings", help="Shows list of settings", aliases=["set", "s", "checkout"])
     sub_parser.add_parser("collectstuff", help="Copy build-in images to your project for building")
 
     newscene = sub_parser.add_parser("newscene", help="Creates new scene for your project")
@@ -134,7 +134,7 @@ def execute_console() -> int|None:
         return 1
     
 
-    if args.command in ["run", "r", "start", "play"]:
+    if args.command in {"run", "r", "start", "play"}:
         from rudlgc.core.execute_game import Game
         check_security(parser)
         game = Game()
@@ -142,13 +142,17 @@ def execute_console() -> int|None:
             game.logger._system_log("WARNING", "DEBUG mode is enabled")
             game._connectDebugServer()
         game._initGame()
-        game._run()
+
+        try:
+            game._run()
+        except KeyboardInterrupt:
+            parser.error("Exit with CRTL + C")
         return 1
 
 
 
-    elif args.command == "settings":
-        from rudlgc.core.subsystems import SettingsCore
+    elif args.command in {"settings", "checkout", "set", "s"}:
+        from rudlgc.core.subsystems.settings_core import SettingsCore
         from rudlgc.core import _getOs
 
         CATEGORY = {
@@ -156,9 +160,9 @@ def execute_console() -> int|None:
 
             "WINDOW-SIZES": ["WIDTH", "HEIGHT", "MIN_WIDTH", "MIN_HEIGHT"],
 
-            "WINDOW-ATTR": ["FULLSCREEN", "BORDERLESS", "RESIZABLE", "VSYNC", "FPS"],
+            "WINDOW-ATTR": ["WINDOW_MODE", "VSYNC", "FPS"],
 
-            "GAME-META": ["GAME_METADATA"],
+            "GAME-IN": ["GAME_METADATA", "SETTINGS"],
 
             "DEBUG": ["DEBUG", "SHOW_INFO"],
 
@@ -205,7 +209,7 @@ def execute_console() -> int|None:
 
                 for name, value in sorted(grouped[group]):
                     value_str = (json.dumps(value, indent=4, ensure_ascii=False) if isinstance(value, dict) else str(value))
-                    print(f"\t\033[33m  • {name} - {value_str}\033[0m")
+                    print(f"\t\033[33m  • {name} = {value_str}\033[0m")
 
         
         if defaults_not_dec:
@@ -218,7 +222,7 @@ def execute_console() -> int|None:
 
                 for name, value in sorted(grouped[group]):
                     value_str = (json.dumps(value, indent=2, ensure_ascii=False) if isinstance(value, dict) else str(value))
-                    print(f"\t\033[33m  • {name} - {value_str}\033[0m")
+                    print(f"\t\033[33m  • {name} = {value_str}\033[0m")
 
         if custom:
             CUSTOM_CATEGORY = getattr(settings_module, "__CUSTOM_CATEGORY", {})
@@ -234,7 +238,7 @@ def execute_console() -> int|None:
 
                     for name, value in sorted(grouped[group]):
                         value_str = (json.dumps(value, indent=4, ensure_ascii=False) if isinstance(value, dict) else str(value))
-                        print(f"\t\033[33m  • {name} - {value_str}\033[0m")
+                        print(f"\t\033[33m  • {name} = {value_str}\033[0m")
         return 1
     
     

@@ -1,22 +1,13 @@
 {
-    "window": {
-        "window-size": {
-            "width": 800,
-            "height": 600,
-            "min-width": 799,
-            "min-height": 599
+    "built-in": {
+        "window": {
+            "mode": 1,
+            "vsync": 0
         },
-        "window-attr": {
-            "vsync": 0,
-            "fullscreen": false,
-            "borderless": false,
-            "resizable": false
-        }
-    },
-    "audio": {
-        "sound-volume": 1.0,
-        "music-volume": 1.0
-    },
-    "frametime": 120,
-    "my_custom": 20
+        "audio": {
+            "music": 1.0,
+            "sound": 1.0
+        },
+        "frametime": 240
+    }
 }

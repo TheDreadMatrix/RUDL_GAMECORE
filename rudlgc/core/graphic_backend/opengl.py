@@ -16,12 +16,13 @@ class OpenGLBackend(BaseGraphicBackend):
     @_callOnce()
     def createFlags(self):
         flags = self.sdl.SDL_WINDOW_OPENGL
-        if self.settings.RESIZABLE:
-            flags |= self.sdl.SDL_WINDOW_RESIZABLE
-        if self.settings.BORDERLESS:
-            flags |= self.sdl.SDL_WINDOW_BORDERLESS
-        if self.settings.FULLSCREEN:
-            flags |= self.sdl.SDL_WINDOW_FULLSCREEN_DESKTOP
+        if self.settings.WINDOW_MODE != 0:
+            if self.settings.WINDOW_MODE == 1:
+                flags |= self.sdl.SDL_WINDOW_RESIZABLE
+            elif self.settings.WINDOW_MODE == 2:
+                flags |= self.sdl.SDL_WINDOW_BORDERLESS
+            elif self.settings.WINDOW_MODE == 3:
+                flags |= self.sdl.SDL_WINDOW_FULLSCREEN
         return flags
     
     @_callOnce()

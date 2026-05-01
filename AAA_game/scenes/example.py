@@ -1,6 +1,6 @@
 
 #There we import 'GameType' for anotation and 'AbstractScene' for ours scene
-from rudlgc.contrib import GameType, PackageScene
+from rudlgc.packages import GameType, PackageScene
 from rudlgc.rudlums import MouseNum, KeyNum, MessageNum, ImageFlag
 from rudlgc.render.sprite_render import Sprite2D
 
@@ -33,11 +33,8 @@ class ExampleScene(PackageScene):
     #This method is called every frame. 
     def onUpdate(self):
         self.window_api.setTitle(f"{self.game.getFps():.2f}")
-
         
-
         
-
 
     def onFixedUpdate(self):
         if self.keyboard.isPress(KeyNum.A):
@@ -45,6 +42,7 @@ class ExampleScene(PackageScene):
 
         if self.keyboard.isPress(KeyNum.D):
             self.x += 230 * self.game.tick_time
+
 
         self.sprite.setPosition(self.x, self.y)
         
@@ -55,13 +53,12 @@ class ExampleScene(PackageScene):
         if self.keyboard.isPressDown(KeyNum.R, event):
             self.settings.FPS = 1000
         elif self.keyboard.isPressDown(KeyNum.T, event):
-            self.settings.FPS = 60
+            self.settings.FPS = 30
 
         
 
         if self.event_api.isResized(event):
-            self.sprite.setSize(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
-            self.window_api.setTitle(f"{self.settings.WINDOW_WIDTH}x{self.settings.WINDOW_HEIGHT}")
+            self.config_api.redirectScene("none-scene")
         
             
 

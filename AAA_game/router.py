@@ -1,6 +1,6 @@
 
-from rudlgc.contrib import GameType, SceneEmpty
-from rudlgc.contrib.package_model import RouterModel
+from rudlgc.packages import GameType, SceneEmpty
+from rudlgc.packages.package_model import RouterModel
 
 from rudlgc import __version__
 

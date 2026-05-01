@@ -1,9 +1,11 @@
 import os
+import json
 import traceback
+from pathlib import Path
 from importlib import import_module
 
 from rudlgc.core import _getOs
-
+from rudlgc.johnson import Joshua
 
 
 
@@ -30,9 +32,9 @@ class SettingsCore:
     _DEFAULTS = {
         "WIDTH": 800, "HEIGHT": 600, "MIN_WIDTH": 799, "MIN_HEIGHT": 599,
 
-        "GAME_METADATA": None,
+        "GAME_METADATA": None, "SETTINGS": None,
 
-        "VSYNC": 0, "FULLSCREEN": False, "BORDERLESS": False, "RESIZABLE": True,
+        "VSYNC": -1, "WINDOW_MODE": 0,
 
         "DEBUG": False, "SHOW_INFO": True,
 
@@ -42,8 +44,9 @@ class SettingsCore:
         
         "POINT_SIZE": 10, "LINE_WIDTH": 10,
 
-        "OS_PLATFORM": _getOs(),
+        "OS_PLATFORM": _getOs(), 
     }
+
 
     def __init__(self, game):
         try: 
@@ -53,8 +56,11 @@ class SettingsCore:
             game.logger._system_log("ERROR", "Game failure exit")
             exit(1)
 
+
         self.__GAME = game
-    
+        self._SETTINGS = {}        
+
+
         self._WINDOW_WIDTH = getattr(self.__settings_module, "WIDTH", self._DEFAULTS.get("WIDTH"))
         self._WINDOW_HEIGHT = getattr(self.__settings_module, "HEIGHT", self._DEFAULTS.get("HEIGHT"))
 
@@ -63,9 +69,7 @@ class SettingsCore:
 
         # WINDOW ATTR
         self._VSYNC = getattr(self.__settings_module, "VSYNC", self._DEFAULTS.get("VSYNC"))
-        self._FULLSCREEN = getattr(self.__settings_module, "FULLSCREEN", self._DEFAULTS.get("FULLSCREEN"))
-        self._BORDERLESS = getattr(self.__settings_module, "BORDERLESS", self._DEFAULTS.get("BORDERLESS"))
-        self._RESIZABLE = getattr(self.__settings_module, "RESIZABLE", self._DEFAULTS.get("RESIZABLE"))
+        self._WINDOW_MODE = getattr(self.__settings_module, "WINDOW_MODE", self._DEFAULTS.get("WINDOW_MODE"))
 
 
         # META
@@ -103,86 +107,52 @@ class SettingsCore:
 
     def _hasInRequiredSettings(self, VARS, his_name):
         if VARS is None:
-            self.__game.logger._system_log("ERROR", f"{his_name} is not declarated in {os.getenv("RUDLGC_PROJECT_SETTINGS")}/settings.py")
-            self.__game.logger._system_log("ERROR", "Game failure exit")
+            self.__GAME.logger._system_log("ERROR", f"{his_name} is not declarated in {os.getenv('RUDLGC_PROJECT_SETTINGS')}/settings.py")
+            self.__GAME.logger._system_log("ERROR", "Game failure exit")
             exit(1)
 
+    
 
-    # READ_ONLY
+
     @property
     def OS_PLATFORM(self):
         return self._OS_PLATFORM
-    
-    @OS_PLATFORM.setter
-    def OS_PLATFORM(self, other): raise AttributeError("Class attribute is read-only")
     
 
     @property
     def WINDOW_WIDTH(self):
         return self._WINDOW_WIDTH
     
-    @WINDOW_WIDTH.setter
-    def WINDOW_WIDTH(self, other): raise AttributeError("Class attribute is read-only")
         
-    
     @property
     def WINDOW_HEIGHT(self):
         return self._WINDOW_HEIGHT
     
-    @WINDOW_HEIGHT.setter
-    def WINDOW_HEIGHT(self, other): raise AttributeError("Class attribute is read-only")
-
-
     @property
     def WINDOW_MINWIDTH(self):
         return self._WINDOW_MINWIDTH
     
-    @WINDOW_MINWIDTH.setter
-    def WINDOW_MINWIDTH(self, other): raise AttributeError("Class attribute is read-only")
 
-    
     @property
     def WINDOW_MINHEIGHT(self):
         return self._WINDOW_MINHEIGHT
     
-    @WINDOW_MINHEIGHT.setter
-    def WINDOW_MINHEIGHT(self, other): raise AttributeError("Class attribute is read-only") 
+    @property
+    def WINDOW_MODE(self):
+        return self._WINDOW_MODE
     
-
+    
     # READ-WRITE
     @property
     def DEBUG(self):
         return self._DEBUG
     
-    @DEBUG.setter
-    def DEBUG(self, other):
-        self._DEBUG = other
-
 
     @property
     def FPS(self):
         return self._FPS
     
-    @FPS.setter
-    def FPS(self, other):
-        self._FPS = min(other, 360)
-        self.__GAME._target_fps = self._FPS
         
-
-
-
-    @property
-    def RESIZABLE(self):
-        return self._RESIZABLE
-    
-    @property
-    def FULLSCREEN(self):
-        return self._FULLSCREEN
-    
-    @property
-    def BORDERLESS(self):
-        return self._BORDERLESS
-    
     @property
     def VSYNC(self):
         return self._VSYNC

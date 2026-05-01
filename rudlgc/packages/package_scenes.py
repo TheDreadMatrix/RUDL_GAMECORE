@@ -1,4 +1,4 @@
-from rudlgc.contrib import GameType
+from rudlgc.packages import GameType
 
 
 #from rudlgc.render import Sprite2D
