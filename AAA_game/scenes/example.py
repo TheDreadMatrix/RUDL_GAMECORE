@@ -1,7 +1,7 @@
 
 #There we import 'GameType' for anotation and 'AbstractScene' for ours scene
 from rudlgc.packages import GameType, PackageScene
-from rudlgc.rudlums import MouseNum, KeyNum, MessageNum
+from rudlgc.rudlums import MouseNum, KeyNum
 from rudlgc.rendering.sprite_render import Sprite2D
 
 
@@ -14,13 +14,13 @@ class ExampleScene(PackageScene):
 
         self.sprite = Sprite2D(game, renderer=self.renderer)
         self.sprite.setSize(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
-        self.sprite.setTexture("out-image")
+        
         
         
 
         self.sprite_2 = Sprite2D(game, renderer=self.renderer)
         self.sprite_2.setSize(300, 450)
-        self.sprite_2.setTexture("my-icon")
+        
 
        
         self.logger.trace(self.settings.OS_PLATFORM)
@@ -51,9 +51,12 @@ class ExampleScene(PackageScene):
     #This method is called on any event, such as clicking, changing focus, etc.                      
     def onEvent(self, event):
         if self.keyboard.isPressDown(KeyNum.R, event):
-            self.settings.FPS = 1000
+            self.config_api.setFps(300)
         elif self.keyboard.isPressDown(KeyNum.T, event):
-            self.settings.FPS = 30
+            self.config_api.setFps(60)
+
+        if self.mouse.mouseButtonDown(MouseNum.LEFT, event):
+            self.config_api.restartScene()
 
 
         

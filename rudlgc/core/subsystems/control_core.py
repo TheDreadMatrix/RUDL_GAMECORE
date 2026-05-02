@@ -1,12 +1,5 @@
 import sdl2
 
-class Gamepad:
-    NOT_WORKING = 0
-
-
-class Touchpad:
-    NOT_WORKING = 0
-
 
 
 class Keyboard:

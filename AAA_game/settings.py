@@ -27,7 +27,7 @@ HEIGHT = 600
 MIN_WIDTH = 400
 MIN_HEIGHT = 300
 
-VSYNC = 1
+VSYNC = 0
 
 
 # Application and build metadata

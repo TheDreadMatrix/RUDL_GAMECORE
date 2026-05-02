@@ -3,7 +3,7 @@ import typing
 
 
 
-class _Settings:
+class _SettingsType:
     DEBUG: bool
 
     WINDOW_WIDTH: int
@@ -11,9 +11,7 @@ class _Settings:
 
 
     VSYNC: int
-    FULLSCREEN: bool
-    BORDERLESS: bool
-    RESIZABLE: bool
+    WINDOW_MODE: int
 
     FPS: float
 
@@ -66,16 +64,6 @@ class _SystemApiType:
 
 
 
-class _ResourcesManager:
-    def addImage(self, path: str, item_id: str) -> None: ...
-    def addFont(self, path: str, item_id: str) -> None: ...
-    def addMusic(self, path: str, item_id: str) -> None: ...
-    def addSound(self, path: str, item_id: str) -> None: ...
-    
-    def removeImage(self, item_id: str) -> None: ...
-    def removeMusic(self, item_id: str) -> None: ...
-    def removeSound(self, item_id: str) -> None: ...
-
 
 class _PathsType:
     def getConfigPath(self, *folder: str, file: str) -> str: ...
@@ -95,14 +83,6 @@ class _LoggerType:
 
 
 
-
-
-class _Gamepad:
-    NOT_WORKING: int
-
-
-class _Touchpad:
-    NOW_WORKING: int
 
 
 class _Keyboard:
@@ -132,10 +112,7 @@ class GameType(typing.Protocol):
     event_api: _EventApiType
     system_api: _SystemApiType
 
-    resources: _ResourcesManager
-    audio: typing.Any
-
-    settings: _Settings
+    settings: _SettingsType
     paths: _PathsType
     logger: _LoggerType
 
@@ -143,8 +120,6 @@ class GameType(typing.Protocol):
     tick_time: float
 
     keyboard: _Keyboard
-    gamepad: _Gamepad
-    touchpad: _Touchpad
     mouse: _Mouse
 
     PROJECT_NAME: str

@@ -17,9 +17,7 @@ class PackageScene:
         self.event_api = game.event_api
         self.config_api = game.config_api
         self.system_api = game.system_api
-
-        self.resources = game.resources
-
+        
         self.settings = game.settings
         self.paths = game.paths
         self.logger = game.logger

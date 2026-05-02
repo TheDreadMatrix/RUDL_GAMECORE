@@ -25,8 +25,8 @@ def getRudlgcAllModulesParts():
 
 def _rudlgc_admin():
     import webbrowser
-    from rudlgc.core.templates.templates import _PROHIBITED_WORDS, _EXAMPLE_PY, _ROUTER_PY, _SETTINGS_PY, _MANAGE_PY
-    from rudlgc.core.templates.functions import is_valid_name
+    from rudlgc.core.templates.templates import _EXAMPLE_PY, _ROUTER_PY, _SETTINGS_PY, _MANAGE_PY
+    from rudlgc.core.templates.functions import is_valid_name, _PROHIBITED_WORDS
 
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
     sub_parser = parser.add_subparsers(dest="command")
@@ -105,8 +105,8 @@ def execute_console() -> int|None:
     import shutil
     import importlib
     import importlib.resources as res
-    from rudlgc.core.templates.templates import _SCENE_PY, _BUILD_PY, check_security
-    from rudlgc.core.templates.functions import is_valid_name, _group_by_category
+    from rudlgc.core.templates.templates import _SCENE_PY, _BUILD_PY
+    from rudlgc.core.templates.functions import is_valid_name, _group_by_category, check_security
 
 
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
@@ -133,11 +133,12 @@ def execute_console() -> int|None:
 
         # CHECKING OUR PROJECT
         check_security(parser)
-        subprocess.Popen(["rudlgc-debug"])
+        #subprocess.Popen(["rudlgc-debug"])
 
         game = Game()
         if game.settings.DEBUG:
-            game._connectDebugServer()
+            pass
+            #game._connectDebugServer()
         game._initGame()
 
         try:

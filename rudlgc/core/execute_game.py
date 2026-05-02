@@ -15,15 +15,13 @@ from importlib import import_module
 
 
 from rudlgc.core.subsystems.logger_core import Logger
-from rudlgc.core.subsystems import (GameConfigApi, WindowApi, EventApi, SystemApi)
+from rudlgc.core.subsystems.api_game import GameConfigApi, WindowApi, EventApi, SystemApi
 
 from rudlgc.core.subsystems.requirements import Requirements
 from rudlgc.core.subsystems.settings_core import SettingsCore
 from rudlgc.core.subsystems.paths_core import PathCore
 
-from rudlgc.core.subsystems.input_game import Keyboard, Mouse, Gamepad, Touchpad
-
-from rudlgc.core.resources_items import ResourcesItems
+from rudlgc.core.subsystems.control_core import Keyboard, Mouse
 from rudlgc.core import _callOnce, _getOs
 
 
@@ -32,10 +30,7 @@ _OS = _getOs()
 if _OS in ["WINDOWS", "LINUX"]:
     from rudlgc.core.graphic_backend.opengl import OpenGLBackend
     _BACKEND_CLASS = OpenGLBackend
-elif _OS in ["MACOS", "IOS"]:
-    _BACKEND_CLASS = "SomeMetalBackend"
-elif _OS == "ANDROID":
-    _BACKEND_CLASS = "SomeOpenGLesBackend"
+
 
 
 
@@ -56,8 +51,6 @@ class Game:
 
         self.keyboard = Keyboard()
         self.mouse = Mouse()
-        self.gamepad = Gamepad()
-        self.touchpad = Touchpad()
 
         self.delta_time = 0
         self.tick_time = 1 / 60
@@ -116,14 +109,13 @@ class Game:
         
     @_callOnce()
     def _initGame(self):
-        self.resources = ResourcesItems(self)
         self.window_api = WindowApi(self)
         self.event_api = EventApi(self)
         self.config_api = GameConfigApi(self)
         self.system_api = SystemApi(self)
 
 
-        self.logger._system_log("INFO", "RUDL Game Core '1.0.0-alpha' build with SDL2 && OpenGL 3.3.0")
+        self.logger._system_log("INFO", f"RUDL Game Core '1.0.0-alpha' build with SDL2 & {self.backend_render.NAME_CONTEXT}")
         
 
         #SCENE ROUTER FOR SCENE MANAGMENT
@@ -142,7 +134,6 @@ class Game:
 
         try:
             self._scene_router = module.SceneManager(self)
-            self._scene_router.onResourcesCreate(self)
             self._scene_router.onRegistration(self)
             self._scene_router._startGameLoop()
         except Exception:

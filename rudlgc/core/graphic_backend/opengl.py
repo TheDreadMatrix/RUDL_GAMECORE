@@ -3,7 +3,7 @@ from rudlgc.core import _callOnce
 
 
 class OpenGLBackend(BaseGraphicBackend):
-    NAME_CONTEXT = "OPENGL"
+    NAME_CONTEXT = "OpenGL-3.3.0"
     def __init__(self, game):
         super().__init__(game)
         self.mgl = game._requirements.mgl
@@ -44,8 +44,8 @@ class OpenGLBackend(BaseGraphicBackend):
         # CONTEXT
         self.context = self.mgl.create_context()
 
-        #self._enable(self.mgl.DEPTH_TEST)
-        self._enable(self.mgl.BLEND)
+        self.enable(self.mgl.DEPTH_TEST)
+        self.enable(self.mgl.BLEND)
 
         self.context.blend_func = (self.mgl.SRC_ALPHA, self.mgl.ONE_MINUS_SRC_ALPHA)
 
@@ -74,6 +74,8 @@ class OpenGLBackend(BaseGraphicBackend):
 
         return texture
     
+
+    
     def createNonTexture(self):
         texture = self.context.texture((256, 256), 3, self.UNDEFINED_TEXTURE_BYTE)
         texture.filter = (self.mgl.LINEAR, self.mgl.LINEAR)
@@ -96,5 +98,5 @@ class OpenGLBackend(BaseGraphicBackend):
         self.context.clear(r, g, b)
 
 
-    def _enable(self, flag):
+    def enable(self, flag):
         self.context.enable(flag)

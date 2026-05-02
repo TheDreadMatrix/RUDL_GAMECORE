@@ -40,7 +40,7 @@ class Sprite2D:
         self.__Alpha = alpha
 
     def setTexture(self, id: str):
-        self.__Texture = self.game.resources._getItemImage(id) or self.backend_render.createNonTexture()
+        self.__Texture = None
 
 
     def getLayer(self):
