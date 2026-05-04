@@ -1,6 +1,5 @@
 import platform
 from datetime import datetime
-from functools import lru_cache
 import os
 
 

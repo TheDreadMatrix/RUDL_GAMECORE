@@ -23,7 +23,7 @@ class ExampleScene(PackageScene):
         
 
        
-        self.logger.trace(self.settings.OS_PLATFORM)
+        self.logger.trace(self.settings.HELLO_WORLD)
         
         
         

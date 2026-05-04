@@ -200,6 +200,11 @@ class Game:
             self._tick_timer = 0.0
 
 
+        if self.keyboard.isPress(92) and self.keyboard.isPress(4):
+            self.ERROR = 707
+            raise Exception("Switched to Error Scene")
+
+
     def __render(self):
         self.backend_render.clearColor(0.9, 0.9, 0.9)
         self._scene_router._render()

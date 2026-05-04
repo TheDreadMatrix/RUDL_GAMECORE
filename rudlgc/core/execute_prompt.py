@@ -164,8 +164,6 @@ def execute_console() -> int|None:
 
             "DEBUG": ["DEBUG", "SHOW_INFO"],
 
-            "AUDIO": ["MUSIC_VOLUME", "SOUND_VOLUME"],
-
             "CROSS-PLATFORM": ["OS_PLATFORM"],
 
             "RENDER-ATTR": ["LINE_WIDTH", "POINT_SIZE"]

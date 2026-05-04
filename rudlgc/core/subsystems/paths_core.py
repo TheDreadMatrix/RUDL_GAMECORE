@@ -3,7 +3,6 @@ from pathlib import Path
 import sys
 
 
-from rudlgc.core import lru_cache
 
 
 
@@ -11,27 +10,27 @@ class PathCore:
     def __init__(self, game):
         PROJECT_DIR = game.PROJECT_NAME
         if hasattr(sys, "frozen"):
-            self._BASE_DATA_DIR = Path(platformdirs.user_data_dir(game.settings.GAME_METADATA.APP_FOLDER)) / "assets"
+            self._RUNTIME_DIR = Path(platformdirs.user_data_dir(game.settings.GAME_METADATA.APP_FOLDER))
         else:
-            self._BASE_DATA_DIR = Path.cwd() / PROJECT_DIR / "assets"
+            self._RUNTIME_DIR = Path.cwd() / PROJECT_DIR / "assets"
 
         if hasattr(sys, "_MEIPASS"):
             self._RESOURCE_DIR = Path(sys._MEIPASS) / "assets"
         else:
-            self._RESOURCE_DIR = Path.cwd() / PROJECT_DIR / "assets"
+            self._RESOURCE_DIR = self._RUNTIME_DIR
             
         self.assets_dir = self._RESOURCE_DIR 
 
-        self.musics_dir = self._RESOURCE_DIR /  "musics"
-        self.sounds_dir = self._RESOURCE_DIR /  "sounds"
+        self.musics_dir = self._RESOURCE_DIR /  "music"
+        self.sounds_dir = self._RESOURCE_DIR /  "sound"
         self.images_dir = self._RESOURCE_DIR / "images"
         self.fonts_dir = self._RESOURCE_DIR /  "fonts"
         self.shaders_dir = self._RESOURCE_DIR /  "shaders"
 
-        self.config_dir = self._BASE_DATA_DIR /  ".config"
-        self.saves_dir = self._BASE_DATA_DIR /  ".saves"
+        self.config_dir = self._RUNTIME_DIR /  "config"
+        self.saves_dir = self._RUNTIME_DIR /  "csaves"
 
-    @lru_cache(maxsize=512)
+    
     def _build_path(self, base: Path, *folders, file: str | None = None):
         path = base
         for f in folders:
@@ -47,7 +46,7 @@ class PathCore:
     def getConfigPath(self, *folder, file):
         return self._build_path(self.config_dir, *folder, file=file)
 
-    def getSavesPath(self, *folder, file):
+    def getCsavesPath(self, *folder, file):
         return self._build_path(self.saves_dir, *folder, file=file)
 
     def getMusicsPath(self, *folder, file):

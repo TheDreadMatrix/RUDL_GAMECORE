@@ -38,8 +38,6 @@ class SettingsCore:
 
         "DEBUG": False, "SHOW_INFO": True,
 
-        "MUSIC_VOLUME": 1.0, "SOUND_VOLUME": 1.0,
-
         "FPS": 60,
         
         "POINT_SIZE": 10, "LINE_WIDTH": 10,
@@ -85,11 +83,6 @@ class SettingsCore:
 
         self._DEBUG = getattr(self.__settings_module, "DEBUG", True)
         self._hasInRequiredSettings(self._DEBUG, "DEBUG")
-
-
-        # AUDIO
-        self.MUSIC_VOLUME = getattr(self.__settings_module, "MUSIC_VOLUME", self._DEFAULTS.get("MUSIC_VOLUME"))
-        self.SOUND_VOLUME = getattr(self.__settings_module, "SOUND_VOLUME", self._DEFAULTS.get("SOUND_VOLUME"))
 
 
         # RENDER CROSSPLATFORM
