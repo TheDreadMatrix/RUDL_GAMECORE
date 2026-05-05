@@ -32,7 +32,7 @@ class SettingsCore:
     _DEFAULTS = {
         "WIDTH": 800, "HEIGHT": 600, "MIN_WIDTH": 799, "MIN_HEIGHT": 599,
 
-        "GAME_METADATA": None,
+        "GAME_METADATA": None, "RUDLGC_JOSEPH": None,
 
         "VSYNC": -1, "WINDOW_MODE": 0,
 
@@ -56,7 +56,7 @@ class SettingsCore:
 
 
         self.__GAME = game
-        self._SETTINGS = {}        
+        self.JOSEPH = getattr(self.__settings_module, "RUDLGC_JOSEPH", self._DEFAULTS.get("RUDLGC_JOSEPH"))    
 
 
         self._WINDOW_WIDTH = getattr(self.__settings_module, "WIDTH", self._DEFAULTS.get("WIDTH"))

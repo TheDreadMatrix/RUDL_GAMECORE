@@ -160,7 +160,7 @@ def execute_console() -> int|None:
 
             "WINDOW-ATTR": ["WINDOW_MODE", "VSYNC", "FPS"],
 
-            "GAME-IN": ["GAME_METADATA"],
+            "GAME-IN": ["GAME_METADATA", "RUDLGC_JOSEPH"],
 
             "DEBUG": ["DEBUG", "SHOW_INFO"],
 

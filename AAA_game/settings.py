@@ -7,6 +7,9 @@
 # DEBUG mode enables additional logs and development features.
 # Should be set to False in production.
 
+from rudlgc.johnson import Joseph
+
+RUDLGC_JOSEPH = Joseph()
 
 
 DEBUG = True

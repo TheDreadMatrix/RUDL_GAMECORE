@@ -23,6 +23,10 @@ class Joshua:
             
 
 
+class Joseph:
+    def __repr__(self):
+        return f"<Joseph: >"
+
 
 
 
@@ -71,3 +75,6 @@ class Xmlion:
         _build(self.root, data)
 
         self.tree.write(self.xml_path)
+
+    def __repr__(self):
+        return f"<Xmlion: {self.xml_path}>"
