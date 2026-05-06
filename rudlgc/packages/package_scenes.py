@@ -2,7 +2,6 @@ from rudlgc.packages import GameType
 
 
 #from rudlgc.render import Sprite2D
-from rudlgc.rudlums import KeyNum
 from rudlgc.rendering import Renderer
 
 
@@ -62,7 +61,7 @@ class SceneError(PackageScene):
     
 
     def onEvent(self, event):
-        if self.keyboard.isPressDown(KeyNum.ESC, event):
+        if self.keyboard.isPressDown(72, event):
             self.config_api.closeGame()
     
 
@@ -82,6 +81,7 @@ class SceneEmpty(PackageScene):
             self.window_api.setTitle(f"{title}")
 
         self.switch = switch
+        
     
 
 
@@ -91,7 +91,7 @@ class SceneEmpty(PackageScene):
     
 
     def onEvent(self, event):
-        if self.keyboard.isPressDown(KeyNum.ESC, event):
+        if self.keyboard.isPressDown(72, event):
             if isinstance(self.switch, str):
                 self.config_api.redirectScene(self.switch)
             else:

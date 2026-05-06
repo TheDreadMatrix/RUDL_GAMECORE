@@ -1,11 +1,8 @@
 import os
-import json
 import traceback
-from pathlib import Path
 from importlib import import_module
 
 from rudlgc.core import _getOs
-from rudlgc.johnson import Joshua
 
 
 
@@ -48,7 +45,7 @@ class SettingsCore:
 
     def __init__(self, game):
         try: 
-            self.__settings_module = import_module(os.getenv("RUDLGC_PROJECT_SETTINGS", ""))
+            self.__settings_module = import_module(f"{os.getenv("RUDLGC_PROJECT_NAME", "")}.settings")
         except ModuleNotFoundError:
             game.logger._system_log("ERROR", traceback.format_exc())
             game.logger._system_log("ERROR", "Game failure exit")
@@ -78,7 +75,7 @@ class SettingsCore:
 
         # FPS AND DEBUG
         self._FPS = getattr(self.__settings_module, "FPS", self._DEFAULTS.get("FPS"))
-        self._SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", self._DEFAULTS.get("SHOW_INFO"))
+        self.SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", self._DEFAULTS.get("SHOW_INFO"))
 
 
         self._DEBUG = getattr(self.__settings_module, "DEBUG", True)

@@ -6,8 +6,3 @@ _WARNING_OFF_SDL = 1
 
 __version__ = "1.0.0"
 
-
-DEFAULT = 0
-RESIZABLE = 1
-BORDERLESS = 2
-FULLSCREEN = 3

@@ -1,4 +1,4 @@
-from . import GameType, PackageScene
+from . import GameType
 from .package_scenes import SceneEmpty, SceneError
 import traceback as _error
 
@@ -19,8 +19,7 @@ class RouterModel:
     def onRegistration(self, game: GameType):
         pass
 
-    def onResourcesCreate(self, game: GameType):
-        pass
+    
 
 
     def _startGameLoop(self):

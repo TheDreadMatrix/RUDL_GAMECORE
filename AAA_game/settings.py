@@ -9,23 +9,28 @@
 
 from rudlgc.johnson import Joseph
 
-RUDLGC_JOSEPH = Joseph()
+
+# Init Joseph
+joseph = Joseph("settings.json", app_folder=".aaa_gameGameData")
+joseph_read = joseph.readData()
+
+# Declaration Joseph
+RUDLGC_JOSEPH = joseph
 
 
 DEBUG = True
 SHOW_INFO = True
 
-WIDTH = 900
-HEIGHT = 600
+# Changing by Joseph
+WIDTH = joseph_read["width"]
+HEIGHT = joseph_read["height"]
 
 # 0 - default
 # 1 - resize
 # 2 - borderless 
 # 3 - fullscreen
-WINDOW_MODE = 1
+WINDOW_MODE = 0
 
-WIDTH = 800
-HEIGHT = 600
 
 MIN_WIDTH = 400
 MIN_HEIGHT = 300
@@ -70,8 +75,7 @@ LINE_WIDTH = 10
 
 # Debug UI options
 
-MUSIC_VOLUME = 0.5
-SOUND_VOLUME = 0.5
+
 
 OS_PLATFORM = "hello"
 

@@ -8,9 +8,11 @@ from rudlgc.rendering.sprite_render import Sprite2D
 class ExampleScene(PackageScene):
     #This method is designed to initialize (create) objects.
     #Here you create objects once, which is better
-    def __init__(self, game: GameType):
+    def __init__(self, game: GameType, data_dict: dict):
         super().__init__(game)
-        
+        self.data_dict = data_dict
+
+        self.logger.trace(self.settings.WINDOW_WIDTH)
 
         self.sprite = Sprite2D(game, renderer=self.renderer)
         self.sprite.setSize(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
@@ -20,11 +22,6 @@ class ExampleScene(PackageScene):
 
         self.sprite_2 = Sprite2D(game, renderer=self.renderer)
         self.sprite_2.setSize(300, 450)
-        
-
-       
-        self.logger.trace(self.settings.HELLO_WORLD)
-        
         
         
         self.x, self.y = 0, 0
@@ -56,7 +53,11 @@ class ExampleScene(PackageScene):
             self.config_api.setFps(60)
 
         if self.mouse.mouseButtonDown(MouseNum.LEFT, event):
-            self.config_api.restartScene()
+            self.game.raiseError()
+
+        if self.event_api.isResized(event):
+            self.data_dict["width"] = self.settings.WINDOW_WIDTH
+            self.data_dict["height"] = self.settings.WINDOW_HEIGHT
 
 
         

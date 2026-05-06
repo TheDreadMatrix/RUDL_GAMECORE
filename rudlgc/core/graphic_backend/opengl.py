@@ -22,7 +22,7 @@ class OpenGLBackend(BaseGraphicBackend):
             elif self.settings.WINDOW_MODE == 2:
                 flags |= self.sdl.SDL_WINDOW_BORDERLESS
             elif self.settings.WINDOW_MODE == 3:
-                flags |= self.sdl.SDL_WINDOW_FULLSCREEN
+                flags |= self.sdl.SDL_WINDOW_FULLSCREEN_DESKTOP
         return flags
     
     @_callOnce()

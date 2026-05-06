@@ -146,6 +146,7 @@ class Game:
     def getFps(self): return self._fps
     def getTps(self): return self._tps
     def getCurrentScene(self): return self._current_scene_name
+    def raiseError(self): raise Exception("Switching to Error Scene")
 
 
     def __limit_fps(self, frame_start):
@@ -200,9 +201,7 @@ class Game:
             self._tick_timer = 0.0
 
 
-        if self.keyboard.isPress(92) and self.keyboard.isPress(4):
-            self.ERROR = 707
-            raise Exception("Switched to Error Scene")
+        
 
 
     def __render(self):

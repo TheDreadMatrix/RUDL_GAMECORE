@@ -1,6 +1,10 @@
 import typing
 
 
+class _JosephType:
+    def readData(self) -> dict: ...
+    def saveData(self, data: dict) -> None: ...
+
 
 
 class _SettingsType:
@@ -8,10 +12,13 @@ class _SettingsType:
 
     WINDOW_WIDTH: int
     WINDOW_HEIGHT: int
+    WINDOW_MINWIDTH: int
+    WINDOW_MINHEIGHT: int
 
 
     VSYNC: int
     WINDOW_MODE: int
+    JOSEPH: _JosephType
 
     FPS: float
 
@@ -19,11 +26,11 @@ class _SettingsType:
 
     OS_PLATFORM: str
 
-    MUSIC_VOLUME: float
-    SOUND_VOLUME: float
-
     POINT_SIZE: float
     LINE_SIZE: float
+
+
+
 
 
 
@@ -128,6 +135,7 @@ class GameType(typing.Protocol):
     def getFps(self) -> float: ...
     def getTps(self) -> float: ...
     def getCurrentScene(self) -> str: ...
+    def raiseError(self) -> None: ...
 
 
 

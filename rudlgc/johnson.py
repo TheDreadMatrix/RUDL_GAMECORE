@@ -1,4 +1,6 @@
-import json
+import json, sys, os
+import platformdirs
+from pathlib import Path
 import xml.etree.ElementTree as ET
 
 
@@ -23,9 +25,23 @@ class Joshua:
             
 
 
-class Joseph:
+class Joseph(Joshua):
+    def __init__(self, json_file: str, app_folder: str):
+        super().__init__(json_file)
+        PROJECT_DIR = os.getenv("RUDLGC_PROJECT_NAME")
+
+        if hasattr(sys, "frozen"):
+            RUNTIME_DIR = Path(platformdirs.user_data_dir(app_folder))
+        else:
+            RUNTIME_DIR = Path.cwd() / PROJECT_DIR / "assets"
+        
+
+        self.json_path = RUNTIME_DIR / "csaves" / json_file
+
+
+
     def __repr__(self):
-        return f"<Joseph: >"
+        return f"<Joseph: {self.json_path}>"
 
 
 

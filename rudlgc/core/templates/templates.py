@@ -111,21 +111,6 @@ def _SETTINGS_PY(project_name: str):
 # {project_name.upper().replace("_", " ")} - SETTINGS CONFIGURATION FILE
 # =============================================
 
-# =========================================================
-# CUSTOM SETTINGS (ENGINE EXTENSION LAYER)
-# =========================================================
-
-# Categories are used ONLY for editor/UI grouping.
-# They do NOT affect runtime logic.
-__CUSTOM_CATEGORY = {{
-    "GENERAL": ["HELLO_WORLD"],
-    "SECRET": ["MY_ABSOLUTE_SECRET",]
-}}
-
-# Custom user-defined constants (accessible via game.settings)
-HELLO_WORLD = ":)"
-MY_ABSOLUTE_SECRET = 12345
-
 
 # =========================================================
 # CORE / DEBUG
@@ -148,6 +133,7 @@ SHOW_INFO = True
 # and may also be used as the folder name during build/export.
 # META contains general information about the game (title, version, etc.).
 # Must be declarated
+
 GAME_METADATA = {{
     "APP_FOLDER": ".{project_name.lower()}_data",
     "META": {{
@@ -160,6 +146,14 @@ GAME_METADATA = {{
         "FILE_VERSION": "1.0.0.0"  
     }}
 }}
+
+
+# Joseph is class from rudlgc/johnson.py
+# Use for saving settings into your json file. Works in '{project_name}/assets/csaves'
+# from rudlgc.johnson import Joseph
+
+RUDLGC_JOSEPH = None
+
 
 
 # =========================================================
@@ -181,23 +175,27 @@ WINDOW_MODE = 0 # [0 - DEFAULT, 1 - RESIZABLE, 2 - BORDERLESS, 3 - FULLSCREEN]
 # Frame timing settings
 FPS = 60   # rendering FPS cap
 
-
-# =========================================================
-# AUDIO
-# =========================================================
-
-# Volume values are in range 0.0 - 1.0
-MUSIC_VOLUME = 1.0
-SOUND_VOLUME = 1.0
-
-
-
 # =========================================================
 # RENDERING QUALITY
 # =========================================================
 
 POINT_SIZE = 10.0
 LINE_WIDTH = 10.0
+
+# =========================================================
+# CUSTOM SETTINGS (ENGINE EXTENSION LAYER)
+# =========================================================
+
+# Categories are used ONLY for editor/UI grouping.
+# They do NOT affect runtime logic.
+__CUSTOM_CATEGORY = {{
+    "GENERAL": ["HELLO_WORLD"],
+    "SECRET": ["MY_ABSOLUTE_SECRET",]
+}}
+
+# Custom user-defined constants (accessible via game.settings)
+HELLO_WORLD = ":)"
+MY_ABSOLUTE_SECRET = 12345
 
 
 """)
@@ -210,10 +208,10 @@ def _MANAGE_PY(project_name: str):
 
 
         def main():
-            # Set default settings module and name for the project
-            # Also do not touch that environs!!! You can destroy your project!!!
+            # Set default name for the project
+            # Also do not touch that environ!!! You can destroy your project!!!
             os.environ.setdefault("RUDLGC_PROJECT_NAME", "{project_name}")
-            os.environ.setdefault("RUDLGC_PROJECT_SETTINGS", "{project_name}.settings")
+            
 
             try:
                 # Import your CLI executor here

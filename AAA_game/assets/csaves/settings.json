@@ -1,13 +1,4 @@
 {
-    "built-in": {
-        "window": {
-            "mode": 1,
-            "vsync": 0
-        },
-        "audio": {
-            "music": 1.0,
-            "sound": 1.0
-        },
-        "frametime": 240
-    }
+    "width": 800,
+    "height": 668
 }

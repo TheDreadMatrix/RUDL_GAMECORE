@@ -13,10 +13,10 @@ class _RUDLParser(argparse.ArgumentParser):
 
 
 
-def getRudlgcAllModulesParts():
+def getRudlgcAllModulesParts(project_name: str):
     rudlgc_modules = []
     for module in sys.modules.keys():
-        if "rudlgc" in module:
+        if "rudlgc" in module or project_name in module:
             rudlgc_modules.append(module)
 
     print(rudlgc_modules)
@@ -169,7 +169,7 @@ def execute_console() -> int|None:
             "RENDER-ATTR": ["LINE_WIDTH", "POINT_SIZE"]
         } 
         
-        settings_module = importlib.import_module(os.environ.get("RUDLGC_PROJECT_SETTINGS"))
+        settings_module = importlib.import_module(f"{os.environ.get("RUDLGC_PROJECT_NAME")}.settings")
         
         defaults = []
         defaults_not_dec = []

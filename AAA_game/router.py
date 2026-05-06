@@ -10,17 +10,20 @@ from AAA_game.scenes import ExampleScene
 class SceneManager(RouterModel):
     def onRegistration(self, game: GameType):
         self.START_SCENE = "example"
+
+        self.data_dict = self.game.settings.JOSEPH.readData()
+        
         
 
         self.registerScene('none-scene', lambda: SceneEmpty(game=game, title="FutureScene", text_scene="Hello World!", switch="example"))
-        self.registerScene('example', lambda: ExampleScene(game=game))
+        self.registerScene('example', lambda: ExampleScene(game=game, data_dict=self.data_dict))
         
         
 
     # THIS METHOD APPEARS WHEN GAME IS ENDING. (NEED FOR SAVING DATA PROGRESS)
     
     def savingProgress(self):
-        pass
+        self.game.settings.JOSEPH.saveData(self.data_dict)
 
 
     # THIS METHOD APPEARS WHEN AN ERROR OCCURS IN THE CODE.
