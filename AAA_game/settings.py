@@ -11,25 +11,28 @@ from rudlgc.johnson import Joseph
 
 
 # Init Joseph
-joseph = Joseph("settings.json", app_folder=".aaa_gameGameData")
-joseph_read = joseph.readData()
+
+# 1. Init and change
+# 2. Save in router
+# 3. Set in game
+
 
 # Declaration Joseph
-RUDLGC_JOSEPH = joseph
+RUDLGC_JOSEPH = Joseph("settings.json", app_folder=".aaa_gameGameData")
 
 
 DEBUG = True
 SHOW_INFO = True
 
 # Changing by Joseph
-WIDTH = joseph_read["width"]
-HEIGHT = joseph_read["height"]
+WIDTH = 800
+HEIGHT = 600
 
 # 0 - default
 # 1 - resize
 # 2 - borderless 
 # 3 - fullscreen
-WINDOW_MODE = 0
+WINDOW_MODE = 1
 
 
 MIN_WIDTH = 400
@@ -42,15 +45,17 @@ VSYNC = 0
 # APPNAME is used as the application identifier and may also define
 # the folder name when building/exporting the project.
 
-RUDLGC_APP_BACKEND = "SDL-MANIA" # [SDL_MANIA, KIVY, GLFW]
+RUDLGC_INIT_BACKEND = "SDL-MANIA" # [SDL_MANIA, KIVY, GLFW]
 
 RUDLGC_AUDIO_BACKEND = "SOLOUD" # [SOLOUD, MIXER_MANIA]
 
-RUDLGC_GRAPHICS_BACKEND = "OPENGL" # [VULKAN, OPENGL, ES]
+RUDLGC_RENDER_BACKEND = "OPENGL" # [VULKAN, OPENGL, ES]
+
+
 
 
 GAME_METADATA = {
-    "APP_FOLDER": ".aaa_gameGameData",
+    "APP_FOLDER": ".aaa_gameData",
     "META": {
         "GAME_TITLE": "My Game",
         "GAME_DESCRIPTION": "A game built with RUDLGC Engine",
@@ -58,7 +63,6 @@ GAME_METADATA = {
         "GAME_ICON": None,
         "GAME_VERSION": "1.0.0",
         "COMPANY": "Write something...",
-        "FILE_VERSION": "1.0.0.0"  
     }
 }
 
@@ -101,6 +105,7 @@ FPS = 240
 
 __CUSTOM_CATEGORY = {
    "JUST-ATTR": ["HELLO_WORLD"],
+   "FUTURE": ["RUDLGC_AUDIO_BACKEND", "RUDLGC_INIT_BACKEND", "RUDLGC_RENDER_BACKEND"]
    
 }
 

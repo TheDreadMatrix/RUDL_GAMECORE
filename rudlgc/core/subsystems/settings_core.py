@@ -17,7 +17,7 @@ class GameMetaData:
             self.GAME_ICON_TRUE = GAME_METADATA.get("GAME_ICON_TRUE") or "NOT-FOUND-ICON-TRUE"
             self.GAME_VERSION = GAME_METADATA.get("GAME_VERSION") or "NOT-FOUND-GAME-VERSION"
             self.COMPANY = GAME_METADATA.get("COMPANY") or "NOT-FOUND-COMPANY"
-            self.FILE_VERSION = GAME_METADATA.get("FILE_VERSION") or "NOT-FOUND-FILE-VERSION"
+            
 
     def __init__(self, GAME_METADATA: dict):
         self.APP_FOLDER = GAME_METADATA.get("APP_FOLDER") or "NOT-FOUND-FOLDER" 

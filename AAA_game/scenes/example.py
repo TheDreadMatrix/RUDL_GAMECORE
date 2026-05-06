@@ -8,11 +8,8 @@ from rudlgc.rendering.sprite_render import Sprite2D
 class ExampleScene(PackageScene):
     #This method is designed to initialize (create) objects.
     #Here you create objects once, which is better
-    def __init__(self, game: GameType, data_dict: dict):
+    def __init__(self, game: GameType):
         super().__init__(game)
-        self.data_dict = data_dict
-
-        self.logger.trace(self.settings.WINDOW_WIDTH)
 
         self.sprite = Sprite2D(game, renderer=self.renderer)
         self.sprite.setSize(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
@@ -56,8 +53,8 @@ class ExampleScene(PackageScene):
             self.game.raiseError()
 
         if self.event_api.isResized(event):
-            self.data_dict["width"] = self.settings.WINDOW_WIDTH
-            self.data_dict["height"] = self.settings.WINDOW_HEIGHT
+            self.settings.JOSEPH.set("width", self.settings.WINDOW_WIDTH)
+            self.settings.JOSEPH.set("height", self.settings.WINDOW_HEIGHT)
 
 
         

@@ -37,7 +37,17 @@ class Joseph(Joshua):
         
 
         self.json_path = RUNTIME_DIR / "csaves" / json_file
+        self.__data = self.readData()
 
+    def set(self, name, value):
+        self.__data[name] = value
+
+    def get(self, name, default=None):
+        return self.__data.get(name, default)
+    
+
+    def saveData(self):
+        return super().saveData(self.__data)
 
 
     def __repr__(self):

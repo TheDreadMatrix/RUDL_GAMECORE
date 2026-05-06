@@ -143,7 +143,6 @@ GAME_METADATA = {{
         "GAME_ICON": None,
         "GAME_VERSION": "1.0.0",
         "COMPANY": "Write something...",
-        "FILE_VERSION": "1.0.0.0"  
     }}
 }}
 
