@@ -36,6 +36,8 @@ class SettingsCore:
         "DEBUG": False, "SHOW_INFO": True,
 
         "FPS": 60,
+
+        "RUDLGC_RENDER_BACKEND": 0,
         
         "POINT_SIZE": 10, "LINE_WIDTH": 10,
 
@@ -52,10 +54,13 @@ class SettingsCore:
             exit(1)
 
 
-        self.__GAME = game
-        self.JOSEPH = getattr(self.__settings_module, "RUDLGC_JOSEPH", self._DEFAULTS.get("RUDLGC_JOSEPH"))    
+
+        # RUDLGC
+        self._JOSEPH = getattr(self.__settings_module, "RUDLGC_JOSEPH", self._DEFAULTS.get("RUDLGC_JOSEPH"))
+        self._RENDER_BACKEND = getattr(self.__settings_module, "RUDLGC_RENDER_BACKEND", self._DEFAULTS.get("RUDLGC_RENDER_BACKEND"))    
 
 
+        # WINDOW SIZES
         self._WINDOW_WIDTH = getattr(self.__settings_module, "WIDTH", self._DEFAULTS.get("WIDTH"))
         self._WINDOW_HEIGHT = getattr(self.__settings_module, "HEIGHT", self._DEFAULTS.get("HEIGHT"))
 
@@ -65,21 +70,19 @@ class SettingsCore:
         # WINDOW ATTR
         self._VSYNC = getattr(self.__settings_module, "VSYNC", self._DEFAULTS.get("VSYNC"))
         self._WINDOW_MODE = getattr(self.__settings_module, "WINDOW_MODE", self._DEFAULTS.get("WINDOW_MODE"))
+        self._FPS = getattr(self.__settings_module, "FPS", self._DEFAULTS.get("FPS"))
 
 
         # META
         self._GAME_METADATA = getattr(self.__settings_module, "GAME_METADATA", None)
-        self._hasInRequiredSettings(self._GAME_METADATA, "GAME_METADATA")
+        self._hasInRequiredSettings(self._GAME_METADATA, "GAME_METADATA", game)
         self._GAME_METADATA = GameMetaData(self._GAME_METADATA)
 
 
-        # FPS AND DEBUG
-        self._FPS = getattr(self.__settings_module, "FPS", self._DEFAULTS.get("FPS"))
-        self.SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", self._DEFAULTS.get("SHOW_INFO"))
-
-
-        self._DEBUG = getattr(self.__settings_module, "DEBUG", True)
-        self._hasInRequiredSettings(self._DEBUG, "DEBUG")
+        # READ-WRITE
+        self.SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", True)
+        self.DEBUG = getattr(self.__settings_module, "DEBUG", None)
+        self._hasInRequiredSettings(self.DEBUG, "DEBUG", game)
 
 
         # RENDER CROSSPLATFORM
@@ -95,10 +98,10 @@ class SettingsCore:
                 setattr(self, attr, value)
 
 
-    def _hasInRequiredSettings(self, VARS, his_name):
+    def _hasInRequiredSettings(self, VARS, his_name, game):
         if VARS is None:
-            self.__GAME.logger._system_log("ERROR", f"{his_name} is not declarated in {os.getenv('RUDLGC_PROJECT_SETTINGS')}/settings.py")
-            self.__GAME.logger._system_log("ERROR", "Game failure exit")
+            game.logger._system_log("ERROR", f"{his_name} is not declarated in {os.getenv('RUDLGC_PROJECT_SETTINGS')}/settings.py")
+            game.logger._system_log("ERROR", "Game failure exit")
             exit(1)
 
     
@@ -107,6 +110,11 @@ class SettingsCore:
     @property
     def OS_PLATFORM(self):
         return self._OS_PLATFORM
+    
+
+    @property
+    def JOSEPH(self):
+        return self._JOSEPH
     
 
     @property
@@ -127,36 +135,11 @@ class SettingsCore:
     def WINDOW_MINHEIGHT(self):
         return self._WINDOW_MINHEIGHT
     
-    @property
-    def WINDOW_MODE(self):
-        return self._WINDOW_MODE
-    
-    
-    # READ-WRITE
-    @property
-    def DEBUG(self):
-        return self._DEBUG
+
     
 
-    @property
-    def FPS(self):
-        return self._FPS
-    
-        
-    @property
-    def VSYNC(self):
-        return self._VSYNC
     
 
-
-    @property
-    def POINT_SIZE(self):
-        return self._POINT_SIZE
-    
-
-    @property
-    def LINE_WIDTH(self):
-        return self._LINE_WIDTH
 
 
     

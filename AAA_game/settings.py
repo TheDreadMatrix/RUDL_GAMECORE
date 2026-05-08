@@ -8,7 +8,7 @@
 # Should be set to False in production.
 
 from rudlgc.johnson import Joseph
-
+from rudlgc.rudlums import WindowModes, VsyncModes, RenderModes
 
 # Init Joseph
 
@@ -19,6 +19,8 @@ from rudlgc.johnson import Joseph
 
 # Declaration Joseph
 RUDLGC_JOSEPH = Joseph("settings.json", app_folder=".aaa_gameGameData")
+
+RUDLGC_RENDER_BACKEND = RenderModes.OPENGL # [0 - OpenGL, 1 - Vulkan]
 
 
 DEBUG = True
@@ -32,13 +34,13 @@ HEIGHT = 600
 # 1 - resize
 # 2 - borderless 
 # 3 - fullscreen
-WINDOW_MODE = 1
+WINDOW_MODE = WindowModes.RESIZABLE
 
 
 MIN_WIDTH = 400
 MIN_HEIGHT = 300
 
-VSYNC = 0
+VSYNC = VsyncModes.DISABLED
 
 
 # Application and build metadata
@@ -49,7 +51,6 @@ RUDLGC_INIT_BACKEND = "SDL-MANIA" # [SDL_MANIA, KIVY, GLFW]
 
 RUDLGC_AUDIO_BACKEND = "SOLOUD" # [SOLOUD, MIXER_MANIA]
 
-RUDLGC_RENDER_BACKEND = "OPENGL" # [VULKAN, OPENGL, ES]
 
 
 

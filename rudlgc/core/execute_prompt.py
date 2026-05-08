@@ -164,6 +164,8 @@ def execute_console() -> int|None:
 
             "DEBUG": ["DEBUG", "SHOW_INFO"],
 
+            "BACKENDS": ["RUDLGC_RENDER_BACKEND"],
+
             "CROSS-PLATFORM": ["OS_PLATFORM"],
 
             "RENDER-ATTR": ["LINE_WIDTH", "POINT_SIZE"]

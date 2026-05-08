@@ -8,10 +8,25 @@ class MessageNum(IntEnum):
 
 
 
+class WindowModes(IntEnum):
+    DEFAULT = 0
+    RESIZABLE = 1
+    BORDERLESS = 2
+    FULLSCREEN = 3
+
+
+class VsyncModes(IntEnum):
+    BALANCED = -1
+    DISABLED = 0
+    ENABLED = 1
+
+
+class RenderModes(IntEnum):
+    OPENGL = 0
+    VULKAN = 1
+
 
     
-
-
 
 class KeyNum(IntEnum):
     # ======================

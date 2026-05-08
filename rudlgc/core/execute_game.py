@@ -13,23 +13,8 @@ from importlib import import_module
 
 
 
+from rudlgc.core import _callOnce
 
-from rudlgc.core.subsystems.logger_core import Logger
-from rudlgc.core.subsystems.api_game import GameConfigApi, WindowApi, EventApi, SystemApi
-
-from rudlgc.core.subsystems.requirements import Requirements
-from rudlgc.core.subsystems.settings_core import SettingsCore
-from rudlgc.core.subsystems.paths_core import PathCore
-
-from rudlgc.core.subsystems.control_core import Keyboard, Mouse
-from rudlgc.core import _callOnce, _getOs
-
-
-_BACKEND_CLASS = None
-_OS = _getOs()
-if _OS in ["WINDOWS", "LINUX"]:
-    from rudlgc.core.graphic_backend.opengl import OpenGLBackend
-    _BACKEND_CLASS = OpenGLBackend
 
 
 
@@ -38,6 +23,17 @@ if _OS in ["WINDOWS", "LINUX"]:
 
 class Game:
     def __init__(self):
+        # Importing modules
+        from rudlgc.core.subsystems.logger_core import Logger
+
+        from rudlgc.core.subsystems.requirements import Requirements
+        from rudlgc.core.subsystems.settings_core import SettingsCore
+        from rudlgc.core.subsystems.paths_core import PathCore
+
+        from rudlgc.core.subsystems.control_core import Keyboard, Mouse
+
+
+        # Initilization
         sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO | sdl2.SDL_INIT_AUDIO)
         mixer.Mix_OpenAudio(44100, mixer.MIX_DEFAULT_FORMAT, 2, 1024)
     
@@ -66,14 +62,23 @@ class Game:
         self._tps = 0.0
         self._tick_count = 0
         self._tick_timer = 0.0
-        self._frame_count = 0
-        self._fps_timer = 0.0
-        self._target_fps = self.settings.FPS
+        self._target_fps = self.settings._FPS
         self._accumulator = 0
 
         
         #SETTINGS OF THE WINDOW AND CONTEXT
-        self.backend_render = _BACKEND_CLASS(self)
+        if self.settings._RENDER_BACKEND == 0:
+            from rudlgc.core.graphic_backend.opengl import OpenGLBackend
+            self.backend_render = OpenGLBackend(self)
+        elif self.settings._RENDER_BACKEND == 1:
+            from rudlgc.core.graphic_backend.vulkan import VulkanBackend
+            self.backend_render = VulkanBackend(self)
+        else:
+            self.logger._system_log("ERROR", "Undefined render backend")
+            self.logger._system_log("ERROR", "Game failure exit")
+            exit(1)
+        
+
         self.backend_render.createVersion()
 
         self._window = sdl2.ext.Window(self.settings._GAME_METADATA.META.GAME_TITLE, 
@@ -81,22 +86,24 @@ class Game:
                                        position=(sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED),
                                        flags=self.backend_render.createFlags())
         
+
         if self.settings._GAME_METADATA.META.GAME_ICON_TRUE != "NOT-FOUND-ICON-TRUE":
             icon_surface = sdl2.ext.load_img(self.paths.getImagesPath(file=self.settings._GAME_METADATA.META.GAME_ICON_TRUE))
             sdl2.SDL_SetWindowIcon(self._window.window, icon_surface)
             sdl2.SDL_FreeSurface(icon_surface)
+
 
         sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
         self._window.show()
         
         # GPU CONTEXT
         self.backend_render.createContext()
-        self.backend_render.setPointSize(self.settings.POINT_SIZE)
-        self.backend_render.setLineWidth(self.settings.LINE_WIDTH)
+        self.backend_render.setPointSize(self.settings._POINT_SIZE)
+        self.backend_render.setLineWidth(self.settings._LINE_WIDTH)
 
         self.backend_render.setViewPort(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
         self.backend_render.setProjectile2D(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
-        sdl2.SDL_GL_SetSwapInterval(self.settings.VSYNC) 
+        sdl2.SDL_GL_SetSwapInterval(self.settings._VSYNC) 
 
 
     @_callOnce()
@@ -109,6 +116,7 @@ class Game:
         
     @_callOnce()
     def _initGame(self):
+        from rudlgc.core.subsystems.api_game import GameConfigApi, WindowApi, EventApi, SystemApi
         self.window_api = WindowApi(self)
         self.event_api = EventApi(self)
         self.config_api = GameConfigApi(self)
@@ -236,7 +244,7 @@ class Game:
         
         self._scene_router._current_scene_class.onSave()
         self._scene_router.savingProgress()
-        self.logger._system_log("INFO" if not self.ERROR else "ERROR", "Game succesfully exit" if not self.ERROR else "Game failure exit 2")
+        self.logger._system_log("INFO" if not self.ERROR else "ERROR", "Game succesfully exit" if not self.ERROR else "Game failure exit update")
         
         
 

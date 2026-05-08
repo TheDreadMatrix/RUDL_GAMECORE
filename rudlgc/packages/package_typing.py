@@ -1,7 +1,7 @@
 import typing
 
 
-class _JosephType:
+class JosephProtocolType:
     def set(self, name: str, value: typing.Any) -> None: ...
     def get(self, name: str, default: typing.Any|None=None) -> typing.Any: ...
     def saveData(self) -> None: ...
@@ -16,19 +16,11 @@ class _SettingsType:
     WINDOW_MINWIDTH: int
     WINDOW_MINHEIGHT: int
 
-
-    VSYNC: int
-    WINDOW_MODE: int
-    JOSEPH: _JosephType
-
-    FPS: float
+    JOSEPH: JosephProtocolType
 
     SHOW_INFO: bool
 
     OS_PLATFORM: str
-
-    POINT_SIZE: float
-    LINE_SIZE: float
 
 
 

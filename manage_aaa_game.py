@@ -9,7 +9,7 @@ def main():
     
     try:
         # Import your CLI executor here
-        from rudlgc.core.execute_prompt import execute_console
+        from rudlgc.core.execute_prompt import execute_console, getRudlgcAllModulesParts
     except ImportError as exc:
         raise ImportError(
             "Couldn't import RUDLGC. Are you sure it's installed? Did you forget to activate a virtual environment?"
@@ -17,6 +17,7 @@ def main():
 
     # Pass CLI arguments to your engine
     execute_console()
+    #getRudlgcAllModulesParts("AAA_game")
     
 
 
