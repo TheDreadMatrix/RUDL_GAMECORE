@@ -129,7 +129,7 @@ def execute_console() -> int|None:
 
     if args.command in {"run", "r", "start", "play"}:
         from rudlgc.core.execute_game import Game
-        import subprocess
+        
 
         # CHECKING OUR PROJECT
         check_security(parser)

@@ -41,4 +41,3 @@ where = ["."]
 
 [project.scripts]
 rudlgc-admin = "rudlgc.core.execute_prompt:_rudlgc_admin"
-rudlgc-debug = "rudlgc.core.execute_debug_server:main"

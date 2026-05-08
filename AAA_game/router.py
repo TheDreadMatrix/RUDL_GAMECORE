@@ -3,8 +3,8 @@ from rudlgc.packages import GameType, SceneEmpty
 from rudlgc.packages.package_model import RouterModel
 
 
-from AAA_game.scenes import ExampleScene
-
+from AAA_game.scenes.example import ExampleScene
+from AAA_game.scenes.main import Menu
 
 
 class SceneManager(RouterModel):
@@ -14,6 +14,7 @@ class SceneManager(RouterModel):
         
         self.registerScene('none-scene', lambda: SceneEmpty(game=game, title="FutureScene", text_scene="Hello World!", switch="example"))
         self.registerScene('example', lambda: ExampleScene(game=game))
+        self.registerScene('menu', lambda: Menu(game))
         
         
 
@@ -21,6 +22,7 @@ class SceneManager(RouterModel):
     
     def savingProgress(self):
         self.game.settings.JOSEPH.saveData()
+        
 
 
     # THIS METHOD APPEARS WHEN AN ERROR OCCURS IN THE CODE.

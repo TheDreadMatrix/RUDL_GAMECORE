@@ -120,7 +120,7 @@ _PROHIBITED_WORDS = [
     "contrib",
     "render",
     "stuff",
-    "venv",
+    "sdl2",
 ]
 
 _PROHIBITED_FUNCTIONS = [

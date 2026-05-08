@@ -49,7 +49,7 @@ class ExampleScene(PackageScene):
         elif self.keyboard.isPressDown(KeyNum.T, event):
             self.config_api.setFps(60)
 
-        if self.mouse.mouseButtonDown(MouseNum.LEFT, event):
+        if self.mouse.mouseButtonUp(MouseNum.LEFT, event):
             self.game.raiseError()
 
         if self.event_api.isResized(event):

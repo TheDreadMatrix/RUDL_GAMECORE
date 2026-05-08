@@ -39,7 +39,7 @@ def _SCENE_PY(class_name: str):
     formatted_name = "".join(word.capitalize() for word in class_name.replace("_", " ").split())
 
     return textwrap.dedent(f"""
-    from rudlgc.contrib import GameType, PackageScene
+    from rudlgc.packages import GameType, PackageScene
 
     class {formatted_name}(PackageScene):
         def __init__(self, game: GameType):

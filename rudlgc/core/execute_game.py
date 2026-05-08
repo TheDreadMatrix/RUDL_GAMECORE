@@ -234,6 +234,7 @@ class Game:
                 self._scene_router.onException(error_message)
             
         
+        self._scene_router._current_scene_class.onSave()
         self._scene_router.savingProgress()
         self.logger._system_log("INFO" if not self.ERROR else "ERROR", "Game succesfully exit" if not self.ERROR else "Game failure exit 2")
         
