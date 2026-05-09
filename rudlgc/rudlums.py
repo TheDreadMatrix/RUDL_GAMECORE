@@ -26,6 +26,11 @@ class RenderModes(IntEnum):
     VULKAN = 1
 
 
+class BuildModes(IntEnum):
+    PYINSTALLER = 0
+    NUITKA = 1
+    
+
     
 
 class KeyNum(IntEnum):

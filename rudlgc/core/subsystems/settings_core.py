@@ -9,19 +9,13 @@ from rudlgc.core import _getOs
 
 
 class GameMetaData:
-    class Meta:
-        def __init__(self, GAME_METADATA: dict):
-            self.GAME_TITLE = GAME_METADATA.get("GAME_TITLE") or "NOT-FOUND-TITLE"
-            self.GAME_DESCRIPTION = GAME_METADATA.get("GAME_DESCRIPTION") or "NOT-FOUND-DESCRIPTION"
-            self.GAME_ICON = GAME_METADATA.get("GAME_ICON") or "NOT-FOUND-ICON"
-            self.GAME_ICON_TRUE = GAME_METADATA.get("GAME_ICON_TRUE") or "NOT-FOUND-ICON-TRUE"
-            self.GAME_VERSION = GAME_METADATA.get("GAME_VERSION") or "NOT-FOUND-GAME-VERSION"
-            self.COMPANY = GAME_METADATA.get("COMPANY") or "NOT-FOUND-COMPANY"
-            
-
     def __init__(self, GAME_METADATA: dict):
-        self.APP_FOLDER = GAME_METADATA.get("APP_FOLDER") or "NOT-FOUND-FOLDER" 
-        self.META = self.Meta(GAME_METADATA.get("META") or {})
+        self.GAME_TITLE = GAME_METADATA.get("GAME_TITLE") or "NOT-FOUND-TITLE"
+        self.GAME_DESCRIPTION = GAME_METADATA.get("GAME_DESCRIPTION") or "NOT-FOUND-DESCRIPTION"
+        self.GAME_ICON = GAME_METADATA.get("GAME_ICON") or "NOT-FOUND-ICON"
+        self.GAME_ICON_TRUE = GAME_METADATA.get("GAME_ICON_TRUE") or "NOT-FOUND-ICON-TRUE"
+        self.GAME_VERSION = GAME_METADATA.get("GAME_VERSION") or "NOT-FOUND-GAME-VERSION"
+        self.COMPANY = GAME_METADATA.get("COMPANY") or "NOT-FOUND-COMPANY"
     
 
 
@@ -29,7 +23,7 @@ class SettingsCore:
     _DEFAULTS = {
         "WIDTH": 800, "HEIGHT": 600, "MIN_WIDTH": 799, "MIN_HEIGHT": 599,
 
-        "GAME_METADATA": None, "RUDLGC_JOSEPH": None,
+        "GAME_METADATA": None, "RUDLGC_JOSEPH": None, "RUDLGC_APP_FOLDER": None,
 
         "VSYNC": -1, "WINDOW_MODE": 0,
 
@@ -47,7 +41,7 @@ class SettingsCore:
 
     def __init__(self, game):
         try: 
-            self.__settings_module = import_module(f"{os.getenv("RUDLGC_PROJECT_NAME", "")}.settings")
+            self.__settings_module = import_module(f"{game.PROJECT_NAME}.settings")
         except ModuleNotFoundError:
             game.logger._system_log("ERROR", traceback.format_exc())
             game.logger._system_log("ERROR", "Game failure exit")
@@ -57,7 +51,10 @@ class SettingsCore:
 
         # RUDLGC
         self._JOSEPH = getattr(self.__settings_module, "RUDLGC_JOSEPH", self._DEFAULTS.get("RUDLGC_JOSEPH"))
-        self._RENDER_BACKEND = getattr(self.__settings_module, "RUDLGC_RENDER_BACKEND", self._DEFAULTS.get("RUDLGC_RENDER_BACKEND"))    
+        self._RENDER_BACKEND = getattr(self.__settings_module, "RUDLGC_RENDER_BACKEND", self._DEFAULTS.get("RUDLGC_RENDER_BACKEND"))
+
+        self._APP_FOLDER = getattr(self.__settings_module, "RUDLGC_APP_FOLDER", None)    
+        self._hasInRequiredSettings(self._APP_FOLDER, "APP_FOLDER", game)
 
 
         # WINDOW SIZES
@@ -100,7 +97,7 @@ class SettingsCore:
 
     def _hasInRequiredSettings(self, VARS, his_name, game):
         if VARS is None:
-            game.logger._system_log("ERROR", f"{his_name} is not declarated in {os.getenv('RUDLGC_PROJECT_SETTINGS')}/settings.py")
+            game.logger._system_log("ERROR", f"{his_name} is not declarated in {game.PROJECT_NAME}/settings.py")
             game.logger._system_log("ERROR", "Game failure exit")
             exit(1)
 

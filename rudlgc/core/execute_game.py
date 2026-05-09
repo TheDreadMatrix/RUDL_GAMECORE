@@ -81,14 +81,14 @@ class Game:
 
         self.backend_render.createVersion()
 
-        self._window = sdl2.ext.Window(self.settings._GAME_METADATA.META.GAME_TITLE, 
+        self._window = sdl2.ext.Window(self.settings._GAME_METADATA.GAME_TITLE, 
                                        size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), 
                                        position=(sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED),
                                        flags=self.backend_render.createFlags())
         
 
-        if self.settings._GAME_METADATA.META.GAME_ICON_TRUE != "NOT-FOUND-ICON-TRUE":
-            icon_surface = sdl2.ext.load_img(self.paths.getImagesPath(file=self.settings._GAME_METADATA.META.GAME_ICON_TRUE))
+        if self.settings._GAME_METADATA.GAME_ICON_TRUE != "NOT-FOUND-ICON-TRUE":
+            icon_surface = sdl2.ext.load_img(self.paths.getImagesPath(file=self.settings._GAME_METADATA.GAME_ICON_TRUE))
             sdl2.SDL_SetWindowIcon(self._window.window, icon_surface)
             sdl2.SDL_FreeSurface(icon_surface)
 

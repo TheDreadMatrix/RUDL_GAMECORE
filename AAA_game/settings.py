@@ -18,7 +18,9 @@ from rudlgc.rudlums import WindowModes, VsyncModes, RenderModes
 
 
 # Declaration Joseph
-RUDLGC_JOSEPH = Joseph("settings.json", app_folder=".aaa_gameGameData")
+RUDLGC_APP_FOLDER = ".aaa_gameData"
+
+RUDLGC_JOSEPH = Joseph("settings.json", app_folder=RUDLGC_APP_FOLDER)
 
 RUDLGC_RENDER_BACKEND = RenderModes.OPENGL # [0 - OpenGL, 1 - Vulkan]
 
@@ -51,20 +53,17 @@ RUDLGC_INIT_BACKEND = "SDL-MANIA" # [SDL_MANIA, KIVY, GLFW]
 
 RUDLGC_AUDIO_BACKEND = "SOLOUD" # [SOLOUD, MIXER_MANIA]
 
-
+RUDLGC_BUILD_BACKEND = "Nuitka" # [NUITKA, PYINSTALLER]
 
 
 
 GAME_METADATA = {
-    "APP_FOLDER": ".aaa_gameData",
-    "META": {
-        "GAME_TITLE": "My Game",
-        "GAME_DESCRIPTION": "A game built with RUDLGC Engine",
-        "GAME_ICON_TRUE": "icon68.png",
-        "GAME_ICON": None,
-        "GAME_VERSION": "1.0.0",
-        "COMPANY": "Write something...",
-    }
+    "GAME_TITLE": "My Game",
+    "GAME_DESCRIPTION": "A game built with RUDLGC Engine",
+    "GAME_ICON_TRUE": "icon68.png",
+    "GAME_ICON": None,
+    "GAME_VERSION": "1.0.0",
+    "COMPANY": "Write something...",
 }
 
 
@@ -106,7 +105,7 @@ FPS = 240
 
 __CUSTOM_CATEGORY = {
    "JUST-ATTR": ["HELLO_WORLD"],
-   "FUTURE": ["RUDLGC_AUDIO_BACKEND", "RUDLGC_INIT_BACKEND", "RUDLGC_RENDER_BACKEND"]
+   "BACKENDS": ["RUDLGC_AUDIO_BACKEND", "RUDLGC_INIT_BACKEND", "RUDLGC_BUILD_BACKEND", "HELLO_WORLD"]
    
 }
 

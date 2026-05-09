@@ -128,6 +128,8 @@ SHOW_INFO = True
 # PROJECT METADATA
 # =========================================================
 
+RUDLGC_APP_FOLDER = ".{project_name.lower()}_data",
+
 # Application and build metadata.
 # APP_FOLDER defines the directory where game data will be stored
 # and may also be used as the folder name during build/export.
@@ -135,15 +137,12 @@ SHOW_INFO = True
 # Must be declarated
 
 GAME_METADATA = {{
-    "APP_FOLDER": ".{project_name.lower()}_data",
-    "META": {{
-        "GAME_TITLE": "My Game",
-        "GAME_DESCRIPTION": "A game built with RUDLGC Engine",
-        "GAME_ICON_TRUE": None,
-        "GAME_ICON": None,
-        "GAME_VERSION": "1.0.0",
-        "COMPANY": "Write something...",
-    }}
+    "GAME_TITLE": "My Game",
+    "GAME_DESCRIPTION": "A game built with RUDLGC Engine",
+    "GAME_ICON_TRUE": None,
+    "GAME_ICON": None,
+    "GAME_VERSION": "1.0.0",
+    "COMPANY": "Write something..."
 }}
 
 

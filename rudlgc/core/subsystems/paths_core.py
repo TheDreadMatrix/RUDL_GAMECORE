@@ -10,7 +10,7 @@ class PathCore:
     def __init__(self, game):
         PROJECT_DIR = game.PROJECT_NAME
         if hasattr(sys, "frozen"):
-            self._RUNTIME_DIR = Path(platformdirs.user_data_dir(game.settings.GAME_METADATA.APP_FOLDER))
+            self._RUNTIME_DIR = Path(platformdirs.user_data_dir(game.settings._APP_FOLDER))
         else:
             self._RUNTIME_DIR = Path.cwd() / PROJECT_DIR / "assets"
 
