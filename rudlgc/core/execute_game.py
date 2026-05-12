@@ -9,8 +9,7 @@ import os
 import time
 import socket
 import traceback
-from importlib import import_module
-
+import importlib
 
 
 from rudlgc.core import _callOnce
@@ -123,22 +122,18 @@ class Game:
         self.system_api = SystemApi(self)
 
 
-        self.logger._system_log("INFO", f"RUDL Game Core '1.0.0-alpha' build with SDL2 & {self.backend_render.NAME_CONTEXT}")
+        self.logger._system_log("INFO", f"RUDL Game Core '1.0.0-alpha' build with SDL2 & {self.backend_render.NAME_CONTEXT}:{self.backend_render.NAME_VERSION}")
+        self.logger._system_log("INFO", f"Also running on project: '{self.PROJECT_NAME}'")
         
 
         #SCENE ROUTER FOR SCENE MANAGMENT
         try:
-            module = import_module(f"{self.PROJECT_NAME}.router")
+            module = importlib.import_module(f"{self.PROJECT_NAME}.router")
         except ModuleNotFoundError:
-            self.logger._system_log("ERROR", traceback.format_exc())
+            self.logger._system_log("ERROR", "Can not import your project. Arent you touched environs")
             self.logger._system_log("ERROR", "Game failure exit")
             exit(1)
 
-
-        if not hasattr(module, "SceneManager"):
-            self.logger._system_log("ERROR", f"Can not found 'SceneManager' from {self.PROJECT_NAME}/router.py ")
-            self.logger._system_log("ERROR", "Game failure exit")
-            exit(1)
 
         try:
             self._scene_router = module.SceneManager(self)

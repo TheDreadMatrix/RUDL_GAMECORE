@@ -1,4 +1,3 @@
-import os
 import traceback
 from importlib import import_module
 
@@ -41,7 +40,7 @@ class SettingsCore:
 
     def __init__(self, game):
         try: 
-            self.__settings_module = import_module(f"{game.PROJECT_NAME}.settings")
+            __settings_module = import_module(f"{game.PROJECT_NAME}.settings")
         except ModuleNotFoundError:
             game.logger._system_log("ERROR", traceback.format_exc())
             game.logger._system_log("ERROR", "Game failure exit")
@@ -50,48 +49,48 @@ class SettingsCore:
 
 
         # RUDLGC
-        self._JOSEPH = getattr(self.__settings_module, "RUDLGC_JOSEPH", self._DEFAULTS.get("RUDLGC_JOSEPH"))
-        self._RENDER_BACKEND = getattr(self.__settings_module, "RUDLGC_RENDER_BACKEND", self._DEFAULTS.get("RUDLGC_RENDER_BACKEND"))
+        self._JOSEPH = getattr(__settings_module, "RUDLGC_JOSEPH", self._DEFAULTS.get("RUDLGC_JOSEPH"))
+        self._RENDER_BACKEND = getattr(__settings_module, "RUDLGC_RENDER_BACKEND", self._DEFAULTS.get("RUDLGC_RENDER_BACKEND"))
 
-        self._APP_FOLDER = getattr(self.__settings_module, "RUDLGC_APP_FOLDER", None)    
+        self._APP_FOLDER = getattr(__settings_module, "RUDLGC_APP_FOLDER", None)    
         self._hasInRequiredSettings(self._APP_FOLDER, "APP_FOLDER", game)
 
 
         # WINDOW SIZES
-        self._WINDOW_WIDTH = getattr(self.__settings_module, "WIDTH", self._DEFAULTS.get("WIDTH"))
-        self._WINDOW_HEIGHT = getattr(self.__settings_module, "HEIGHT", self._DEFAULTS.get("HEIGHT"))
+        self._WINDOW_WIDTH = getattr(__settings_module, "WIDTH", self._DEFAULTS.get("WIDTH"))
+        self._WINDOW_HEIGHT = getattr(__settings_module, "HEIGHT", self._DEFAULTS.get("HEIGHT"))
 
-        self._WINDOW_MINWIDTH = getattr(self.__settings_module, "MIN_WIDTH", self._DEFAULTS.get("MIN_WIDTH"))
-        self._WINDOW_MINHEIGHT = getattr(self.__settings_module, "MIN_HEIGHT", self._DEFAULTS.get("MIN_HEIGHT"))
+        self._WINDOW_MINWIDTH = getattr(__settings_module, "MIN_WIDTH", self._DEFAULTS.get("MIN_WIDTH"))
+        self._WINDOW_MINHEIGHT = getattr(__settings_module, "MIN_HEIGHT", self._DEFAULTS.get("MIN_HEIGHT"))
 
         # WINDOW ATTR
-        self._VSYNC = getattr(self.__settings_module, "VSYNC", self._DEFAULTS.get("VSYNC"))
-        self._WINDOW_MODE = getattr(self.__settings_module, "WINDOW_MODE", self._DEFAULTS.get("WINDOW_MODE"))
-        self._FPS = getattr(self.__settings_module, "FPS", self._DEFAULTS.get("FPS"))
+        self._VSYNC = getattr(__settings_module, "VSYNC", self._DEFAULTS.get("VSYNC"))
+        self._WINDOW_MODE = getattr(__settings_module, "WINDOW_MODE", self._DEFAULTS.get("WINDOW_MODE"))
+        self._FPS = getattr(__settings_module, "FPS", self._DEFAULTS.get("FPS"))
 
 
         # META
-        self._GAME_METADATA = getattr(self.__settings_module, "GAME_METADATA", None)
+        self._GAME_METADATA = getattr(__settings_module, "GAME_METADATA", None)
         self._hasInRequiredSettings(self._GAME_METADATA, "GAME_METADATA", game)
         self._GAME_METADATA = GameMetaData(self._GAME_METADATA)
 
 
         # READ-WRITE
-        self.SHOW_INFO = getattr(self.__settings_module, "SHOW_INFO", True)
-        self.DEBUG = getattr(self.__settings_module, "DEBUG", None)
+        self.SHOW_INFO = getattr(__settings_module, "SHOW_INFO", True)
+        self.DEBUG = getattr(__settings_module, "DEBUG", None)
         self._hasInRequiredSettings(self.DEBUG, "DEBUG", game)
 
 
         # RENDER CROSSPLATFORM
-        self._POINT_SIZE = getattr(self.__settings_module, "POINT_SIZE", self._DEFAULTS.get("POINT_SIZE"))
-        self._LINE_WIDTH = getattr(self.__settings_module, "LINE_WIDTH", self._DEFAULTS.get("LINE_WIDTH"))
+        self._POINT_SIZE = getattr(__settings_module, "POINT_SIZE", self._DEFAULTS.get("POINT_SIZE"))
+        self._LINE_WIDTH = getattr(__settings_module, "LINE_WIDTH", self._DEFAULTS.get("LINE_WIDTH"))
 
         self._OS_PLATFORM = _getOs()
         
 
-        for attr in dir(self.__settings_module):
+        for attr in dir(__settings_module):
             if attr not in SettingsCore._DEFAULTS and not attr.startswith("__") and attr.isupper():
-                value = getattr(self.__settings_module, attr)
+                value = getattr(__settings_module, attr)
                 setattr(self, attr, value)
 
 

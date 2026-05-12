@@ -3,7 +3,8 @@ from rudlgc.core import _callOnce
 
 
 class OpenGLBackend(BaseGraphicBackend):
-    NAME_CONTEXT = "OpenGL-3.3.0"
+    NAME_CONTEXT = "OpenGL"
+    NAME_VERSION = "3.3.0"
     def __init__(self, game):
         super().__init__(game)
         self.mgl = game._requirements.mgl
@@ -27,7 +28,6 @@ class OpenGLBackend(BaseGraphicBackend):
     
     @_callOnce()
     def createVersion(self):
-        self.game.logger._system_log("WARNING", "Created OpenGL context")
         self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_PROFILE_MASK, self.sdl.SDL_GL_CONTEXT_PROFILE_CORE)
         self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_MAJOR_VERSION, 3)
         self.sdl.SDL_GL_SetAttribute(self.sdl.SDL_GL_CONTEXT_MINOR_VERSION, 3)

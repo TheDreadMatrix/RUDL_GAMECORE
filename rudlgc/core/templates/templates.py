@@ -4,7 +4,7 @@ import textwrap
 
 _EXAMPLE_PY = textwrap.dedent("""
 #There we import 'GameType' for anotation and 'AbstractScene' for ours scene
-from rudlgc.contrib import GameType, PackageScene
+from rudlgc.packages import GameType, PackageScene
                               
 class ExampleScene(PackageScene):
     #This method is designed to initialize (create) objects.
@@ -66,14 +66,14 @@ def _SCENE_PY(class_name: str):
 
 def _ROUTER_PY(project_name: str):
     return textwrap.dedent(f"""
-    from rudlgc.contrib import GameType, SceneEmpty
-    from rudlgc.contrib.package_model import RouterModel
+    from rudlgc.packages import GameType, SceneEmpty
+    from rudlgc.packages.package_model import RouterModel
 
     # Our scenes
     from {project_name}.scenes.example import ExampleScene
                            
     class SceneManager(RouterModel):
-        def onRegistration(self, game: GameType)
+        def onRegistration(self, game: GameType):
                            
             # FIRST OF WE SWITCHING TO DEFAULT START SCENE
             self.START_SCENE = 'example'

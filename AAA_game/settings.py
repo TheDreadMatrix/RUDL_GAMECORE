@@ -3,6 +3,14 @@
 # AAA_GAME - SETTINGS CONFIGURATION FILE
 # =============================================
 
+"""
+Engine: Rudl Game Core Engine
+Init Backend: {{IB}}|{{IBV}}
+Audio Backend: {{AB}}|{{ABV}}
+Render Backend: {{RB}}|{{RBV}}
+Frametime: {{FPS}}
+"""
+
 
 # DEBUG mode enables additional logs and development features.
 # Should be set to False in production.

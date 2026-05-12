@@ -13,6 +13,8 @@ class _RUDLParser(argparse.ArgumentParser):
 
 
 
+
+# testing imports env
 def getRudlgcAllModulesParts(project_name: str):
     rudlgc_modules = []
     for module in sys.modules.keys():
@@ -23,10 +25,44 @@ def getRudlgcAllModulesParts(project_name: str):
 
 
 
-def _rudlgc_admin():
-    import webbrowser
+
+def _createNewProject(project_name: str, parser: _RUDLParser):
     from rudlgc.core.templates.templates import _EXAMPLE_PY, _ROUTER_PY, _SETTINGS_PY, _MANAGE_PY
     from rudlgc.core.templates.functions import is_valid_name, _PROHIBITED_WORDS
+    if (project_name.lower() in _PROHIBITED_WORDS) or (not is_valid_name(project_name)):
+        parser.error(f"Invalid project name!")
+            
+    PROJECT_BASE_PATH = Path.cwd() / project_name
+    if PROJECT_BASE_PATH.exists():
+        parser.error(f"Project {project_name} already exists!")
+
+
+    #CREATING ALL FOLDERS AND FILES
+    all_folders = ["musics", "sounds", "images", "fonts", "shaders", "config", "csaves"]
+    for folder in all_folders:
+        folder_path = PROJECT_BASE_PATH / "assets" / folder
+        folder_path.mkdir(parents=True, exist_ok=True)
+
+    (PROJECT_BASE_PATH / "__init__.py").write_text("# Module file")
+
+    for folder in ["my_utils", "scenes"]:
+        code_folder_path = PROJECT_BASE_PATH / folder
+        code_folder_path.mkdir(parents=True, exist_ok=True)
+        (code_folder_path / "__init__.py").write_text("# Submodule file")
+
+    #HERE WE WRITES EXAMPLE CODE
+    (PROJECT_BASE_PATH / "scenes" / "example.py").write_text(_EXAMPLE_PY)
+    (PROJECT_BASE_PATH / "router.py").write_text(_ROUTER_PY(project_name))
+    (PROJECT_BASE_PATH / "settings.py").write_text(_SETTINGS_PY(project_name))
+    
+
+    (Path.cwd() / f"manage_{project_name.lower()}.py").write_text(_MANAGE_PY(project_name))
+
+
+
+def _rudlgc_admin():
+    import webbrowser
+    
 
     parser = _RUDLParser(prog="rudl", description="RUDL Engine ++", formatter_class=argparse.RawTextHelpFormatter)
     sub_parser = parser.add_subparsers(dest="command")
@@ -44,37 +80,7 @@ def _rudlgc_admin():
 
     args = parser.parse_args()
     if args.command == "newproject":
-        #WORKING TO CREATE AND REGISTER DIRECTORY
-        if (args.project_name.lower() in _PROHIBITED_WORDS) or (not is_valid_name(args.project_name)):
-            parser.error(f"Invalid project name!")
-            
-        PROJECT_BASE_PATH = Path.cwd() / args.project_name
-        if PROJECT_BASE_PATH.exists():
-            parser.error(f"Project {args.project_name} already exists!")
-
-
-        #CREATING ALL FOLDERS AND FILES
-        all_folders = ["musics", "sounds", "images", "fonts", "shaders", ".config", ".saves"]
-        for folder in all_folders:
-            folder_path = PROJECT_BASE_PATH / "assets" / folder
-            folder_path.mkdir(parents=True, exist_ok=True)
-
-        (PROJECT_BASE_PATH / "__init__.py").write_text("# Module file")
-
-        for folder in ["my_utils", "scenes"]:
-            code_folder_path = PROJECT_BASE_PATH / folder
-            code_folder_path.mkdir(parents=True, exist_ok=True)
-            (code_folder_path / "__init__.py").write_text("# Submodule file")
-
-        #HERE WE WRITES EXAMPLE CODE
-        (PROJECT_BASE_PATH / "scenes" / "example.py").write_text(_EXAMPLE_PY)
-        (PROJECT_BASE_PATH / "router.py").write_text(_ROUTER_PY(args.project_name))
-        (PROJECT_BASE_PATH / "settings.py").write_text(_SETTINGS_PY(args.project_name))
-        (PROJECT_BASE_PATH / "utils" / "utils.py").write_text("# Here write some utilits")
-
-        (Path.cwd() / "manage.py").write_text(_MANAGE_PY(args.project_name))
-        
-
+        _createNewProject(args.project_name, parser)
         print("\033[32mProject succesfully created!\033[0m")
         return 1
                 

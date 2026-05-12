@@ -10,7 +10,7 @@ from AAA_game.scenes.main import Menu
 class SceneManager(RouterModel):
     def onRegistration(self, game: GameType):
         self.START_SCENE = "example"
-
+        
         
         self.registerScene('none-scene', lambda: SceneEmpty(game=game, title="FutureScene", text_scene="Hello World!", switch="example"))
         self.registerScene('example', lambda: ExampleScene(game=game))

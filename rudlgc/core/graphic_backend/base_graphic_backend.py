@@ -3,6 +3,7 @@
 
 class BaseGraphicBackend:
     NAME_CONTEXT="NONE"
+    NAME_VERSION="0.0.0"
     def __init__(self, game):
         self.game = game
         
