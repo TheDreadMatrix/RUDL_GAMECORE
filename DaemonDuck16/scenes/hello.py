@@ -1,7 +1,7 @@
 
 from rudlgc.packages import GameType, PackageScene
 
-class Menu(PackageScene):
+class Hello(PackageScene):
     def __init__(self, game: GameType):
         super().__init__(game)
         # Here we have self.keyboard, self.mouse, self.api

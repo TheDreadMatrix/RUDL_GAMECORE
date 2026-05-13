@@ -26,15 +26,17 @@ def getRudlgcAllModulesParts(project_name: str):
 
 
 
-def _createNewProject(project_name: str, parser: _RUDLParser):
+def _createNewProject(project_name: str, parser: _RUDLParser, ruining=False):
     from rudlgc.core.templates.templates import _EXAMPLE_PY, _ROUTER_PY, _SETTINGS_PY, _MANAGE_PY
     from rudlgc.core.templates.functions import is_valid_name, _PROHIBITED_WORDS
     if (project_name.lower() in _PROHIBITED_WORDS) or (not is_valid_name(project_name)):
         parser.error(f"Invalid project name!")
             
+
     PROJECT_BASE_PATH = Path.cwd() / project_name
-    if PROJECT_BASE_PATH.exists():
-        parser.error(f"Project {project_name} already exists!")
+    if not ruining:
+        if PROJECT_BASE_PATH.exists():
+            parser.error(f"Project {project_name} already exists!")
 
 
     #CREATING ALL FOLDERS AND FILES
@@ -42,6 +44,8 @@ def _createNewProject(project_name: str, parser: _RUDLParser):
     for folder in all_folders:
         folder_path = PROJECT_BASE_PATH / "assets" / folder
         folder_path.mkdir(parents=True, exist_ok=True)
+
+    (PROJECT_BASE_PATH / "assets" / "csaves" / "settings.json").write_text("{}")
 
     (PROJECT_BASE_PATH / "__init__.py").write_text("# Module file")
 

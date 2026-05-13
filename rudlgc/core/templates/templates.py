@@ -116,8 +116,7 @@ def _SETTINGS_PY(project_name: str):
 # CORE / DEBUG
 # =========================================================
 
-# Enables debug mode with logs and development tools.
-# Must be False in production builds.
+# Enables debug mode with debug server and development tools.
 DEBUG = True
 
 # Shows information about Engine and Fps
@@ -128,7 +127,8 @@ SHOW_INFO = True
 # PROJECT METADATA
 # =========================================================
 
-RUDLGC_APP_FOLDER = ".{project_name.lower()}_data",
+# For building path
+RUDLGC_APP_FOLDER = ".{project_name.lower()}_data"
 
 # Application and build metadata.
 # APP_FOLDER defines the directory where game data will be stored
@@ -148,15 +148,23 @@ GAME_METADATA = {{
 
 # Joseph is class from rudlgc/johnson.py
 # Use for saving settings into your json file. Works in '{project_name}/assets/csaves'
-# from rudlgc.johnson import Joseph
+# Also have in game.settings.JOSEPH to change and save data in game
 
-RUDLGC_JOSEPH = None
+from rudlgc.johnson import Joseph
+
+RUDLGC_JOSEPH = Joseph('settings.json', RUDLGC_APP_FOLDER)
 
 
 
 # =========================================================
 # WINDOW / DISPLAY SETTINGS
 # =========================================================
+
+from rudlgc.rudlums import RenderModes, WindowModes, VsyncModes
+
+# Choose your render backend 
+RUDLGC_RENDER_BACKEND = RenderModes.OPENGL
+
 
 WIDTH = 800
 HEIGHT = 600
@@ -166,19 +174,17 @@ MIN_WIDTH = 799
 MIN_HEIGHT = 599
 
 # Window behavior flags
-VSYNC = 0 # must be [-1, 0, 1]
-WINDOW_MODE = 0 # [0 - DEFAULT, 1 - RESIZABLE, 2 - BORDERLESS, 3 - FULLSCREEN]
+VSYNC = VsyncModes.DISABLED
+WINDOW_MODE = WindowModes.DEFAULT
 
 
 # Frame timing settings
 FPS = 60   # rendering FPS cap
 
-# =========================================================
-# RENDERING QUALITY
-# =========================================================
-
+# Render tools
 POINT_SIZE = 10.0
 LINE_WIDTH = 10.0
+
 
 # =========================================================
 # CUSTOM SETTINGS (ENGINE EXTENSION LAYER)
