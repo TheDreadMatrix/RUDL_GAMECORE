@@ -70,7 +70,7 @@ WINDOW_MODE = WindowModes.DEFAULT
 
 
 # Frame timing settings
-FPS = 60   # rendering FPS cap
+FPS = 240   # rendering FPS cap
 
 # Render tools
 POINT_SIZE = 10.0

@@ -30,6 +30,7 @@ class Game:
         from rudlgc.core.subsystems.paths_core import PathCore
 
         from rudlgc.core.subsystems.control_core import Keyboard, Mouse
+        from rudlgc.core.subsystems.api_game import GameConfigApi, WindowApi, EventApi
 
 
         # Initilization
@@ -53,7 +54,7 @@ class Game:
         #PRIVATE PROTECTED
         self._requirements = Requirements(self.logger)
         self._running = True
-        self._current_scene_name = "empty-scene"
+        self._current_scene_name = 0
         
 
         self._last_time = time.perf_counter()
@@ -81,7 +82,7 @@ class Game:
         self.backend_render.createVersion()
 
         self._window = sdl2.ext.Window(self.settings._GAME_METADATA.GAME_TITLE, 
-                                       size=(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT), 
+                                       size=(self.settings._WINDOW_WIDTH, self.settings._WINDOW_HEIGHT), 
                                        position=(sdl2.SDL_WINDOWPOS_CENTERED, sdl2.SDL_WINDOWPOS_CENTERED),
                                        flags=self.backend_render.createFlags())
         
@@ -92,7 +93,7 @@ class Game:
             sdl2.SDL_FreeSurface(icon_surface)
 
 
-        sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings.WINDOW_MINWIDTH, self.settings.WINDOW_MINHEIGHT)
+        sdl2.SDL_SetWindowMinimumSize(self._window.window, self.settings._WINDOW_MINWIDTH, self.settings._WINDOW_MINHEIGHT)
         self._window.show()
         
         # GPU CONTEXT
@@ -100,9 +101,13 @@ class Game:
         self.backend_render.setPointSize(self.settings._POINT_SIZE)
         self.backend_render.setLineWidth(self.settings._LINE_WIDTH)
 
-        self.backend_render.setViewPort(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
-        self.backend_render.setProjectile2D(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
-        sdl2.SDL_GL_SetSwapInterval(self.settings._VSYNC) 
+        self.backend_render.setViewPort(self.settings._WINDOW_WIDTH, self.settings._WINDOW_HEIGHT)
+        self.backend_render.setProjectile2D(self.settings._WINDOW_WIDTH, self.settings._WINDOW_HEIGHT)
+        sdl2.SDL_GL_SetSwapInterval(self.settings._VSYNC)
+
+        self.apps = WindowApi(self)
+        self.event = EventApi(self)
+        self.config = GameConfigApi(self) 
 
 
     @_callOnce()
@@ -115,13 +120,6 @@ class Game:
         
     @_callOnce()
     def _initGame(self):
-        from rudlgc.core.subsystems.api_game import GameConfigApi, WindowApi, EventApi, SystemApi
-        self.window_api = WindowApi(self)
-        self.event_api = EventApi(self)
-        self.config_api = GameConfigApi(self)
-        self.system_api = SystemApi(self)
-
-
         self.logger._system_log("INFO", f"RUDL Game Core '1.0.0-alpha' build with SDL2 & {self.backend_render.NAME_CONTEXT}:{self.backend_render.NAME_VERSION}")
         self.logger._system_log("INFO", f"Also running on project: '{self.PROJECT_NAME}'")
         
@@ -190,8 +188,8 @@ class Game:
                 self.settings._WINDOW_WIDTH = event.window.data1
                 self.settings._WINDOW_HEIGHT = event.window.data2
 
-                self.backend_render.setViewPort(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
-                self.backend_render.setProjectile2D(self.settings.WINDOW_WIDTH, self.settings.WINDOW_HEIGHT)
+                self.backend_render.setViewPort(self.settings._WINDOW_WIDTH, self.settings._WINDOW_HEIGHT)
+                self.backend_render.setProjectile2D(self.settings._WINDOW_WIDTH, self.settings._WINDOW_HEIGHT)
 
 
             self.mouse.eventThis(event)
@@ -229,13 +227,13 @@ class Game:
             try:
                 self.__update()  
                 self.__render()
-                self.__limit_fps(frame_start)
             except Exception:
                 error_message = traceback.format_exc()
                 self.ERROR = error_message if self.settings.DEBUG else "Oops...! You catched an error!!!"
-                self.config_api.redirectScene("error-scene")
+                self.config.redirectScene("error-scene")
                 self._scene_router.onException(error_message)
             
+            self.__limit_fps(frame_start)
         
         self._scene_router._current_scene_class.onSave()
         self._scene_router.savingProgress()

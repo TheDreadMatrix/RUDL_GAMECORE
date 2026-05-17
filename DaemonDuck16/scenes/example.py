@@ -1,16 +1,26 @@
 
 #There we import 'GameType' for anotation and 'AbstractScene' for ours scene
 from rudlgc.packages import GameType, PackageScene
+import math
 
 class ExampleScene(PackageScene):
     #This method is designed to initialize (create) objects.
     #Here you create objects once, which is better
     def __init__(self, game: GameType):
         super().__init__(game)
+        self.timer = 0
+        self.x, self.y = 0, 0
+
+        self.cur_x, self.cur_y = self.apps.getWindowPos()
+       
+    
+        
 
     #This method is called every frame.                    
     def onUpdate(self):
         pass
+
+
 
     #This method is called every tick                
     def onFixedUpdate(self):

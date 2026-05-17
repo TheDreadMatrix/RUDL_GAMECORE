@@ -1,5 +1,6 @@
 import typing
 
+__all__ = ["GameType"]
 
 class JosephProtocolType:
     def set(self, name: str, value: typing.Any) -> None: ...
@@ -10,11 +11,6 @@ class JosephProtocolType:
 
 class _SettingsType:
     DEBUG: bool
-
-    WINDOW_WIDTH: int
-    WINDOW_HEIGHT: int
-    WINDOW_MINWIDTH: int
-    WINDOW_MINHEIGHT: int
 
     JOSEPH: JosephProtocolType
 
@@ -46,6 +42,13 @@ class _WindowApiType:
     def setWindowMinlimit(self, min_x: int, min_y: int) -> None: ...
     def setTitle(self, title: str) -> None: ...
 
+    def openUrl(self, url: str) -> None: ...
+    def chooseFile(self, message: str) -> str: ...
+    def createMsgBox(self, title: str, info: str, type_messagebpx: int=0) -> None: ...
+
+    def getWindowSize(self) -> tuple[int, int]: ...
+    def getWindowPos(self) -> tuple[int, int]: ...
+
 
 class _EventApiType:
     def isMinimilized(self, event) -> bool: ...
@@ -56,11 +59,6 @@ class _EventApiType:
     def isFocusGain(self, event) -> bool: ...
 
 
-class _SystemApiType:
-    def openUrl(self, url: str) -> None: ...
-    def chooseFile(self, message: str) -> str: ...
-    def createMsgBox(self, title: str, info: str, type_messagebpx: int=0) -> None: ...
-    
 
 
 
@@ -107,10 +105,9 @@ class _Mouse:
 
 
 class GameType(typing.Protocol):
-    config_api: _RequestType
-    window_api: _WindowApiType
-    event_api: _EventApiType
-    system_api: _SystemApiType
+    config: _RequestType
+    apps: _WindowApiType
+    event: _EventApiType
 
     settings: _SettingsType
     paths: _PathsType
@@ -123,13 +120,14 @@ class GameType(typing.Protocol):
     mouse: _Mouse
 
     PROJECT_NAME: str
-    ERROR: str
+   
 
     def getFps(self) -> float: ...
     def getTps(self) -> float: ...
     def getCurrentScene(self) -> str: ...
     def raiseError(self) -> None: ...
 
+    
 
 
 

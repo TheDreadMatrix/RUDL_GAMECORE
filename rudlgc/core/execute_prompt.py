@@ -73,6 +73,8 @@ def _rudlgc_admin():
 
     start_project = sub_parser.add_parser("newproject", help="Creates game project")
     start_project.add_argument("project_name")
+
+    sub_parser.add_parser("default")
     
 
     sub_parser.add_parser("tg", help="Open TG channel")
@@ -85,6 +87,11 @@ def _rudlgc_admin():
     args = parser.parse_args()
     if args.command == "newproject":
         _createNewProject(args.project_name, parser)
+        print("\033[32mProject succesfully created!\033[0m")
+        return 1
+    
+    elif args.command == "default":
+        _createNewProject("ExampleGameProject", 0, True)
         print("\033[32mProject succesfully created!\033[0m")
         return 1
                 

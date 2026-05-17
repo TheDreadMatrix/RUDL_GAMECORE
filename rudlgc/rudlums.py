@@ -7,6 +7,22 @@ class MessageNum(IntEnum):
     ERROR = 2
 
 
+class TextureFilter(IntEnum):
+    NEAREST = 0
+    LINEAR = 1
+    NEAR_NEAREST = 2
+    LINE_LINEAR = 3
+    LINE_NEAREST = 4
+    NEAR_LINEAR = 5
+
+class Anisotropy(IntEnum):
+    X1 = 0
+    X2 = 2
+    X4 = 4
+    X6 = 6
+    X8 = 8
+    x16 = 16
+
 
 class WindowModes(IntEnum):
     DEFAULT = 0
@@ -24,6 +40,8 @@ class VsyncModes(IntEnum):
 class RenderModes(IntEnum):
     OPENGL = 0
     VULKAN = 1
+    METAL = 2
+    DIRECTX = 3
 
 
 class BuildModes(IntEnum):

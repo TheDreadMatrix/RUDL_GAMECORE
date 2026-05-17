@@ -50,7 +50,7 @@ class OpenGLBackend(BaseGraphicBackend):
         self.context.blend_func = (self.mgl.SRC_ALPHA, self.mgl.ONE_MINUS_SRC_ALPHA)
 
         # BUFFER AND PROJECTION
-        self.projection_2d = self.glm.ortho(0, self.settings.WINDOW_WIDTH, 0, self.settings.WINDOW_HEIGHT, -1, 1)
+        self.projection_2d = self.glm.ortho(0, self.settings._WINDOW_WIDTH, 0, self.settings._WINDOW_HEIGHT, -1, 1)
 
         self.ubo = self.context.buffer(reserve=1024)
         self.ubo.bind_to_uniform_block(0)

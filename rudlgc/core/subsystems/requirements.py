@@ -8,8 +8,7 @@ class Requirements:
         self.logger = logger
         
         self.mgl = None
-        self.glm = None
-        self.pil = None
+        self.glm5 = None
         self.sdl = None
         self.audio = None
 
@@ -24,9 +23,8 @@ class Requirements:
             return None
         
     def _loadImports(self):
-        self.pil = self._safeImport("PIL.Image")
-        self.glm5 = self._safeImport("glm")
         self.sdl = self._safeImport("sdl2")
+        self.glm5 = self._safeImport("glm")
         self.audio = self._safeImport("sdl2.sdlmixer")
         
         

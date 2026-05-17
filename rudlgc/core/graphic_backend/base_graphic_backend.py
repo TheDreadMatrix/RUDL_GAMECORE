@@ -10,7 +10,7 @@ class BaseGraphicBackend:
         # SETTINGS
         self.glm = game._requirements.glm5
         self.sdl = game._requirements.sdl
-        self.pil = game._requirements.pil
+        
 
 
         purple = (128, 0, 128)
@@ -51,6 +51,12 @@ class BaseGraphicBackend:
 
 
     def createVersion(self):
+        pass
+
+    def createShader(self):
+        pass
+
+    def createVertexArray(self):
         pass
 
     def setPointSize(self, size):

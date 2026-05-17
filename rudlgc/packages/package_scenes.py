@@ -12,10 +12,9 @@ class PackageScene:
         self.keyboard = game.keyboard
         self.mouse = game.mouse
 
-        self.window_api = game.window_api
-        self.event_api = game.event_api
-        self.config_api = game.config_api
-        self.system_api = game.system_api
+        self.apps = game.apps
+        self.event = game.event
+        self.config = game.config
         
         self.settings = game.settings
         self.paths = game.paths

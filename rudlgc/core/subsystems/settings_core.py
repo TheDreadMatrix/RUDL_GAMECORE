@@ -113,23 +113,6 @@ class SettingsCore:
         return self._JOSEPH
     
 
-    @property
-    def WINDOW_WIDTH(self):
-        return self._WINDOW_WIDTH
-    
-        
-    @property
-    def WINDOW_HEIGHT(self):
-        return self._WINDOW_HEIGHT
-    
-    @property
-    def WINDOW_MINWIDTH(self):
-        return self._WINDOW_MINWIDTH
-    
-
-    @property
-    def WINDOW_MINHEIGHT(self):
-        return self._WINDOW_MINHEIGHT
     
 
     

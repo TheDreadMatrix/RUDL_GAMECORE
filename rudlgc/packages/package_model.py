@@ -1,18 +1,20 @@
 from . import GameType
 from .package_scenes import SceneEmpty, SceneError
+from typing import Callable
 import traceback as _error
 
+__all__ = ["RouterModel"]
 
 class RouterModel:
     def __init__(self, game: GameType):
         self.game = game
 
-        self.START_SCENE = "empty-scene"
+        self.START_SCENE = 0
 
         self._state_of_scene = ""
         self._scene_dict = {
-            "empty-scene": lambda: SceneEmpty(game=game, title="Buildings Scene", text_scene="MOST USEFUL SCENE IN THE WORLD!!!", switch=1),
-            "error-scene": lambda: SceneError(game=game),
+            0: lambda: SceneEmpty(game=game, title="Buildings Scene", text_scene="MOST USEFUL SCENE IN THE WORLD!!!", switch=1),
+            1: lambda: SceneError(game=game),
         }
         
         
@@ -25,12 +27,12 @@ class RouterModel:
     def _startGameLoop(self):
         self.game._current_scene_name = self.START_SCENE
         self._state_of_scene = self.START_SCENE
-        self._current_scene_class = self._scene_dict.get(self.game._current_scene_name, self._scene_dict["empty-scene"])()
+        self._current_scene_class = self._scene_dict.get(self.game._current_scene_name, self._scene_dict[0])()
 
 
-    def registerScene(self, name: str, scene):
+    def registerScene(self, name: str, scene_fabric: Callable[[], SceneEmpty]):
         self.game.logger._system_log("SCENE", f"Scene '{name}' has been registered.")
-        self._scene_dict.update({name: scene})
+        self._scene_dict.update({name: scene_fabric})
 
 
     def _restartScene(self): 

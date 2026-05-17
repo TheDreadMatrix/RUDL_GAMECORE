@@ -107,7 +107,11 @@ game.resouces._getItemImage(id: str)
 
 
 
+game.config
+game.config.settings
 
+game.app
+game.event
 
 
 
